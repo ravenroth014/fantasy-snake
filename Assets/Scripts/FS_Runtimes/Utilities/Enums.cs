@@ -6,4 +6,11 @@ namespace FS_Runtimes.Utilities
         , Obstacle
         , Occupied
     }
+
+    public enum ECharacterType
+    {
+        Player
+        , Enlist
+        , Enemy
+    }
 }

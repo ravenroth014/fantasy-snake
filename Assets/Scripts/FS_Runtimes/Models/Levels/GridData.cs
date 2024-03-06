@@ -1,4 +1,4 @@
-using FS_Runtimes.Controllers.Characters;
+using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Utilities;
 
 namespace FS_Runtimes.Models.Levels
@@ -9,8 +9,8 @@ namespace FS_Runtimes.Models.Levels
 
         public int HorizontalIndex;
         public int VerticalIndex;
-        
-        public CharacterController CurrentCharacter;
+
+        public CharacterData CharacterData;
         public EGridState GridState;
 
         #endregion
