@@ -7,9 +7,11 @@ namespace FS_Runtimes.Models.Levels
     {
         #region Fields & Properties
 
+        public int HorizontalIndex;
+        public int VerticalIndex;
+        
         public CharacterController CurrentCharacter;
         public EGridState GridState;
-        // Obstacle Type
 
         #endregion
     }
