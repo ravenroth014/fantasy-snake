@@ -16,5 +16,11 @@ namespace FS_Runtimes.Utilities
                 return null;
             return _textureList[index];
         }
+
+        public Texture2D GetRandomTexture()
+        {
+            int randomIndex = Random.Range(0, TextureCount);
+            return _textureList[randomIndex];
+        }
     }
 }

@@ -36,7 +36,6 @@ namespace FS_Runtimes.Controllers.Core
         {
             NavigateToScene(SceneHelper.GameplayScene, false);
             NavigateToScene(SceneHelper.NavigatorScene, true);
-            SceneManager.UnloadSceneAsync(SceneHelper.LoaderScene);
         }
         
         #endregion

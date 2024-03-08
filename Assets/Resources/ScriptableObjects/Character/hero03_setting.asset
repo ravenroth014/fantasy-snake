@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7426476411f67a94284da07300c926fa, type: 3}
   m_Name: hero03_setting
   m_EditorClassIdentifier: 
-  _textureList: []
+  _textureList:
+  - {fileID: 2800000, guid: 3b480addf81f00543af7c2939ccf3b20, type: 3}
+  - {fileID: 2800000, guid: d170b63c3a39f7e4fa42cfa618a4c753, type: 3}

@@ -12,4 +12,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7426476411f67a94284da07300c926fa, type: 3}
   m_Name: enemy02_setting
   m_EditorClassIdentifier: 
-  _textureList: []
+  _textureList:
+  - {fileID: 2800000, guid: 1f602d3650c2c9e46811fc285b77ddae, type: 3}
+  - {fileID: 2800000, guid: 8bf7a0a9f3762224598a50c6a56ee501, type: 3}

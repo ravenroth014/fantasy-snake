@@ -1,4 +1,4 @@
-using System.Threading.Tasks;
+using FS_Runtimes.Controllers.Player;
 using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Core
@@ -9,6 +9,8 @@ namespace FS_Runtimes.Controllers.Core
         
         public static GameplayManager Instance => _instance;
         private static GameplayManager _instance;
+
+        public CharacterModule Test;
         
         #endregion
 
@@ -20,7 +22,13 @@ namespace FS_Runtimes.Controllers.Core
         {
             _instance = this;
         }
-        
+
+        private void Start()
+        {
+            if (Test is not null)
+                Test.Init();
+        }
+
         #endregion
         
         #endregion
