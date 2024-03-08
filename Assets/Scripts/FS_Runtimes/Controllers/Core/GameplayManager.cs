@@ -1,4 +1,6 @@
+using System;
 using FS_Runtimes.Controllers.Player;
+using FS_Runtimes.Utilities;
 using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Core
@@ -29,7 +31,24 @@ namespace FS_Runtimes.Controllers.Core
                 Test.Init();
         }
 
+        private void Update()
+        {
+            TestCharacterRotation();
+        }
+
         #endregion
+
+        private void TestCharacterRotation()
+        {
+            if (Input.GetKeyDown(KeyCode.W))
+                Test.SetCharacterPosition(EDirection.Up);
+            else if (Input.GetKeyDown(KeyCode.A))
+                Test.SetCharacterPosition(EDirection.Left);
+            else if (Input.GetKeyDown(KeyCode.D))
+                Test.SetCharacterPosition(EDirection.Right);
+            else if (Input.GetKeyDown(KeyCode.S))
+                Test.SetCharacterPosition(EDirection.Down);
+        }
         
         #endregion
     }

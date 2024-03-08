@@ -13,4 +13,12 @@ namespace FS_Runtimes.Utilities
         , Enlist
         , Enemy
     }
+
+    public enum EDirection
+    {
+        Up,
+        Down,
+        Left,
+        Right
+    }
 }

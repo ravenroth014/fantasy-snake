@@ -1,3 +1,6 @@
+using System;
+using UnityEngine;
+
 namespace FS_Runtimes.Utilities
 {
     public static class SceneHelper
@@ -17,5 +20,25 @@ namespace FS_Runtimes.Utilities
     public static class MaterialPropertyHelper
     {
         public static readonly string MainTexture = "_MainTex";
+    }
+
+    public static class DirectionHelper
+    {
+        public static Vector3 GetDirection(EDirection direction)
+        {
+            switch (direction)
+            {
+                case EDirection.Up:
+                    return Vector3.forward;
+                case EDirection.Down:
+                    return Vector3.back;
+                case EDirection.Left:
+                    return Vector3.left;
+                case EDirection.Right:
+                    return Vector3.right;
+                default:
+                    return Vector3.zero;
+            }
+        }
     }
 }

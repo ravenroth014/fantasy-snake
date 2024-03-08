@@ -1,3 +1,4 @@
+using System.Collections;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -12,6 +13,8 @@ namespace FS_Runtimes.Controllers.Player
         [SerializeField, Tooltip("Character Setting")] private CharacterSetting _characterSetting;
         [SerializeField, Tooltip("Character Mesh Renderer")] private SkinnedMeshRenderer _meshRenderer;
         [SerializeField, Tooltip("Character Animator")] private Animator _animator;
+
+        private bool _isMoving;
 
         #endregion
 
@@ -41,9 +44,41 @@ namespace FS_Runtimes.Controllers.Player
             _animator.Play(stateName);
         }
 
-        public void RotateCharacter()
+        public void SetCharacterDirection(EDirection direction)
         {
+            Vector3 directionVector = DirectionHelper.GetDirection(direction);
+            if (directionVector == Vector3.zero) return;
+
+            Quaternion rotation = Quaternion.LookRotation(directionVector);
+            transform.rotation = rotation;
+        }
+
+        public void SetCharacterPosition(EDirection direction)
+        {
+            if (_isMoving) return;
             
+            Vector3 directionVector = DirectionHelper.GetDirection(direction);
+            if (directionVector == Vector3.zero) return;
+
+            _isMoving = true;
+            Vector3 destination = transform.position + directionVector;
+            
+            SetCharacterDirection(direction);
+            SetCharacterAnimation(CharacterAnimationHelper.RunState);
+            StartCoroutine(MoveCharacter(directionVector, destination));
+        }
+
+        private IEnumerator MoveCharacter(Vector3 direction, Vector3 destination)
+        {
+            while (Vector3.Distance(transform.position, destination) > _characterSetting.Threshold)
+            {
+                transform.position += direction * (_characterSetting.Speed * Time.deltaTime);
+                yield return null;
+            }
+
+            SetCharacterAnimation(CharacterAnimationHelper.IdleState);
+            transform.position = destination;
+            _isMoving = false;
         }
 
         #endregion

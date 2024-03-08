@@ -7,8 +7,12 @@ namespace FS_Runtimes.Utilities
     {
         [Header("Character Setting")] 
         [SerializeField, Tooltip("List of Texture")] private Texture2D[] _textureList;
+        [SerializeField, Tooltip("Character speed")] private float _speed = 5f;
+        [SerializeField, Tooltip("Character position threshold")] private float _threshold = 0.01f;
 
-        public int TextureCount => _textureList is null or { Length: <= 0 } ? 0 : _textureList.Length;
+        private int TextureCount => _textureList is null or { Length: <= 0 } ? 0 : _textureList.Length;
+        public float Speed => _speed;
+        public float Threshold => _threshold;
 
         public Texture2D GetTextureByIndex(int index)
         {
