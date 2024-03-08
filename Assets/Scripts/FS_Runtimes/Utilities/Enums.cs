@@ -21,4 +21,10 @@ namespace FS_Runtimes.Utilities
         Left,
         Right
     }
+
+    public enum EPoolingType
+    {
+        Stack,
+        LinkedList
+    }
 }

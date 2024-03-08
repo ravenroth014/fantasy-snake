@@ -1,18 +1,19 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class PoolingSetting : MonoBehaviour
+namespace FS_Runtimes.Utilities
 {
-    // Start is called before the first frame update
-    void Start()
+    [CreateAssetMenu(fileName = "PoolingSetting", menuName = "Settings/Pooling Setting")]
+    public class PoolingSetting : ScriptableObject
     {
+        #region Fields & Properties
         
-    }
+        [Header("Pooling Setting")]
+        [SerializeField, Tooltip("Pool Type")] private EPoolingType _poolingType;
+        [SerializeField, Tooltip("Max Pool Size")] private int _maxPoolSize = 30;
 
-    // Update is called once per frame
-    void Update()
-    {
+        public EPoolingType PoolingType => _poolingType;
+        public int MaxPoolSize => _maxPoolSize;
         
+        #endregion
     }
 }
