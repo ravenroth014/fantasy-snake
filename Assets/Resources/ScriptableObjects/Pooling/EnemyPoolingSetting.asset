@@ -13,4 +13,6 @@ MonoBehaviour:
   m_Name: EnemyPoolingSetting
   m_EditorClassIdentifier: 
   _poolingType: 1
-  _maxPoolSize: 30
+  _poolMaxSize: 30
+  _objectInPool: {fileID: 4539375487791821841, guid: b68cd15ace74e424bafb3877aa4f1f88, type: 3}
+  _collectionCheck: 1
