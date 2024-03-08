@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7426476411f67a94284da07300c926fa, type: 3}
+  m_Name: hero_setting
+  m_EditorClassIdentifier: 
+  _textureList:
+  - {fileID: 2800000, guid: bfb7f700c0417d24dbf6d9260433f699, type: 3}
+  - {fileID: 2800000, guid: 6877ea0a9b6c2b84bba50f10ee929f68, type: 3}
+  _speed: 2.5
+  _threshold: 0.01
