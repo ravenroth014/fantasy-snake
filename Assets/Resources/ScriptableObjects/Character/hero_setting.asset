@@ -15,5 +15,9 @@ MonoBehaviour:
   _textureList:
   - {fileID: 2800000, guid: bfb7f700c0417d24dbf6d9260433f699, type: 3}
   - {fileID: 2800000, guid: 6877ea0a9b6c2b84bba50f10ee929f68, type: 3}
+  - {fileID: 2800000, guid: cb4a8115bd1381f4b8aab3801df3a38e, type: 3}
+  - {fileID: 2800000, guid: 8b37735129876374c8588e9a36a56e2e, type: 3}
+  - {fileID: 2800000, guid: 3b480addf81f00543af7c2939ccf3b20, type: 3}
+  - {fileID: 2800000, guid: d170b63c3a39f7e4fa42cfa618a4c753, type: 3}
   _speed: 2.5
   _threshold: 0.01

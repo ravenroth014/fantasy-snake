@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace FS_Runtimes.Utilities
 {
@@ -9,11 +10,15 @@ namespace FS_Runtimes.Utilities
         
         [Header("Pooling Setting")]
         [SerializeField, Tooltip("Pool Type")] private EPoolingType _poolingType;
-        [SerializeField, Tooltip("Max Pool Size")] private int _maxPoolSize = 30;
+        [FormerlySerializedAs("_maxPoolSize")] [SerializeField, Tooltip("Max Pool Size")] private int _poolMaxSize = 30;
+        [SerializeField, Tooltip("Game object for pooling")] private GameObject _objectInPool;
+        [SerializeField, Tooltip("Collection Check")] private bool _collectionCheck = true;
 
         public EPoolingType PoolingType => _poolingType;
-        public int MaxPoolSize => _maxPoolSize;
-        
+        public int PoolMaxSize => _poolMaxSize;
+        public GameObject ObjectInPool => _objectInPool;
+        public bool CollectionCheck => _collectionCheck;
+
         #endregion
     }
 }
