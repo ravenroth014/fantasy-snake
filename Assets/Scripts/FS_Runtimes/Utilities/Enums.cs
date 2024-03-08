@@ -19,7 +19,8 @@ namespace FS_Runtimes.Utilities
         Up,
         Down,
         Left,
-        Right
+        Right,
+        None
     }
 
     public enum EPoolingType

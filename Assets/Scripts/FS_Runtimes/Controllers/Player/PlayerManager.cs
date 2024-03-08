@@ -19,26 +19,37 @@ namespace FS_Runtimes.Controllers.Player
 
         private void OnEnable()
         {
-            _moveInput.action.started += OnKeyboardTrigger;
+            _moveInput.action.started += OnMoveTrigger;
         }
 
         private void OnDisable()
         {
-            _moveInput.action.started -= OnKeyboardTrigger;
+            _moveInput.action.started -= OnMoveTrigger;
         }
 
-        private void OnKeyboardTrigger(InputAction.CallbackContext action)
+        private void OnMoveTrigger(InputAction.CallbackContext action)
         {
-            if (action.control is not KeyControl keyControl) return;
-            
-            if (keyControl.keyCode == Key.A)
-                _test.SetCharacterPosition(EDirection.Left);
-            else if (keyControl.keyCode == Key.W)
-                _test.SetCharacterPosition(EDirection.Up);
-            else if (keyControl.keyCode == Key.S)
-                _test.SetCharacterPosition(EDirection.Down);
-            else if (keyControl.keyCode == Key.D)
-                _test.SetCharacterPosition(EDirection.Right);
+            switch (action.control)
+            {
+                case KeyControl keyControl:
+                    OnKeyboardTrigger(keyControl);
+                    break;
+                case DiscreteButtonControl gamepadControl:
+                    OnGamepadTrigger(gamepadControl);
+                    break;
+            }
+        }
+
+        private void OnKeyboardTrigger(KeyControl keyControl)
+        {
+            EDirection direction = KeyboardHelper.GetDirection(keyControl.keyCode);
+            _test.SetCharacterPosition(direction);
+        }
+
+        private void OnGamepadTrigger(DiscreteButtonControl gamepadControl)
+        {
+            EDirection direction = GamePadHelper.GetDirection(gamepadControl.minValue, gamepadControl.maxValue);
+            _test.SetCharacterPosition(direction);
         }
 
         #endregion
