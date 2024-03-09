@@ -127,7 +127,10 @@ namespace FS_Runtimes.Controllers.Character
             if (_pooling is null)
                 Destroy(gameObject);
             else
+            {
+                _isMoving = false;
                 _pooling.ReturnItemToPool(this);
+            }
         }
 
         #endregion

@@ -50,12 +50,12 @@ namespace FS_Runtimes.Controllers.Gameplay
             Vector2 targetPosition = currentPosition + new Vector2(direction.x, direction.z);
             EGridState gridState = _levelManager.GetGridState(targetPosition);
             
-            if (gridState == EGridState.Empty)
+            if (gridState is EGridState.Empty)
             {
                 _charactersManager.MoveCharacter(directionAction, OnUpdateGridCallback);
                 _currentDirection = directionAction;
             }
-            else if (gridState == EGridState.Occupied)
+            else if (gridState is EGridState.Occupied)
             {
                 ECharacterType characterType = _levelManager.GetGridOccupiedType(targetPosition);
                 if (characterType == ECharacterType.Enlist)
@@ -65,6 +65,15 @@ namespace FS_Runtimes.Controllers.Gameplay
                     _currentDirection = directionAction;
                     _levelManager.GenerateEnlist();
                 }
+                else if (characterType == ECharacterType.Enemy)
+                {
+                    // TODO: Implement battle mode.
+                }
+            }
+            else if (gridState is EGridState.Walled or EGridState.Obstacle)
+            {
+                _charactersManager.RemoveMainCharacter(directionAction, OnUpdateGridCallback);
+                _currentDirection = directionAction;
             }
         }
         
@@ -111,14 +120,14 @@ namespace FS_Runtimes.Controllers.Gameplay
 
         private void OnUpdateGridCallback(Vector2 position, string uniqueID)
         {
+            EGridState gridState = _levelManager.GetGridState(position);
+            if (gridState is EGridState.Walled or EGridState.Obstacle)
+                return;
+            
             if (string.IsNullOrEmpty(uniqueID))
-            {
                 _levelManager.UpdateGridData(position, string.Empty, EGridState.Empty, ECharacterType.None);
-            }
             else
-            {
                 _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
-            }
         }
 
         #endregion

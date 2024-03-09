@@ -101,7 +101,7 @@ namespace FS_Runtimes.Controllers.Character
             }
         }
 
-        public void RemoveCharacter(string uniqueID)
+        private void RemoveCharacter(string uniqueID)
         {
             if (string.IsNullOrEmpty(uniqueID)) return;
             
@@ -109,7 +109,21 @@ namespace FS_Runtimes.Controllers.Character
             _heroDataList.Remove(characterData);
 
             if (_heroGameObjectDict.ContainsKey(uniqueID))
+            {
+                CharacterGameObject removeCharacter = _heroGameObjectDict[uniqueID];
                 _heroGameObjectDict.Remove(uniqueID);
+                removeCharacter.Release();
+            }
+        }
+
+        public void RemoveMainCharacter(EDirection direction, Action<Vector2, string> onUpdateGrid = null)
+        {
+            if (_heroDataList is null or {Count: 0})
+                return;
+
+            string uniqueID = _heroDataList[0].UniqueID;
+            MoveCharacter(direction, onUpdateGrid);
+            RemoveCharacter(uniqueID);
         }
 
         public Vector2 GetMainCharacterPosition()
