@@ -155,7 +155,7 @@ MonoBehaviour:
   _heroPooling: {fileID: 666223721}
   _enemyPooling: {fileID: 524786098}
   _levelManager: {fileID: 909288763}
-  _charactersManager: {fileID: 0}
+  _charactersManager: {fileID: 1500662233}
 --- !u!4 &79906518
 Transform:
   m_ObjectHideFlags: 0

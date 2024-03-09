@@ -22,11 +22,12 @@ namespace FS_Runtimes.Controllers.Character
 
         #region Methods
 
-        public void Init(string uniqueID)
+        public void Init(string uniqueID, Vector2 position)
         {
             UniqueID = uniqueID;
             
             SetCharacterMaterial();
+            SetCharacterPosition(position);
             SetCharacterAnimation(GameHelper.IdleState);
             
             LogManager.Instance.Log($"{this}'s initialization is complete.");
@@ -57,7 +58,13 @@ namespace FS_Runtimes.Controllers.Character
             transform.rotation = rotation;
         }
 
-        public void SetCharacterPosition(EDirection direction)
+        public void SetCharacterPosition(Vector2 position)
+        {
+            float height = transform.position.y;
+            gameObject.transform.position = new Vector3(position.x, height, position.y);
+        }
+
+        public void MoveCharacterPosition(EDirection direction)
         {
             if (_isMoving) return;
             
@@ -65,7 +72,7 @@ namespace FS_Runtimes.Controllers.Character
             if (directionVector == Vector3.zero) return;
 
             _isMoving = true;
-            Vector3 destination = transform.position + directionVector;
+            Vector3 destination = gameObject.transform.position + directionVector;
             
             SetCharacterDirection(direction);
             SetCharacterAnimation(GameHelper.RunState);

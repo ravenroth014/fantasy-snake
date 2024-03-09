@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Level;
-using FS_Runtimes.Controllers.Player;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.States;
 using FS_Runtimes.Utilities;
@@ -49,6 +48,8 @@ namespace FS_Runtimes.Controllers.Core
         private void Start()
         {
             InitControllers();
+
+            ChangeState(EGameState.GamePrepare);
         }
 
         #endregion

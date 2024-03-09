@@ -1,6 +1,5 @@
 ﻿using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Level;
-using FS_Runtimes.Controllers.Player;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -11,9 +10,9 @@ namespace FS_Runtimes.States
     {
         #region Fields & Properties
 
-        private CharactersManager _charactersManager;
-        private CharacterPooling _heroPooling;
-        private LevelManager _levelManager;
+        private readonly CharactersManager _charactersManager;
+        private readonly CharacterPooling _heroPooling;
+        private readonly LevelManager _levelManager;
 
         #endregion
 
@@ -34,7 +33,7 @@ namespace FS_Runtimes.States
         {
             PrepareProcess();
             
-            _gameplayManager.ChangeState(EGameState.GamePlay);
+            //_gameplayManager.ChangeState(EGameState.GamePlay);
         }
 
         public override void OnExit()
@@ -50,7 +49,7 @@ namespace FS_Runtimes.States
             CharacterGameObject characterGameObject = _heroPooling.GetFromPool();
             Vector2 position = _levelManager.GetFreePosition();
 
-            string uniqueID = _charactersManager.AddCharacter(characterGameObject, ECharacterType.Hero);
+            string uniqueID = _charactersManager.AddCharacter(characterGameObject, ECharacterType.Hero, position);
             _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
         }
         

@@ -30,7 +30,7 @@ namespace FS_Runtimes.Models.Levels
         {
             for (int hIndex = 1; hIndex <= _horizontalMaxSize; hIndex++)
             {
-                for (int vIndex = 0; vIndex < _verticalMaxSize; vIndex++)
+                for (int vIndex = 1; vIndex <= _verticalMaxSize; vIndex++)
                 {
                     Vector2 newVector = new Vector2(hIndex, vIndex);
                     _gridDict.Add(newVector, new GridData(newVector));

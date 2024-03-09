@@ -37,7 +37,7 @@ namespace FS_Runtimes.Controllers.Character
             _stringBuilder = new StringBuilder();
         }
 
-        public string AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType)
+        public string AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, Vector2 position)
         {
             _stringBuilder ??= new StringBuilder();
             _stringBuilder.Clear();
@@ -66,6 +66,9 @@ namespace FS_Runtimes.Controllers.Character
 
                 _heroGameObjectDict[uniqueID] = characterGameObject;
             }
+            
+            characterGameObject.Init(uniqueID, position);
+            
 
             return uniqueID;
         }
