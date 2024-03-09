@@ -1,5 +1,6 @@
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -51,11 +52,13 @@ namespace FS_Runtimes.Controllers.Player
         private void OnKeyboardTrigger(KeyControl keyControl)
         {
             EDirection direction = GameHelper.GetDirection(keyControl.keyCode);
+            _gameplayManager.OnCharacterAction(direction);
         }
 
         private void OnGamepadTrigger(DiscreteButtonControl gamepadControl)
         {
             EDirection direction = GameHelper.GetDirection(gamepadControl.minValue, gamepadControl.maxValue);
+            _gameplayManager.OnCharacterAction(direction);
         }
 
         #endregion

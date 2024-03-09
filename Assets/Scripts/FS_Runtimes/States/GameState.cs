@@ -1,15 +1,10 @@
 using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Controllers.Gameplay;
 
 namespace FS_Runtimes.States
 {
     public abstract class GameState 
     {
-        #region Fields & Properties
-
-        protected GameplayManager _gameplayManager;
-
-        #endregion
-
         #region Methods
 
         #region Abstract Methods

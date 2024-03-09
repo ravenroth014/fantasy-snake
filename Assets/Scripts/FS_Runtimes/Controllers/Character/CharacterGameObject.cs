@@ -19,6 +19,8 @@ namespace FS_Runtimes.Controllers.Character
         private bool _isInitOnCreate;
         private CharacterPooling _pooling;
         
+        public Vector2 CurrentPosition { get; private set; }
+        
         public string UniqueID { get; private set; }
 
         #endregion
@@ -62,14 +64,14 @@ namespace FS_Runtimes.Controllers.Character
 
         public void SetCharacterDirection(EDirection direction)
         {
-            Vector3 directionVector = GameHelper.GetDirection(direction);
+            Vector3 directionVector = GameHelper.GetWorldSpaceDirection(direction);
             if (directionVector == Vector3.zero) return;
 
             Quaternion rotation = Quaternion.LookRotation(directionVector);
             transform.rotation = rotation;
         }
 
-        public void SetCharacterPosition(Vector2 position)
+        private void SetCharacterPosition(Vector2 position)
         {
             float height = transform.position.y;
             gameObject.transform.position = new Vector3(position.x, height, position.y);
@@ -79,11 +81,25 @@ namespace FS_Runtimes.Controllers.Character
         {
             if (_isMoving) return;
             
-            Vector3 directionVector = GameHelper.GetDirection(direction);
+            Vector3 directionVector = GameHelper.GetWorldSpaceDirection(direction);
             if (directionVector == Vector3.zero) return;
 
             _isMoving = true;
             Vector3 destination = gameObject.transform.position + directionVector;
+            
+            SetCharacterDirection(direction);
+            SetCharacterAnimation(GameHelper.RunState);
+            StartCoroutine(MoveCharacter(directionVector, destination));
+        }
+
+        public void MoveCharacterPosition(Vector2 targetPos)
+        {
+            if (_isMoving) return;
+            
+            _isMoving = true;
+            Vector3 directionVector = new Vector3(targetPos.x, 0, targetPos.y);
+            Vector3 destination = gameObject.transform.position + directionVector;
+            EDirection direction = GameHelper.GetDirection(directionVector);
             
             SetCharacterDirection(direction);
             SetCharacterAnimation(GameHelper.RunState);
@@ -100,6 +116,7 @@ namespace FS_Runtimes.Controllers.Character
 
             SetCharacterAnimation(GameHelper.IdleState);
             transform.position = destination;
+            CurrentPosition = new Vector2(destination.x, destination.z);
             _isMoving = false;
         }
 

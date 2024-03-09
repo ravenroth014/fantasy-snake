@@ -20,4 +20,4 @@ MonoBehaviour:
   - {fileID: 2800000, guid: 3b480addf81f00543af7c2939ccf3b20, type: 3}
   - {fileID: 2800000, guid: d170b63c3a39f7e4fa42cfa618a4c753, type: 3}
   _speed: 2.5
-  _threshold: 0.01
+  _threshold: 0.1

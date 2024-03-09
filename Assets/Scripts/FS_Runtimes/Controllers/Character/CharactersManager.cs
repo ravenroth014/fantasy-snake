@@ -44,6 +44,14 @@ namespace FS_Runtimes.Controllers.Character
             string uniqueID = string.Empty;
             
             // TODO: Generate character data base on stage level.
+            CharacterData newData = new CharacterData
+            {
+                UniqueID = uniqueID
+                , CharacterType =  characterType
+                , Level = 1
+                , AttackPoint = 1
+                , HealthPoint = 5
+            };
 
             if (characterType == ECharacterType.Enemy)
             {
@@ -52,8 +60,10 @@ namespace FS_Runtimes.Controllers.Character
                 _currentEnemyUniqueID++;
                 
                 uniqueID = _stringBuilder.ToString();
+                newData.UniqueID = uniqueID;
 
                 _enemyGameObjectDict[uniqueID] = characterGameObject;
+                _enemyDataList.Add(newData);
             }
             else if (characterType == ECharacterType.Hero)
             {
@@ -62,14 +72,37 @@ namespace FS_Runtimes.Controllers.Character
                 _currentHeroUniqueID++;
                 
                 uniqueID = _stringBuilder.ToString();
+                newData.UniqueID = uniqueID;
 
                 _heroGameObjectDict[uniqueID] = characterGameObject;
+                _heroDataList.Add(newData);
             }
             
             characterGameObject.InitData(uniqueID, position);
             
 
             return uniqueID;
+        }
+
+        public void MoveHeroCharacter(EDirection direction)
+        {
+            Vector2 cachePos = Vector2.zero;
+
+            for (int index = 0; index < _heroGameObjectDict.Count; index++)
+            {
+                string uniqueID = _heroDataList[index].UniqueID;
+                Vector2 targetPos = cachePos;
+                cachePos = _heroGameObjectDict[uniqueID].CurrentPosition;
+                
+                if (index == 0)
+                {
+                    _heroGameObjectDict[uniqueID].MoveCharacterPosition(direction);
+                }
+                else
+                {
+                    _heroGameObjectDict[uniqueID].MoveCharacterPosition(targetPos);
+                }
+            }
         }
 
         public void SwitchHeroCharacter(ECharacterSwitch switchDirection)
@@ -112,6 +145,17 @@ namespace FS_Runtimes.Controllers.Character
                 if (_enemyGameObjectDict.ContainsKey(uniqueID))
                     _enemyGameObjectDict.Remove(uniqueID);
             }
+        }
+
+        public Vector2 GetCurrentHeroPosition()
+        {
+            if (_heroDataList is null or { Count: 0 }) 
+                return Vector2.zero;
+            string uniqueID = _heroDataList[0].UniqueID;
+
+            if (_heroGameObjectDict.TryGetValue(uniqueID, out CharacterGameObject character) == false) 
+                return Vector2.zero;
+            return character.CurrentPosition;
         }
         
         public void ResetManager()

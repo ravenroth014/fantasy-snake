@@ -1,5 +1,6 @@
 ﻿using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Pooling;
 
@@ -13,6 +14,7 @@ namespace FS_Runtimes.States
         private readonly CharacterPooling _enemyPooling = GameManager.Instance.EnemyPooling;
         private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
+        private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
 
         #endregion
 
@@ -20,7 +22,7 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
-            
+            _gameplayManager.StartGame();
         }
 
         public override void OnExit()

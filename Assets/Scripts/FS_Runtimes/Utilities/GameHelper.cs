@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using FS_Runtimes.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -15,8 +16,10 @@ namespace FS_Runtimes.Utilities
         public static readonly string RunState = "run";
         
         public static readonly string MainTexture = "_MainTex";
+
+        private static readonly Dictionary<EDirection, List<EDirection>> _availableDirectionDict = new();
         
-        public static Vector3 GetDirection(EDirection direction)
+        public static Vector3 GetWorldSpaceDirection(EDirection direction)
         {
             switch (direction)
             {
@@ -32,6 +35,19 @@ namespace FS_Runtimes.Utilities
                 default:
                     return Vector3.zero;
             }
+        }
+
+        public static EDirection GetDirection(Vector3 vector3)
+        {
+            if (vector3.normalized == Vector3.forward)
+                return EDirection.Up;
+            if (vector3.normalized == Vector3.back)
+                return EDirection.Down;
+            if (vector3.normalized == Vector3.left)
+                return EDirection.Left;
+            if (vector3.normalized == Vector3.right)
+                return EDirection.Right;
+            return EDirection.None;
         }
         
         public static EDirection GetDirection(Key keyCode)

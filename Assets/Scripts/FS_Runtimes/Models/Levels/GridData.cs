@@ -16,11 +16,11 @@ namespace FS_Runtimes.Models.Levels
 
         #region Constructors
 
-        public GridData(Vector2 gridIndex)
+        public GridData(Vector2 gridIndex, EGridState gridState)
         {
             GridIndex = gridIndex;
             CharacterUniqueID = string.Empty;
-            GridState = EGridState.Empty;
+            GridState = gridState;
             CharacterType = ECharacterType.None;
         }
 

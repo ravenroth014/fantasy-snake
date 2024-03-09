@@ -22,6 +22,7 @@ namespace FS_Runtimes.States
         public override void OnEnter()
         {
             PrepareProcess();
+            GameManager.Instance.ChangeState(EGameState.GamePlay);
         }
 
         public override void OnExit()

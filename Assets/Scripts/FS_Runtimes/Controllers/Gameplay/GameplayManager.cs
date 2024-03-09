@@ -1,11 +1,11 @@
 using System;
 using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
-using FS_Runtimes.States;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 
-namespace FS_Runtimes.Controllers.Core
+namespace FS_Runtimes.Controllers.Gameplay
 {
     public class GameplayManager : MonoBehaviour
     {
@@ -38,11 +38,19 @@ namespace FS_Runtimes.Controllers.Core
             _currentDirection = EDirection.None;
         }
 
-        public void OnMoveAction(EDirection directionAction)
+        public void OnCharacterAction(EDirection directionAction)
         {
             if (_isGameStart == false) return;
+            if (CheckActionAvailable(directionAction) == false) return;
+
+            Vector2 currentPosition = _charactersManager.GetCurrentHeroPosition();
+            EGridState gridState = _levelManager.GetGridState(currentPosition);
             
-            
+            if (gridState == EGridState.Empty)
+            {
+                _charactersManager.MoveHeroCharacter(directionAction);
+                _currentDirection = directionAction;
+            }
         }
         
         public void SetOnAttackEnemyCallback(Action callback = null)
@@ -63,6 +71,22 @@ namespace FS_Runtimes.Controllers.Core
         public void SetOnGameOverCallback(Action callback = null)
         {
             _onGameOver = callback;
+        }
+
+        private bool CheckActionAvailable(EDirection action)
+        {
+            if (_currentDirection == EDirection.None)
+                return true;
+
+            if (_currentDirection == EDirection.Right && action is EDirection.None or EDirection.Left)
+                return false;
+            if (_currentDirection == EDirection.Left && action is EDirection.None or EDirection.Right)
+                return false;
+            if (_currentDirection == EDirection.Up && action is EDirection.None or EDirection.Down)
+                return false;
+            if (_currentDirection == EDirection.Down && action is EDirection.None or EDirection.Up)
+                return false;
+            return true;
         }
 
         #endregion
