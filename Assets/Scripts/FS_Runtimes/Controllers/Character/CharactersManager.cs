@@ -15,7 +15,6 @@ namespace FS_Runtimes.Controllers.Character
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
 
         public bool IsMoving => _heroGameObjectDict.Values.ToList().Any(character => character.IsMoving);
-        public Vector2 LastPos { get; private set; }
         
         #endregion
 
@@ -26,9 +25,9 @@ namespace FS_Runtimes.Controllers.Character
             
         }
 
-        public void AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, EDirection direction = EDirection.None)
+        public void AddCharacter(CharacterGameObject newCharacter, ECharacterType characterType, EDirection direction = EDirection.None, Action<Vector2, string> onUpdateGrid = null)
         {
-            string uniqueID = characterGameObject.UniqueID;
+            string uniqueID = newCharacter.UniqueID;
             
             // TODO: Generate character data base on stage level.
             CharacterData newData = new CharacterData
@@ -44,11 +43,12 @@ namespace FS_Runtimes.Controllers.Character
             {
                 string lastUniqueID = _heroDataList[^1].UniqueID;
                 Vector2 lastPos = _heroGameObjectDict[lastUniqueID].CurrentPosition;
-                MoveCharacter(direction);
-                characterGameObject.SetCharacterPosition(lastPos);
+                MoveCharacter(direction, onUpdateGrid);
+                newCharacter.SetCharacterPosition(lastPos);
+                onUpdateGrid?.Invoke(lastPos, uniqueID);
             }
             
-            _heroGameObjectDict[uniqueID] = characterGameObject;
+            _heroGameObjectDict[uniqueID] = newCharacter;
             _heroDataList.Add(newData);
         }
 
@@ -59,20 +59,26 @@ namespace FS_Runtimes.Controllers.Character
             for (int index = 0; index < _heroGameObjectDict.Count; index++)
             {
                 string uniqueID = _heroDataList[index].UniqueID;
-                Vector2 targetPos = cachePos;
-                cachePos = _heroGameObjectDict[uniqueID].CurrentPosition;
+                Vector2 targetPos;
                 
                 if (index == 0)
                 {
-                    _heroGameObjectDict[uniqueID].MoveCharacterPosition(direction);
+                    Vector2 directionVector = GameHelper.Get2DDirection(direction);
+                    cachePos = _heroGameObjectDict[uniqueID].CurrentPosition;
+                    targetPos = cachePos + directionVector;
+                    _heroGameObjectDict[uniqueID].MoveCharacterPosition(targetPos);
                 }
                 else
                 {
+                    targetPos = cachePos;
+                    cachePos = _heroGameObjectDict[uniqueID].CurrentPosition;
                     _heroGameObjectDict[uniqueID].MoveCharacterPosition(targetPos);
                 }
+                
+                onUpdateGrid?.Invoke(targetPos, uniqueID);
             }
 
-            LastPos = cachePos;
+            onUpdateGrid?.Invoke(cachePos, string.Empty);
         }
 
         public void SwitchCharacter(ECharacterSwitch switchDirection)

@@ -37,6 +37,24 @@ namespace FS_Runtimes.Utilities
             }
         }
 
+        public static Vector2 Get2DDirection(EDirection direction)
+        {
+            switch (direction)
+            {
+                case EDirection.Up:
+                    return Vector2.up;
+                case EDirection.Down:
+                    return Vector2.down;
+                case EDirection.Left:
+                    return Vector2.left;
+                case EDirection.Right:
+                    return Vector2.right;
+                case EDirection.None:
+                default:
+                    return Vector2.zero;
+            }
+        }
+
         public static EDirection GetDirection(Vector3 vector3)
         {
             if (vector3.normalized == Vector3.forward)

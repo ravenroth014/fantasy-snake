@@ -52,7 +52,7 @@ namespace FS_Runtimes.Controllers.Gameplay
             
             if (gridState == EGridState.Empty)
             {
-                _charactersManager.MoveCharacter(directionAction);
+                _charactersManager.MoveCharacter(directionAction, OnUpdateGridCallback);
                 _currentDirection = directionAction;
             }
             else if (gridState == EGridState.Occupied)
@@ -61,9 +61,9 @@ namespace FS_Runtimes.Controllers.Gameplay
                 if (characterType == ECharacterType.Enlist)
                 {
                     CharacterGameObject character = _levelManager.GetGridOccupiedCharacter(targetPosition);
-                    _charactersManager.AddCharacter(character, ECharacterType.Hero, directionAction);
+                    _charactersManager.AddCharacter(character, ECharacterType.Hero, directionAction, OnUpdateGridCallback);
                     _currentDirection = directionAction;
-                    //_levelManager.GenerateEnlist();
+                    _levelManager.GenerateEnlist();
                 }
             }
         }
@@ -107,6 +107,18 @@ namespace FS_Runtimes.Controllers.Gameplay
             if (_currentDirection == EDirection.Down && action is EDirection.None or EDirection.Up)
                 return false;
             return true;
+        }
+
+        private void OnUpdateGridCallback(Vector2 position, string uniqueID)
+        {
+            if (string.IsNullOrEmpty(uniqueID))
+            {
+                _levelManager.UpdateGridData(position, string.Empty, EGridState.Empty, ECharacterType.None);
+            }
+            else
+            {
+                _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
+            }
         }
 
         #endregion
