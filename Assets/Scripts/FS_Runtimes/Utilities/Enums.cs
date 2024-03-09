@@ -5,6 +5,7 @@ namespace FS_Runtimes.Utilities
         Empty
         , Obstacle
         , Occupied
+        , Walled
     }
 
     public enum ECharacterType

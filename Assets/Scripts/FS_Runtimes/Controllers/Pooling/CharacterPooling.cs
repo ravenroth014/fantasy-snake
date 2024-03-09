@@ -51,6 +51,7 @@ namespace FS_Runtimes.Controllers.Pooling
             _stringBuilder.Clear();
             _stringBuilder.Append(_characterType.ToString());
             _stringBuilder.Append(_currentID.ToString("0000"));
+            _currentID++;
             
             item.InitOnCreate(this, _stringBuilder.ToString());
 

@@ -38,7 +38,7 @@ namespace FS_Runtimes.Models.Levels
         public void Reset()
         {
             CharacterUniqueID = string.Empty;
-            GridState = EGridState.Empty;
+            GridState = GridState != EGridState.Walled ? EGridState.Empty : EGridState.Walled;
         }
 
         #endregion

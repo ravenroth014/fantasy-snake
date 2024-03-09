@@ -15,6 +15,7 @@ namespace FS_Runtimes.Controllers.Gameplay
         private Action _onRecruitEnlistAction;
         private Action _onHeroIsDeadAction;
         private Action _onGameOver;
+        private Action _onEnemyIsDeadAction;
 
         private bool _isGameStart;
         private EDirection _currentDirection;
@@ -42,14 +43,28 @@ namespace FS_Runtimes.Controllers.Gameplay
         {
             if (_isGameStart == false) return;
             if (CheckActionAvailable(directionAction) == false) return;
+            if (_charactersManager.IsMoving) return;
 
-            Vector2 currentPosition = _charactersManager.GetCurrentHeroPosition();
-            EGridState gridState = _levelManager.GetGridState(currentPosition);
+            Vector2 currentPosition = _charactersManager.GetMainCharacterPosition();
+            Vector3 direction = GameHelper.GetWorldSpaceDirection(directionAction);
+            Vector2 targetPosition = currentPosition + new Vector2(direction.x, direction.z);
+            EGridState gridState = _levelManager.GetGridState(targetPosition);
             
             if (gridState == EGridState.Empty)
             {
-                _charactersManager.MoveHeroCharacter(directionAction);
+                _charactersManager.MoveCharacter(directionAction);
                 _currentDirection = directionAction;
+            }
+            else if (gridState == EGridState.Occupied)
+            {
+                ECharacterType characterType = _levelManager.GetGridOccupiedType(targetPosition);
+                if (characterType == ECharacterType.Enlist)
+                {
+                    CharacterGameObject character = _levelManager.GetGridOccupiedCharacter(targetPosition);
+                    _charactersManager.AddCharacter(character, ECharacterType.Hero, directionAction);
+                    _currentDirection = directionAction;
+                    //_levelManager.GenerateEnlist();
+                }
             }
         }
         
@@ -71,6 +86,11 @@ namespace FS_Runtimes.Controllers.Gameplay
         public void SetOnGameOverCallback(Action callback = null)
         {
             _onGameOver = callback;
+        }
+
+        public void SetOnEnemyIsDeadCallback(Action callback = null)
+        {
+            _onEnemyIsDeadAction = callback;
         }
 
         private bool CheckActionAvailable(EDirection action)

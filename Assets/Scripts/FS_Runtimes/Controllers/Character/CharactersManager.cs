@@ -1,6 +1,6 @@
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -12,11 +12,11 @@ namespace FS_Runtimes.Controllers.Character
         #region Fields & Properties
 
         private readonly List<CharacterData> _heroDataList = new();
-        private readonly List<CharacterData> _enemyDataList = new();
-
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
-        private readonly Dictionary<string, CharacterGameObject> _enemyGameObjectDict = new();
 
+        public bool IsMoving => _heroGameObjectDict.Values.ToList().Any(character => character.IsMoving);
+        public Vector2 LastPos { get; private set; }
+        
         #endregion
 
         #region Methods
@@ -26,7 +26,7 @@ namespace FS_Runtimes.Controllers.Character
             
         }
 
-        public void AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, Vector2 position)
+        public void AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, EDirection direction = EDirection.None)
         {
             string uniqueID = characterGameObject.UniqueID;
             
@@ -40,21 +40,19 @@ namespace FS_Runtimes.Controllers.Character
                 , HealthPoint = 5
             };
 
-            if (characterType == ECharacterType.Enemy)
+            if (_heroGameObjectDict is { Count: > 0 })
             {
-                _enemyGameObjectDict[uniqueID] = characterGameObject;
-                _enemyDataList.Add(newData);
-            }
-            else if (characterType == ECharacterType.Hero)
-            {
-                _heroGameObjectDict[uniqueID] = characterGameObject;
-                _heroDataList.Add(newData);
+                string lastUniqueID = _heroDataList[^1].UniqueID;
+                Vector2 lastPos = _heroGameObjectDict[lastUniqueID].CurrentPosition;
+                MoveCharacter(direction);
+                characterGameObject.SetCharacterPosition(lastPos);
             }
             
-            characterGameObject.InitData(position);
+            _heroGameObjectDict[uniqueID] = characterGameObject;
+            _heroDataList.Add(newData);
         }
 
-        public void MoveHeroCharacter(EDirection direction)
+        public void MoveCharacter(EDirection direction, Action<Vector2,string> onUpdateGrid = null)
         {
             Vector2 cachePos = Vector2.zero;
 
@@ -73,9 +71,11 @@ namespace FS_Runtimes.Controllers.Character
                     _heroGameObjectDict[uniqueID].MoveCharacterPosition(targetPos);
                 }
             }
+
+            LastPos = cachePos;
         }
 
-        public void SwitchHeroCharacter(ECharacterSwitch switchDirection)
+        public void SwitchCharacter(ECharacterSwitch switchDirection)
         {
             if (_heroDataList is null or {Count: 0})
                 return;
@@ -95,29 +95,18 @@ namespace FS_Runtimes.Controllers.Character
             }
         }
 
-        public void RemoveCharacter(string uniqueID, ECharacterType characterType)
+        public void RemoveCharacter(string uniqueID)
         {
             if (string.IsNullOrEmpty(uniqueID)) return;
             
-            if (characterType == ECharacterType.Hero)
-            {
-                CharacterData characterData = _heroDataList.Find(data => data.UniqueID == uniqueID);
-                _heroDataList.Remove(characterData);
+            CharacterData characterData = _heroDataList.Find(data => data.UniqueID == uniqueID);
+            _heroDataList.Remove(characterData);
 
-                if (_heroGameObjectDict.ContainsKey(uniqueID))
-                    _heroGameObjectDict.Remove(uniqueID);
-            }
-            else if (characterType == ECharacterType.Enemy)
-            {
-                CharacterData characterData = _enemyDataList.Find(data => data.UniqueID == uniqueID);
-                _enemyDataList.Remove(characterData);
-
-                if (_enemyGameObjectDict.ContainsKey(uniqueID))
-                    _enemyGameObjectDict.Remove(uniqueID);
-            }
+            if (_heroGameObjectDict.ContainsKey(uniqueID))
+                _heroGameObjectDict.Remove(uniqueID);
         }
 
-        public Vector2 GetCurrentHeroPosition()
+        public Vector2 GetMainCharacterPosition()
         {
             if (_heroDataList is null or { Count: 0 }) 
                 return Vector2.zero;
@@ -131,18 +120,11 @@ namespace FS_Runtimes.Controllers.Character
         public void ResetManager()
         {
             _heroDataList.Clear();
-            _enemyDataList.Clear();
 
             if (_heroGameObjectDict is { Count: > 0 })
             {
                 _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
                 _heroGameObjectDict.Clear();
-            }
-
-            if (_enemyGameObjectDict is { Count: > 0 })
-            {
-                _enemyGameObjectDict.Values.ToList().ForEach(enemy => enemy.Release());
-                _enemyGameObjectDict.Clear();
             }
         }
 

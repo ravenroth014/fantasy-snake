@@ -1,10 +1,6 @@
-﻿using FS_Runtimes.Controllers.Character;
-using FS_Runtimes.Controllers.Core;
+﻿using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
-using FS_Runtimes.Controllers.Pooling;
-using FS_Runtimes.Utilities;
-using UnityEngine;
 
 namespace FS_Runtimes.States
 {
@@ -12,9 +8,6 @@ namespace FS_Runtimes.States
     {
         #region Fields & Properties
 
-        private readonly CharacterPooling _heroPooling = GameManager.Instance.HeroPooling;
-        private readonly CharacterPooling _enemyPooling = GameManager.Instance.EnemyPooling;
-        private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
 
@@ -24,10 +17,11 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
-            _gameplayManager.SetOnRecruitEnlistCallback(GenerateHero);
+            _gameplayManager.SetOnRecruitEnlistCallback(GenerateEnlist);
+            _gameplayManager.SetOnAttackEnemyCallback();
             _gameplayManager.StartGame();
 
-            GenerateHero();
+            GenerateEnlist();
         }
 
         public override void OnExit()
@@ -39,13 +33,14 @@ namespace FS_Runtimes.States
             
         }
         
-        private void GenerateHero()
+        private void GenerateEnlist()
         {
-            CharacterGameObject character = _heroPooling.GetFromPool();
-            Vector2 position = _levelManager.GetFreePosition();
+            _levelManager.GenerateEnlist();
+        }
 
-            _levelManager.UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
-            character.SetCharacterPosition(position);
+        private void GenerateEnemy()
+        {
+            _levelManager.GenerateEnemy();
         }
         
         #endregion

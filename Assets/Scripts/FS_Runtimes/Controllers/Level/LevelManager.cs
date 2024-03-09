@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
+using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Models.Levels;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -14,6 +17,12 @@ namespace FS_Runtimes.Controllers.Level
         private readonly int _verticalMaxSize = 16;
         private readonly Dictionary<Vector2, GridData> _gridDict = new();
 
+        private CharacterPooling _heroPooling;
+        private CharacterPooling _enemyPooling;
+        
+        private CharacterGameObject _enlistCharacter;
+        private CharacterGameObject _enemyCharacter;
+
         #endregion
 
         #region Methods
@@ -21,6 +30,9 @@ namespace FS_Runtimes.Controllers.Level
         public void Init()
         {
             GenerateDict();
+
+            _heroPooling = GameManager.Instance.HeroPooling;
+            _enemyPooling = GameManager.Instance.EnemyPooling;
         }
         
         private void GenerateDict()
@@ -32,7 +44,7 @@ namespace FS_Runtimes.Controllers.Level
                     EGridState gridState = EGridState.Empty;
 
                     if (hIndex == 0 || hIndex == _horizontalMaxSize + 1 || vIndex == 0 || vIndex == _verticalMaxSize + 1)
-                        gridState = EGridState.Obstacle;
+                        gridState = EGridState.Walled;
                     
                     Vector2 newVector = new Vector2(hIndex, vIndex);
                     _gridDict.Add(newVector, new GridData(newVector, gridState));
@@ -48,7 +60,7 @@ namespace FS_Runtimes.Controllers.Level
                 _gridDict.Values.ToList().ForEach(grid => grid.Reset());
         }
 
-        public Vector2 GetFreePosition()
+        private Vector2 GetFreePosition()
         {
             List<GridData> freeGridList = _gridDict.Values.Where(grid => grid.GridState == EGridState.Empty).ToList();
 
@@ -67,9 +79,66 @@ namespace FS_Runtimes.Controllers.Level
             }
         }
 
+        public void GenerateEnlist()
+        {
+            CharacterGameObject character = _heroPooling.GetFromPool();
+            Vector2 position = GetFreePosition();
+
+            UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
+
+            _enlistCharacter = character;
+            _enlistCharacter.InitData(position);
+        }
+
+        public void GenerateEnemy()
+        {
+            CharacterGameObject character = _enemyPooling.GetFromPool();
+            Vector2 position = GetFreePosition();
+
+            UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enemy);
+
+            _enemyCharacter = character;
+            _enemyCharacter.InitData(position);
+        }
+
+        public CharacterGameObject GenerateHero()
+        {
+            CharacterGameObject character = _heroPooling.GetFromPool();
+            Vector2 position = GetFreePosition();
+            
+            UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Hero);
+            
+            character.InitData(position);
+            return character;
+        }
+
         public EGridState GetGridState(Vector2 position)
         {
             return _gridDict[position].GridState;
+        }
+
+        public ECharacterType GetGridOccupiedType(Vector2 position)
+        {
+            return _gridDict[position].CharacterType;
+        }
+
+        public CharacterGameObject GetGridOccupiedCharacter(Vector2 position)
+        {
+            CharacterGameObject character;
+            
+            if (GetGridOccupiedType(position) == ECharacterType.Enlist)
+            {
+                character = _enlistCharacter;
+                _enlistCharacter = null;
+                return character;
+            }
+            if (GetGridOccupiedType(position) == ECharacterType.Enemy)
+            {
+                character = _enemyCharacter;
+                _enemyCharacter = null;
+                return character;
+            }
+            return null;
         }
         
         #endregion

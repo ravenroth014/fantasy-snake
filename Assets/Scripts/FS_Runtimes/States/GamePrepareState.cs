@@ -3,7 +3,6 @@ using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Utilities;
-using UnityEngine;
 
 namespace FS_Runtimes.States
 {
@@ -35,11 +34,8 @@ namespace FS_Runtimes.States
             _charactersManager.ResetManager();
             _levelManager.ResetManager();
 
-            CharacterGameObject characterGameObject = _heroPooling.GetFromPool();
-            Vector2 position = _levelManager.GetFreePosition();
-
-            _charactersManager.AddCharacter(characterGameObject, ECharacterType.Hero, position);
-            _levelManager.UpdateGridData(position, characterGameObject.UniqueID, EGridState.Occupied, ECharacterType.Hero);
+            CharacterGameObject character = _levelManager.GenerateHero();
+            _charactersManager.AddCharacter(character, ECharacterType.Hero);
         }
         
         #endregion

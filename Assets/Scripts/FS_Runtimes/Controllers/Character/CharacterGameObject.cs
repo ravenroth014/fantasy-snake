@@ -22,6 +22,7 @@ namespace FS_Runtimes.Controllers.Character
         public Vector2 CurrentPosition { get; private set; }
         
         public string UniqueID { get; private set; }
+        public bool IsMoving => _isMoving;
 
         #endregion
 
@@ -74,6 +75,7 @@ namespace FS_Runtimes.Controllers.Character
         {
             float height = transform.position.y;
             gameObject.transform.position = new Vector3(position.x, height, position.y);
+            CurrentPosition = position;
         }
 
         public void MoveCharacterPosition(EDirection direction)
@@ -96,7 +98,7 @@ namespace FS_Runtimes.Controllers.Character
             if (_isMoving) return;
             
             _isMoving = true;
-            Vector3 directionVector = new Vector3(targetPos.x, 0, targetPos.y);
+            Vector3 directionVector = new Vector3(targetPos.x - CurrentPosition.x, 0, targetPos.y - CurrentPosition.y);
             Vector3 destination = gameObject.transform.position + directionVector;
             EDirection direction = GameHelper.GetDirection(directionVector);
             
@@ -116,6 +118,7 @@ namespace FS_Runtimes.Controllers.Character
             SetCharacterAnimation(GameHelper.IdleState);
             transform.position = destination;
             CurrentPosition = new Vector2(destination.x, destination.z);
+            LogManager.Instance.Log($"Unique ID: {UniqueID}, Current position : {CurrentPosition.ToString()}");
             _isMoving = false;
         }
 
