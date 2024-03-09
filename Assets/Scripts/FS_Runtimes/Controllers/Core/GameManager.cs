@@ -70,6 +70,8 @@ namespace FS_Runtimes.Controllers.Core
             _enemyPooling.Init();
             _levelManager.Init();
             _charactersManager.Init();
+            _playerController.Init();
+            _gameplayManager.Init();
         }
 
         #endregion

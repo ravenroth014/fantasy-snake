@@ -82,7 +82,7 @@ namespace FS_Runtimes.Utilities
                 case EGameState.GamePrepare:
                     return new GamePrepareState();
                 case EGameState.GamePlay:
-                    return new GamePlayState();
+                    return new GameplayState();
                 case EGameState.GameOver:
                     return new GameOverState();
                 default:

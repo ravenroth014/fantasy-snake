@@ -14,7 +14,7 @@ namespace FS_Runtimes.Controllers.Player
         [SerializeField, Tooltip("Player Input")] private InputActionReference _moveInput;
 
         private EDirection _currentDirection;
-        private CharactersManager _charactersManager;
+        private GameplayManager _gameplayManager;
 
         #endregion
 
@@ -22,7 +22,7 @@ namespace FS_Runtimes.Controllers.Player
 
         public void Init()
         {
-            _charactersManager = GameManager.Instance.CharactersManager;
+            _gameplayManager = GameManager.Instance.GameplayManager;
         }
         
         private void OnEnable()

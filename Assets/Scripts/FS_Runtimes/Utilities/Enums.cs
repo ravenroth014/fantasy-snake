@@ -37,4 +37,10 @@ namespace FS_Runtimes.Utilities
         , GamePlay
         , GameOver
     }
+
+    public enum ECharacterSwitch
+    {
+        Left
+        , Right
+    }
 }

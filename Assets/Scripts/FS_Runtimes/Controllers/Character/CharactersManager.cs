@@ -11,8 +11,8 @@ namespace FS_Runtimes.Controllers.Character
     {
         #region Fields & Properties
 
-        private readonly Dictionary<string, CharacterData> _heroDataDict = new();
-        private readonly Dictionary<string, CharacterData> _enemyDataDict = new();
+        private readonly List<CharacterData> _heroDataList = new();
+        private readonly List<CharacterData> _enemyDataList = new();
 
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
         private readonly Dictionary<string, CharacterGameObject> _enemyGameObjectDict = new();
@@ -72,13 +72,55 @@ namespace FS_Runtimes.Controllers.Character
             return uniqueID;
         }
 
+        public void SwitchHeroCharacter(ECharacterSwitch switchDirection)
+        {
+            if (_heroDataList is null or {Count: 0})
+                return;
+            
+            if (switchDirection == ECharacterSwitch.Left)
+            {
+                CharacterData data = _heroDataList[0];
+                _heroDataList.RemoveAt(0);
+                _heroDataList.Add(data);
+            }
+            else if (switchDirection == ECharacterSwitch.Right)
+            {
+                int index = _heroDataList.Count - 1;
+                CharacterData data = _heroDataList[index];
+                _heroDataList.RemoveAt(index);
+                _heroDataList.Insert(0, data);
+            }
+        }
+
+        public void RemoveCharacter(string uniqueID, ECharacterType characterType)
+        {
+            if (string.IsNullOrEmpty(uniqueID)) return;
+            
+            if (characterType == ECharacterType.Hero)
+            {
+                CharacterData characterData = _heroDataList.Find(data => data.UniqueID == uniqueID);
+                _heroDataList.Remove(characterData);
+
+                if (_heroGameObjectDict.ContainsKey(uniqueID))
+                    _heroGameObjectDict.Remove(uniqueID);
+            }
+            else if (characterType == ECharacterType.Enemy)
+            {
+                CharacterData characterData = _enemyDataList.Find(data => data.UniqueID == uniqueID);
+                _enemyDataList.Remove(characterData);
+
+                if (_enemyGameObjectDict.ContainsKey(uniqueID))
+                    _enemyGameObjectDict.Remove(uniqueID);
+            }
+        }
+        
         public void ResetManager()
         {
             _currentHeroUniqueID = 0;
             _currentEnemyUniqueID = 0;
             
-            _heroDataDict.Clear();
-            _enemyDataDict.Clear();
+            _heroDataList.Clear();
+            _enemyDataList.Clear();
 
             if (_heroGameObjectDict is { Count: > 0 })
             {

@@ -5,7 +5,7 @@ using FS_Runtimes.Controllers.Pooling;
 
 namespace FS_Runtimes.States
 {
-    public class GamePlayState : GameState
+    public class GameplayState : GameState
     {
         #region Fields & Properties
 
