@@ -1,4 +1,5 @@
 ﻿using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Pooling;
 
@@ -8,22 +9,10 @@ namespace FS_Runtimes.States
     {
         #region Fields & Properties
 
-        private readonly CharacterPooling _heroPooling;
-        private readonly CharacterPooling _enemyPooling;
-        private readonly CharactersManager _charactersManager;
-        private readonly LevelManager _levelManager;
-
-        #endregion
-
-        #region Constructors
-
-        public GamePlayState()
-        {
-            _heroPooling = _gameplayManager.HeroPooling;
-            _enemyPooling = _gameplayManager.EnemyPooling;
-            _charactersManager = _gameplayManager.CharactersManager;
-            _levelManager = _gameplayManager.LevelManager;
-        }
+        private readonly CharacterPooling _heroPooling = GameManager.Instance.HeroPooling;
+        private readonly CharacterPooling _enemyPooling = GameManager.Instance.EnemyPooling;
+        private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
+        private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
 
         #endregion
 
@@ -31,10 +20,16 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
+            
         }
 
         public override void OnExit()
         {
+        }
+
+        private void StartProcess()
+        {
+            
         }
         
         #endregion

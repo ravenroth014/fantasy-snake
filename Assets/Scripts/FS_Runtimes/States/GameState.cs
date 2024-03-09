@@ -10,16 +10,6 @@ namespace FS_Runtimes.States
 
         #endregion
 
-        #region Constructor
-
-        protected GameState()
-        {
-            if (GameplayManager.Instance is not null)
-                _gameplayManager = GameplayManager.Instance;
-        }
-
-        #endregion
-
         #region Methods
 
         #region Abstract Methods

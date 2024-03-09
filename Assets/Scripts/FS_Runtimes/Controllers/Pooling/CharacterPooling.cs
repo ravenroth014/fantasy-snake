@@ -42,12 +42,14 @@ namespace FS_Runtimes.Controllers.Pooling
             if (_poolingSetting.ObjectInPool.HasComponent<CharacterGameObject>() == false) return null;
 
             CharacterGameObject item = Instantiate(_poolingSetting.ObjectInPool).GetComponent<CharacterGameObject>();
+            item.InitOnCreate(this);
 
             return item;
         }
 
         private void OnReleaseToPool(CharacterGameObject item)
         {
+            item.gameObject.transform.parent = gameObject.transform;
             item.gameObject.SetActive(false);
         }
 
@@ -59,11 +61,6 @@ namespace FS_Runtimes.Controllers.Pooling
         private void OnDestroyPoolObject(CharacterGameObject item)
         {
             Destroy(item.gameObject);
-        }
-
-        public void ReturnItemListToPool(List<CharacterGameObject> itemList)
-        {
-            itemList.ForEach(item => _pool.Release(item));
         }
 
         public void ReturnItemToPool(CharacterGameObject item)

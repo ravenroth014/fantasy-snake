@@ -1,4 +1,5 @@
 using System.Collections;
+using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -15,6 +16,8 @@ namespace FS_Runtimes.Controllers.Character
         [SerializeField, Tooltip("Character Animator")] private Animator _animator;
 
         private bool _isMoving;
+        private bool _isInitOnCreate;
+        private CharacterPooling _pooling;
         
         public string UniqueID { get; private set; }
 
@@ -22,7 +25,15 @@ namespace FS_Runtimes.Controllers.Character
 
         #region Methods
 
-        public void Init(string uniqueID, Vector2 position)
+        public void InitOnCreate(CharacterPooling pooling)
+        {
+            if (_isInitOnCreate) return;
+
+            _pooling = pooling;
+            _isInitOnCreate = true;
+        }
+        
+        public void InitData(string uniqueID, Vector2 position)
         {
             UniqueID = uniqueID;
             
@@ -90,6 +101,14 @@ namespace FS_Runtimes.Controllers.Character
             SetCharacterAnimation(GameHelper.IdleState);
             transform.position = destination;
             _isMoving = false;
+        }
+
+        public void Release()
+        {
+            if (_pooling is null)
+                Destroy(gameObject);
+            else
+                _pooling.ReturnItemToPool(this);
         }
 
         #endregion

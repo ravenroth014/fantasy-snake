@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -67,7 +66,7 @@ namespace FS_Runtimes.Controllers.Character
                 _heroGameObjectDict[uniqueID] = characterGameObject;
             }
             
-            characterGameObject.Init(uniqueID, position);
+            characterGameObject.InitData(uniqueID, position);
             
 
             return uniqueID;
@@ -83,13 +82,14 @@ namespace FS_Runtimes.Controllers.Character
 
             if (_heroGameObjectDict is { Count: > 0 })
             {
-                GameplayManager.Instance.ReturnItemListToPool(_heroGameObjectDict.Values.ToList(), ECharacterType.Hero);
+                _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
                 _heroGameObjectDict.Clear();
             }
 
             if (_enemyGameObjectDict is { Count: > 0 })
             {
-                GameplayManager.Instance.ReturnItemListToPool(_enemyGameObjectDict.Values.ToList(), ECharacterType.Enemy);
+                _enemyGameObjectDict.Values.ToList().ForEach(enemy => enemy.Release());
+                _enemyGameObjectDict.Clear();
             }
         }
 

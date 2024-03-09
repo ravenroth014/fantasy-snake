@@ -1,7 +1,7 @@
 using System;
-using System.Collections.Generic;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Level;
+using FS_Runtimes.Controllers.Player;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.States;
 using FS_Runtimes.Utilities;
@@ -9,7 +9,7 @@ using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Core
 {
-    public class GameplayManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         #region Fields & Properties
 
@@ -28,18 +28,26 @@ namespace FS_Runtimes.Controllers.Core
         public CharactersManager CharactersManager => _charactersManager;
         [SerializeField, Tooltip("Characters Manager")]
         private CharactersManager _charactersManager;
-        
-        public static GameplayManager Instance => _instance;
-        private static GameplayManager _instance;
 
-        private GameState _currentState;
+        public PlayerController PlayerController => _playerController;
+        [SerializeField, Tooltip("Player Controller")]
+        private PlayerController _playerController;
+
+        public GameplayManager GameplayManager => _gameplayManager;
+        [SerializeField, Tooltip("Gameplay Manager")]
+        private GameplayManager _gameplayManager;
+
+        public static GameManager Instance => _instance;
+        private static GameManager _instance;
         
+        private GameState _currentState;
+
         #endregion
 
         #region Methods
 
         #region Unity Event Methods
-        
+
         private void Awake()
         {
             _instance = this;
@@ -54,6 +62,8 @@ namespace FS_Runtimes.Controllers.Core
 
         #endregion
 
+        #region Init Methods
+
         private void InitControllers()
         {
             _heroPooling.Init();
@@ -61,6 +71,10 @@ namespace FS_Runtimes.Controllers.Core
             _levelManager.Init();
             _charactersManager.Init();
         }
+
+        #endregion
+
+        #region Management Methods
 
         public void ChangeState(EGameState gameState, Action onComplete = null)
         {
@@ -71,13 +85,7 @@ namespace FS_Runtimes.Controllers.Core
             onComplete?.Invoke();
         }
 
-        public void ReturnItemListToPool(List<CharacterGameObject> characterList, ECharacterType characterType)
-        {
-            if (characterType == ECharacterType.Enemy)
-                _enemyPooling.ReturnItemListToPool(characterList);
-            else if (characterType == ECharacterType.Hero)
-                _heroPooling.ReturnItemListToPool(characterList);
-        }
+        #endregion
 
         #endregion
     }

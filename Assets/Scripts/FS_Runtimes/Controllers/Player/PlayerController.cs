@@ -1,3 +1,5 @@
+using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -11,12 +13,18 @@ namespace FS_Runtimes.Controllers.Player
 
         [SerializeField, Tooltip("Player Input")] private InputActionReference _moveInput;
 
-        private EDirection _currentDirection;        
+        private EDirection _currentDirection;
+        private CharactersManager _charactersManager;
 
         #endregion
 
         #region Methods
 
+        public void Init()
+        {
+            _charactersManager = GameManager.Instance.CharactersManager;
+        }
+        
         private void OnEnable()
         {
             _moveInput.action.started += OnMoveTrigger;
