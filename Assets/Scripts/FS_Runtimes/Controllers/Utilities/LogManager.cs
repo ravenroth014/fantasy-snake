@@ -129,7 +129,7 @@ namespace FS_Runtimes.Controllers.Utilities
         private void InitFileName()
         {
             DateTime currentTime = DateTime.Now;
-            string time = currentTime.ToString("yyyy-mm-dd HH_mm_ss");
+            string time = currentTime.ToString("yyyy-MM-dd HH_mm_ss");
             
             if (_logSetting.IsLogMessage) 
                 _logFileName = $"{LogFileNamePrefix}_{time}.txt";
@@ -303,7 +303,7 @@ namespace FS_Runtimes.Controllers.Utilities
             if (string.IsNullOrEmpty(_logErrorBuilder.ToString())) return;
             
             TextWriter tw = new StreamWriter(Path.Combine(_logErrorFolderPath, _logErrorFileName), true);
-            tw.WriteLine(_logWarningBuilder.ToString());
+            tw.WriteLine(_logErrorBuilder.ToString());
             tw.Close();
         }
 
