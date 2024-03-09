@@ -38,8 +38,8 @@ namespace FS_Runtimes.States
             CharacterGameObject characterGameObject = _heroPooling.GetFromPool();
             Vector2 position = _levelManager.GetFreePosition();
 
-            string uniqueID = _charactersManager.AddCharacter(characterGameObject, ECharacterType.Hero, position);
-            _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
+            _charactersManager.AddCharacter(characterGameObject, ECharacterType.Hero, position);
+            _levelManager.UpdateGridData(position, characterGameObject.UniqueID, EGridState.Occupied, ECharacterType.Hero);
         }
         
         #endregion

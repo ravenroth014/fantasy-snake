@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Text;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Utilities;
@@ -13,8 +12,11 @@ namespace FS_Runtimes.Controllers.Pooling
         
         [Header("Setting")]
         [SerializeField, Tooltip("Pooling Setting")] private PoolingSetting _poolingSetting;
+        [SerializeField, Tooltip("Character Type")] private ECharacterType _characterType;
         
         private IObjectPool<CharacterGameObject> _pool;
+        private int _currentID;
+        private StringBuilder _stringBuilder;
         
         #endregion
 
@@ -30,6 +32,9 @@ namespace FS_Runtimes.Controllers.Pooling
                 _pool = new ObjectPool<CharacterGameObject>(CreatePooledItem, OnGetFromPool, OnReleaseToPool, OnDestroyPoolObject, _poolingSetting.CollectionCheck, maxSize: _poolingSetting.PoolMaxSize);
             else if (_poolingSetting.PoolingType == EPoolingType.LinkedList)
                 _pool = new LinkedPool<CharacterGameObject>(CreatePooledItem, OnGetFromPool, OnReleaseToPool, OnDestroyPoolObject, _poolingSetting.CollectionCheck, _poolingSetting.PoolMaxSize);
+
+            _currentID = 0;
+            _stringBuilder = new StringBuilder();
         }
         
         #endregion
@@ -42,7 +47,12 @@ namespace FS_Runtimes.Controllers.Pooling
             if (_poolingSetting.ObjectInPool.HasComponent<CharacterGameObject>() == false) return null;
 
             CharacterGameObject item = Instantiate(_poolingSetting.ObjectInPool).GetComponent<CharacterGameObject>();
-            item.InitOnCreate(this);
+
+            _stringBuilder.Clear();
+            _stringBuilder.Append(_characterType.ToString());
+            _stringBuilder.Append(_currentID.ToString("0000"));
+            
+            item.InitOnCreate(this, _stringBuilder.ToString());
 
             return item;
         }

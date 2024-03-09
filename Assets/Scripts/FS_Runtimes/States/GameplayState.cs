@@ -3,6 +3,8 @@ using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Pooling;
+using FS_Runtimes.Utilities;
+using UnityEngine;
 
 namespace FS_Runtimes.States
 {
@@ -22,7 +24,10 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
+            _gameplayManager.SetOnRecruitEnlistCallback(GenerateHero);
             _gameplayManager.StartGame();
+
+            GenerateHero();
         }
 
         public override void OnExit()
@@ -32,6 +37,15 @@ namespace FS_Runtimes.States
         private void StartProcess()
         {
             
+        }
+        
+        private void GenerateHero()
+        {
+            CharacterGameObject character = _heroPooling.GetFromPool();
+            Vector2 position = _levelManager.GetFreePosition();
+
+            _levelManager.UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
+            character.SetCharacterPosition(position);
         }
         
         #endregion

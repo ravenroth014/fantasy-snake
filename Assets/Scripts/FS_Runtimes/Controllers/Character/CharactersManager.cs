@@ -17,31 +17,18 @@ namespace FS_Runtimes.Controllers.Character
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
         private readonly Dictionary<string, CharacterGameObject> _enemyGameObjectDict = new();
 
-        private int _currentHeroUniqueID = 0;
-        private int _currentEnemyUniqueID = 0;
-
-        private readonly string _enemyPrefix = "E";
-        private readonly string _heroPrefix = "H";
-
-        private StringBuilder _stringBuilder;
-
         #endregion
 
         #region Methods
 
         public void Init()
         {
-            _currentHeroUniqueID = 0;
-            _currentEnemyUniqueID = 0;
-            _stringBuilder = new StringBuilder();
+            
         }
 
-        public string AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, Vector2 position)
+        public void AddCharacter(CharacterGameObject characterGameObject, ECharacterType characterType, Vector2 position)
         {
-            _stringBuilder ??= new StringBuilder();
-            _stringBuilder.Clear();
-
-            string uniqueID = string.Empty;
+            string uniqueID = characterGameObject.UniqueID;
             
             // TODO: Generate character data base on stage level.
             CharacterData newData = new CharacterData
@@ -55,33 +42,16 @@ namespace FS_Runtimes.Controllers.Character
 
             if (characterType == ECharacterType.Enemy)
             {
-                _stringBuilder.Append(_enemyPrefix);
-                _stringBuilder.Append(_currentEnemyUniqueID.ToString("0000"));
-                _currentEnemyUniqueID++;
-                
-                uniqueID = _stringBuilder.ToString();
-                newData.UniqueID = uniqueID;
-
                 _enemyGameObjectDict[uniqueID] = characterGameObject;
                 _enemyDataList.Add(newData);
             }
             else if (characterType == ECharacterType.Hero)
             {
-                _stringBuilder.Append(_heroPrefix);
-                _stringBuilder.Append(_currentHeroUniqueID.ToString("0000"));
-                _currentHeroUniqueID++;
-                
-                uniqueID = _stringBuilder.ToString();
-                newData.UniqueID = uniqueID;
-
                 _heroGameObjectDict[uniqueID] = characterGameObject;
                 _heroDataList.Add(newData);
             }
             
-            characterGameObject.InitData(uniqueID, position);
-            
-
-            return uniqueID;
+            characterGameObject.InitData(position);
         }
 
         public void MoveHeroCharacter(EDirection direction)
@@ -160,9 +130,6 @@ namespace FS_Runtimes.Controllers.Character
         
         public void ResetManager()
         {
-            _currentHeroUniqueID = 0;
-            _currentEnemyUniqueID = 0;
-            
             _heroDataList.Clear();
             _enemyDataList.Clear();
 

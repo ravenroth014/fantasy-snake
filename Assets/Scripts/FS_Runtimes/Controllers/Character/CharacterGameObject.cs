@@ -27,18 +27,17 @@ namespace FS_Runtimes.Controllers.Character
 
         #region Methods
 
-        public void InitOnCreate(CharacterPooling pooling)
+        public void InitOnCreate(CharacterPooling pooling, string uniqueID)
         {
             if (_isInitOnCreate) return;
 
+            UniqueID = uniqueID;
             _pooling = pooling;
             _isInitOnCreate = true;
         }
         
-        public void InitData(string uniqueID, Vector2 position)
+        public void InitData(Vector2 position)
         {
-            UniqueID = uniqueID;
-            
             SetCharacterMaterial();
             SetCharacterPosition(position);
             SetCharacterAnimation(GameHelper.IdleState);
@@ -57,12 +56,12 @@ namespace FS_Runtimes.Controllers.Character
                 LogManager.Instance.LogError("Material does not have an Albedo texture slot");
         }
 
-        public void SetCharacterAnimation(string stateName)
+        private void SetCharacterAnimation(string stateName)
         {
             _animator.Play(stateName);
         }
 
-        public void SetCharacterDirection(EDirection direction)
+        private void SetCharacterDirection(EDirection direction)
         {
             Vector3 directionVector = GameHelper.GetWorldSpaceDirection(direction);
             if (directionVector == Vector3.zero) return;
@@ -71,7 +70,7 @@ namespace FS_Runtimes.Controllers.Character
             transform.rotation = rotation;
         }
 
-        private void SetCharacterPosition(Vector2 position)
+        public void SetCharacterPosition(Vector2 position)
         {
             float height = transform.position.y;
             gameObject.transform.position = new Vector3(position.x, height, position.y);
