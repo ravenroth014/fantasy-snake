@@ -1,4 +1,5 @@
 using System;
+using FS_Runtimes.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
 using UnityEngine.InputSystem.Controls;
@@ -90,6 +91,26 @@ namespace FS_Runtimes.Utilities
         public static Vector2 GetGridVector(Vector3 vector3)
         {
             return new Vector2(vector3.x, vector3.z);
+        }
+    }
+
+    public static class GameStateHelper
+    {
+        public static GameState GetGameState(EGameState gameState)
+        {
+            switch (gameState)
+            {
+                case EGameState.GameMenu:
+                    return new GameMenuState();
+                case EGameState.GamePrepare:
+                    return new GamePrepareState();
+                case EGameState.GamePlay:
+                    return new GamePlayState();
+                case EGameState.GameOver:
+                    return new GameOverState();
+                default:
+                    return null;
+            }
         }
     }
 }

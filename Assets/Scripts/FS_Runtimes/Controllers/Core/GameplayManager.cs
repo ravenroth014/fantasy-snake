@@ -1,6 +1,9 @@
+using System;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Player;
 using FS_Runtimes.Controllers.Pooling;
+using FS_Runtimes.States;
+using FS_Runtimes.Utilities;
 using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Core
@@ -28,7 +31,7 @@ namespace FS_Runtimes.Controllers.Core
         public static GameplayManager Instance => _instance;
         private static GameplayManager _instance;
 
-        // public CharacterModule Test;
+        private GameState _currentState;
         
         #endregion
 
@@ -42,6 +45,15 @@ namespace FS_Runtimes.Controllers.Core
         }
 
         #endregion
+
+        public void ChangeState(EGameState gameState, Action onComplete = null)
+        {
+            _currentState?.OnExit();
+            _currentState = GameStateHelper.GetGameState(gameState);
+            _currentState.OnEnter();
+            
+            onComplete?.Invoke();
+        }
 
         #endregion
     }

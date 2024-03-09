@@ -16,16 +16,24 @@ namespace FS_Runtimes.Utilities
 
     public enum EDirection
     {
-        Up,
-        Down,
-        Left,
-        Right,
-        None
+        Up
+        , Down
+        , Left
+        , Right
+        , None
     }
 
     public enum EPoolingType
     {
-        Stack,
-        LinkedList
+        Stack
+        , LinkedList
+    }
+
+    public enum EGameState
+    {
+        GameMenu
+        , GamePrepare
+        , GamePlay
+        , GameOver
     }
 }

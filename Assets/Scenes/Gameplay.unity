@@ -97,7 +97,7 @@ LightmapSettings:
     m_ExportTrainingData: 0
     m_TrainingDataDestination: TrainingData
     m_LightProbeSampleCountMultiplier: 4
-  m_LightingDataAsset: {fileID: 0}
+  m_LightingDataAsset: {fileID: 112000000, guid: 4ec51ca7e79f2454db8191008cf36068, type: 2}
   m_LightingSettings: {fileID: 0}
 --- !u!196 &4
 NavMeshSettings:
@@ -155,7 +155,7 @@ MonoBehaviour:
   _heroPooling: {fileID: 666223721}
   _enemyPooling: {fileID: 524786098}
   _levelManager: {fileID: 909288763}
-  _playerManager: {fileID: 0}
+  _playerManager: {fileID: 1919593452}
 --- !u!4 &79906518
 Transform:
   m_ObjectHideFlags: 0
