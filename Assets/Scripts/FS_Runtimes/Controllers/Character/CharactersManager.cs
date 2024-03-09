@@ -47,6 +47,10 @@ namespace FS_Runtimes.Controllers.Character
                 newCharacter.SetCharacterPosition(lastPos);
                 onUpdateGrid?.Invoke(lastPos, uniqueID);
             }
+            else
+            {
+                newCharacter.SetHighlightState(true);
+            }
             
             _heroGameObjectDict[uniqueID] = newCharacter;
             _heroDataList.Add(newData);
@@ -99,6 +103,8 @@ namespace FS_Runtimes.Controllers.Character
                 _heroDataList.RemoveAt(index);
                 _heroDataList.Insert(0, data);
             }
+
+            SetHighlightState();
         }
 
         private void RemoveCharacter(string uniqueID)
@@ -124,6 +130,7 @@ namespace FS_Runtimes.Controllers.Character
             string uniqueID = _heroDataList[0].UniqueID;
             MoveCharacter(direction, onUpdateGrid);
             RemoveCharacter(uniqueID);
+            SetHighlightState();
         }
 
         public Vector2 GetMainCharacterPosition()
@@ -145,6 +152,19 @@ namespace FS_Runtimes.Controllers.Character
             {
                 _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
                 _heroGameObjectDict.Clear();
+            }
+        }
+
+        private void SetHighlightState()
+        {
+            if (_heroDataList is null or {Count: 0})
+                return;
+            
+            string uniqueID = _heroDataList[0].UniqueID;
+            
+            foreach (KeyValuePair<string,CharacterGameObject> characterGameObject in _heroGameObjectDict)
+            {
+                _heroGameObjectDict[uniqueID].SetHighlightState(characterGameObject.Key == uniqueID);
             }
         }
 

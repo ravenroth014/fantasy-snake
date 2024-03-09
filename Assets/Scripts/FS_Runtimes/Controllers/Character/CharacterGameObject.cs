@@ -14,6 +14,7 @@ namespace FS_Runtimes.Controllers.Character
         [SerializeField, Tooltip("Character Setting")] private CharacterGameObjectSetting _characterGameObjectSetting;
         [SerializeField, Tooltip("Character Mesh Renderer")] private SkinnedMeshRenderer _meshRenderer;
         [SerializeField, Tooltip("Character Animator")] private Animator _animator;
+        [SerializeField, Tooltip("Character Highlight")] private GameObject _highlight;
 
         private bool _isMoving;
         private bool _isInitOnCreate;
@@ -35,6 +36,7 @@ namespace FS_Runtimes.Controllers.Character
             UniqueID = uniqueID;
             _pooling = pooling;
             _isInitOnCreate = true;
+            _highlight.SetActive(false);
         }
         
         public void InitData(Vector2 position)
@@ -130,7 +132,16 @@ namespace FS_Runtimes.Controllers.Character
             {
                 _isMoving = false;
                 _pooling.ReturnItemToPool(this);
+                SetHighlightState(false);
             }
+        }
+
+        public void SetHighlightState(bool state)
+        {
+            if (_highlight is null)
+                return;
+            
+            _highlight.SetActive(state);
         }
 
         #endregion
