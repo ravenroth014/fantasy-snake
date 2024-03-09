@@ -10,7 +10,7 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7426476411f67a94284da07300c926fa, type: 3}
-  m_Name: enemy_setting
+  m_Name: enemy_gameobject_setting
   m_EditorClassIdentifier: 
   _textureList:
   - {fileID: 2800000, guid: 64c7840efb718ff499b4782257ada79a, type: 3}

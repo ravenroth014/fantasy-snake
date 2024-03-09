@@ -5,13 +5,13 @@ using UnityEngine.InputSystem.Controls;
 
 namespace FS_Runtimes.Controllers.Player
 {
-    public class PlayerManager : MonoBehaviour
+    public class PlayerController : MonoBehaviour
     {
         #region Fields & Properties
 
         [SerializeField, Tooltip("Player Input")] private InputActionReference _moveInput;
 
-        public CharacterModule _test;
+        private EDirection _currentDirection;        
 
         #endregion
 
@@ -42,14 +42,12 @@ namespace FS_Runtimes.Controllers.Player
 
         private void OnKeyboardTrigger(KeyControl keyControl)
         {
-            EDirection direction = KeyboardHelper.GetDirection(keyControl.keyCode);
-            _test.SetCharacterPosition(direction);
+            EDirection direction = GameHelper.GetDirection(keyControl.keyCode);
         }
 
         private void OnGamepadTrigger(DiscreteButtonControl gamepadControl)
         {
-            EDirection direction = GamePadHelper.GetDirection(gamepadControl.minValue, gamepadControl.maxValue);
-            _test.SetCharacterPosition(direction);
+            EDirection direction = GameHelper.GetDirection(gamepadControl.minValue, gamepadControl.maxValue);
         }
 
         #endregion

@@ -2,8 +2,8 @@ using UnityEngine;
 
 namespace FS_Runtimes.Utilities
 {
-    [CreateAssetMenu(fileName = "CharacterSetting", menuName = "Settings/Character Setting")]
-    public class CharacterSetting : ScriptableObject
+    [CreateAssetMenu(fileName = "CharacterGameObjectSetting", menuName = "Settings/Character GameObject Setting")]
+    public class CharacterGameObjectSetting : ScriptableObject
     {
         [Header("Character Setting")] 
         [SerializeField, Tooltip("List of Texture")] private Texture2D[] _textureList;

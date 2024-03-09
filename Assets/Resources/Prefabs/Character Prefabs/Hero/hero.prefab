@@ -93,7 +93,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ce376e072b974f64fbc0eaec3eaec878, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _characterSetting: {fileID: 11400000, guid: 620c73a4346500d4cb841834786d1e60, type: 2}
+  _characterGameObjectSetting: {fileID: 11400000, guid: 620c73a4346500d4cb841834786d1e60, type: 2}
   _meshRenderer: {fileID: 5413822237037271768}
   _animator: {fileID: 8774833672854841170}
 --- !u!137 &5413822237037271768 stripped

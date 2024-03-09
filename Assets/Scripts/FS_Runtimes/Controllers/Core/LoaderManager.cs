@@ -34,8 +34,8 @@ namespace FS_Runtimes.Controllers.Core
         
         private void StartProcess()
         {
-            NavigateToScene(SceneHelper.GameplayScene, false);
-            NavigateToScene(SceneHelper.NavigatorScene, true);
+            NavigateToScene(GameHelper.GameplayScene, false);
+            NavigateToScene(GameHelper.NavigatorScene, true);
         }
         
         #endregion

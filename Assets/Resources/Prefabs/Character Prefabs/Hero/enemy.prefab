@@ -72,6 +72,10 @@ PrefabInstance:
       propertyPath: _characterSetting
       value: 
       objectReference: {fileID: 11400000, guid: 61ba6db401ec75c4fa518d2e7357db14, type: 2}
+    - target: {fileID: 7789730478509192414, guid: 8593c3487cb65d047866656ab8928ca4, type: 3}
+      propertyPath: _characterGameObjectSetting
+      value: 
+      objectReference: {fileID: 11400000, guid: 61ba6db401ec75c4fa518d2e7357db14, type: 2}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []

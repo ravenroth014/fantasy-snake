@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Player;
 using FS_Runtimes.Controllers.Pooling;
@@ -24,9 +26,9 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Level Manager")]
         private LevelManager _levelManager;
 
-        public PlayerManager PlayerManager => _playerManager;
-        [SerializeField, Tooltip("Player Manager")]
-        private PlayerManager _playerManager;
+        public CharactersManager CharactersManager => _charactersManager;
+        [SerializeField, Tooltip("Characters Manager")]
+        private CharactersManager _charactersManager;
         
         public static GameplayManager Instance => _instance;
         private static GameplayManager _instance;
@@ -44,15 +46,36 @@ namespace FS_Runtimes.Controllers.Core
             _instance = this;
         }
 
+        private void Start()
+        {
+            InitControllers();
+        }
+
         #endregion
+
+        private void InitControllers()
+        {
+            _heroPooling.Init();
+            _enemyPooling.Init();
+            _levelManager.Init();
+            _charactersManager.Init();
+        }
 
         public void ChangeState(EGameState gameState, Action onComplete = null)
         {
             _currentState?.OnExit();
-            _currentState = GameStateHelper.GetGameState(gameState);
+            _currentState = GameHelper.GetGameState(gameState);
             _currentState.OnEnter();
             
             onComplete?.Invoke();
+        }
+
+        public void ReturnItemListToPool(List<CharacterGameObject> characterList, ECharacterType characterType)
+        {
+            if (characterType == ECharacterType.Enemy)
+                _enemyPooling.ReturnItemListToPool(characterList);
+            else if (characterType == ECharacterType.Hero)
+                _heroPooling.ReturnItemListToPool(characterList);
         }
 
         #endregion

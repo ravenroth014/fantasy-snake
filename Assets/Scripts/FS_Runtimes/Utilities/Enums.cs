@@ -9,9 +9,10 @@ namespace FS_Runtimes.Utilities
 
     public enum ECharacterType
     {
-        Player
+        Hero
         , Enlist
         , Enemy
+        , None
     }
 
     public enum EDirection

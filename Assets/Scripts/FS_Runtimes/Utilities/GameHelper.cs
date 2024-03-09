@@ -1,32 +1,21 @@
-using System;
 using FS_Runtimes.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
-using UnityEngine.InputSystem.Controls;
 
 namespace FS_Runtimes.Utilities
 {
-    public static class SceneHelper
+    public static class GameHelper
     {
         public static readonly string LoaderScene = "Loader";
         public static readonly string GameplayScene = "Gameplay";
         public static readonly string NavigatorScene = "Navigator";
-    }
-
-    public static class CharacterAnimationHelper
-    {
+        
         public static readonly string IdleState = "idle";
         public static readonly string JumpState = "jump";
         public static readonly string RunState = "run";
-    }
-
-    public static class MaterialPropertyHelper
-    {
+        
         public static readonly string MainTexture = "_MainTex";
-    }
-
-    public static class DirectionHelper
-    {
+        
         public static Vector3 GetDirection(EDirection direction)
         {
             switch (direction)
@@ -44,10 +33,7 @@ namespace FS_Runtimes.Utilities
                     return Vector3.zero;
             }
         }
-    }
-
-    public static class KeyboardHelper
-    {
+        
         public static EDirection GetDirection(Key keyCode)
         {
             switch (keyCode)
@@ -64,10 +50,7 @@ namespace FS_Runtimes.Utilities
                     return EDirection.None;
             }
         }
-    }
-
-    public static class GamePadHelper
-    {
+        
         public static EDirection GetDirection(int minValue, int maxValue)
         {
             switch (minValue)
@@ -84,18 +67,12 @@ namespace FS_Runtimes.Utilities
                     return EDirection.None;
             }
         }
-    }
-
-    public static class GridHelper
-    {
+        
         public static Vector2 GetGridVector(Vector3 vector3)
         {
             return new Vector2(vector3.x, vector3.z);
         }
-    }
-
-    public static class GameStateHelper
-    {
+        
         public static GameState GetGameState(EGameState gameState)
         {
             switch (gameState)
