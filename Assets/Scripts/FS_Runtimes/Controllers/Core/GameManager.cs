@@ -50,7 +50,8 @@ namespace FS_Runtimes.Controllers.Core
         {
             InitControllers();
 
-            ChangeState(EGameState.GamePrepare);
+            // TODO: In final, will need to change to GameMenu first.
+            ChangeState(EGameState.GamePlay);
         }
 
         #endregion

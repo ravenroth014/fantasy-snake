@@ -160,8 +160,6 @@ namespace FS_Runtimes.Utilities
             {
                 case EGameState.GameMenu:
                     return new GameMenuState();
-                case EGameState.GamePrepare:
-                    return new GamePrepareState();
                 case EGameState.GamePlay:
                     return new GameplayState();
                 case EGameState.GameOver:

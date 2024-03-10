@@ -14,26 +14,28 @@ namespace FS_Runtimes.States
         private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
+        private readonly SettingManager _settingManager = SettingManager.Instance;
+        private readonly LogManager _logManager = LogManager.Instance;
 
-        private EDirection _lastDirection;
-
+        private EPlayerAction _lastAction;
+        
         #endregion
 
         #region Methods
         
         public override void OnEnter()
         {
-            // // TODO: Open Loading UI.
-            //
-            // if (Init() == false)
-            // {
-            //     GameManager.Instance.ChangeState(EGameState.GameError);
-            //     return;
-            // }
-            //
-            // // TODO: Close Loading UI, and countdown before start game.
-            //
-            // StartGame();
+            // TODO: Open Loading UI.
+            
+            if (Init() == false)
+            {
+                GameManager.Instance.ChangeState(EGameState.GameError);
+                return;
+            }
+            
+            // TODO: Close Loading UI, and countdown before start game.
+            
+            StartGame();
         }
 
         public override void OnExit()
@@ -52,6 +54,8 @@ namespace FS_Runtimes.States
             isComplete &= InitCallback();
             isComplete &= InitPlayer();
             isComplete &= InitStageLevel();
+
+            _lastAction = EPlayerAction.None;
 
             return isComplete;
         }
@@ -96,7 +100,15 @@ namespace FS_Runtimes.States
         
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
+            if (_charactersManager.IsMoving) return;
+            if (_settingManager.IsGameplayButtonActionValid(_lastAction, playerAction) == false)
+            {
+                _logManager.Log($"Action {playerAction} is not valid for previous action, {_lastAction}");
+                return;
+            }
             
+            _logManager.Log($"Action {playerAction} is valid for previous action, {_lastAction}");
+            _lastAction = playerAction;
         }
 
         #region Generation Methods
@@ -112,22 +124,6 @@ namespace FS_Runtimes.States
         }
         
         #endregion
-        
-        private bool CheckActionAvailable(EDirection action)
-        {
-            if (_lastDirection == EDirection.None)
-                return true;
-
-            if (_lastDirection == EDirection.Right && action is EDirection.None or EDirection.Left)
-                return false;
-            if (_lastDirection == EDirection.Left && action is EDirection.None or EDirection.Right)
-                return false;
-            if (_lastDirection == EDirection.Up && action is EDirection.None or EDirection.Down)
-                return false;
-            if (_lastDirection == EDirection.Down && action is EDirection.None or EDirection.Up)
-                return false;
-            return true;
-        }
         
         #endregion
     }

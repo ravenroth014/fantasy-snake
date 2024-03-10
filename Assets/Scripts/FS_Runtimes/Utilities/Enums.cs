@@ -45,7 +45,6 @@ namespace FS_Runtimes.Utilities
     public enum EGameState
     {
         GameMenu
-        , GamePrepare
         , GamePlay
         , GameOver
         , GameError
