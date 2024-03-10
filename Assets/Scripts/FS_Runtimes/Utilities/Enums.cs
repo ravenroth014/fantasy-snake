@@ -25,6 +25,17 @@ namespace FS_Runtimes.Utilities
         , None
     }
 
+    public enum EPlayerAction
+    {
+        Up
+        , Right
+        , Down
+        , Left
+        , RotateLeft
+        , RotateRight
+        , None
+    }
+
     public enum EPoolingType
     {
         Stack
@@ -37,6 +48,7 @@ namespace FS_Runtimes.Utilities
         , GamePrepare
         , GamePlay
         , GameOver
+        , GameError
     }
 
     public enum ECharacterSwitch

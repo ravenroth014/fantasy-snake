@@ -106,6 +106,11 @@ namespace FS_Runtimes.Controllers.Level
             _enemyCharacter.InitData(position);
         }
 
+        public void GenerateDecoration()
+        {
+            
+        }
+        
         public void GenerateObstacle()
         {
             

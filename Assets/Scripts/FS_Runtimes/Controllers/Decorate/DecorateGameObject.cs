@@ -18,7 +18,18 @@ namespace FS_Runtimes.Controllers.Decorate
 
         public void InitOnCreate(DecoratePooling pooling, EDecorateType decorateType)
         {
-            
+            _pooling = pooling;
+            _decorateType = decorateType;
+        }
+        
+        public void Release()
+        {
+            if (_pooling is null)
+                Destroy(gameObject);
+            else
+            {
+                _pooling.ReturnItemToPool(this);
+            }
         }
 
         #endregion

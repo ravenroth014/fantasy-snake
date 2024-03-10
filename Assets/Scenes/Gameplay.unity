@@ -502,10 +502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0eda620ebccb64b80006f238539e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _decoratePooling: {fileID: 0}
-  _obstaclePooling: {fileID: 0}
-  _heroPooling: {fileID: 0}
-  _enemyPooling: {fileID: 0}
+  _decoratePooling: {fileID: 1452674134}
+  _obstaclePooling: {fileID: 1652093352}
+  _heroPooling: {fileID: 666223721}
+  _enemyPooling: {fileID: 524786098}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -684,8 +684,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72121bbe92ed4a74eaf4d670a8c7a3af, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _heroPooling: {fileID: 666223721}
-  _enemyPooling: {fileID: 524786098}
   _levelManager: {fileID: 909288763}
   _charactersManager: {fileID: 1500662233}
   _playerController: {fileID: 1919593452}
@@ -790,8 +788,8 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1500662232}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 8.555806, y: 2.3403707, z: 8.616521}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []

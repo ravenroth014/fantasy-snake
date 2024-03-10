@@ -2,6 +2,7 @@ using System;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
+using FS_Runtimes.States;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 
@@ -11,13 +12,9 @@ namespace FS_Runtimes.Controllers.Gameplay
     {
         #region Fields & Properties
 
-        private Action _onAttackEnemyAction;
-        private Action _onRecruitEnlistAction;
-        private Action _onHeroIsDeadAction;
-        private Action _onGameOver;
-        private Action _onEnemyIsDeadAction;
+        private Action<EPlayerAction> _onPlayerTrigger;
+        private GameState _currentState;
 
-        private bool _isGameStart;
         private EDirection _currentDirection;
 
         private LevelManager _levelManager;
@@ -29,20 +26,17 @@ namespace FS_Runtimes.Controllers.Gameplay
 
         public void Init()
         {
-            _levelManager = GameManager.Instance.LevelManager;
-            _charactersManager = GameManager.Instance.CharactersManager;
-        }
-        
-        public void StartGame()
-        {
-            _isGameStart = true;
-            _currentDirection = EDirection.None;
+            // Do nothing (For now)
         }
 
-        public void OnCharacterAction(EDirection directionAction)
+        public void OnPlayerAction(EPlayerAction playerAction)
         {
-            if (_isGameStart == false) return;
-            if (CheckActionAvailable(directionAction) == false) return;
+            _onPlayerTrigger?.Invoke(playerAction);
+        }
+
+        public void OnPlayerAction(EDirection directionAction)
+        {
+            //if (CheckActionAvailable(directionAction) == false) return;
             if (_charactersManager.IsMoving) return;
 
             Vector2 currentPosition = _charactersManager.GetMainCharacterPosition();
@@ -76,46 +70,10 @@ namespace FS_Runtimes.Controllers.Gameplay
                 _currentDirection = directionAction;
             }
         }
-        
-        public void SetOnAttackEnemyCallback(Action callback = null)
-        {
-            _onAttackEnemyAction = callback;
-        }
 
-        public void SetOnRecruitEnlistCallback(Action callback = null)
+        public void SetOnPlayerActionTriggerCallback(Action<EPlayerAction> callback = null)
         {
-            _onRecruitEnlistAction = callback;
-        }
-
-        public void SetOnHeroIsDeadCallback(Action callback = null)
-        {
-            _onHeroIsDeadAction = callback;
-        }
-
-        public void SetOnGameOverCallback(Action callback = null)
-        {
-            _onGameOver = callback;
-        }
-
-        public void SetOnEnemyIsDeadCallback(Action callback = null)
-        {
-            _onEnemyIsDeadAction = callback;
-        }
-
-        private bool CheckActionAvailable(EDirection action)
-        {
-            if (_currentDirection == EDirection.None)
-                return true;
-
-            if (_currentDirection == EDirection.Right && action is EDirection.None or EDirection.Left)
-                return false;
-            if (_currentDirection == EDirection.Left && action is EDirection.None or EDirection.Right)
-                return false;
-            if (_currentDirection == EDirection.Up && action is EDirection.None or EDirection.Down)
-                return false;
-            if (_currentDirection == EDirection.Down && action is EDirection.None or EDirection.Up)
-                return false;
-            return true;
+            _onPlayerTrigger = callback;
         }
 
         private void OnUpdateGridCallback(Vector2 position, string uniqueID)

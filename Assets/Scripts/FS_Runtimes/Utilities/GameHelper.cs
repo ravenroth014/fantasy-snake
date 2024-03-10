@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using FS_Runtimes.States;
 using UnityEngine;
@@ -101,10 +102,56 @@ namespace FS_Runtimes.Utilities
                     return EDirection.None;
             }
         }
-        
-        public static Vector2 GetGridVector(Vector3 vector3)
+
+        public static EPlayerAction GetPlayerAction(int minValue, int maxValue)
         {
-            return new Vector2(vector3.x, vector3.z);
+            switch (minValue)
+            {
+                case 7 when maxValue == 1:
+                    return EPlayerAction.Up;
+                case 1 when maxValue == 3:
+                    return EPlayerAction.Right;
+                case 3 when maxValue == 5:
+                    return EPlayerAction.Down;
+                case 5 when maxValue == 7:
+                    return EPlayerAction.Left;
+                default:
+                    return EPlayerAction.None;
+            }
+        }
+
+        public static EPlayerAction GetPlayerAction(string buttonName)
+        {
+            switch (buttonName)
+            {
+                case "leftShoulder":
+                    return EPlayerAction.RotateLeft;
+                case "rightShoulder":
+                    return EPlayerAction.RotateRight;
+                default:
+                    return EPlayerAction.None;
+            }
+        }
+
+        public static EPlayerAction GetPlayerAction(Key keyCode)
+        {
+            switch (keyCode)
+            {
+                case Key.W:
+                    return EPlayerAction.Up;
+                case Key.D:
+                    return EPlayerAction.Right;
+                case Key.S:
+                    return EPlayerAction.Down;
+                case Key.A:
+                    return EPlayerAction.Left;
+                case Key.Q:
+                    return EPlayerAction.RotateLeft;
+                case Key.E:
+                    return EPlayerAction.RotateRight;
+                default:
+                    return EPlayerAction.None;
+            }
         }
         
         public static GameState GetGameState(EGameState gameState)
@@ -119,6 +166,8 @@ namespace FS_Runtimes.Utilities
                     return new GameplayState();
                 case EGameState.GameOver:
                     return new GameOverState();
+                case EGameState.GameError:
+                    return new GameErrorState();
                 default:
                     return null;
             }
