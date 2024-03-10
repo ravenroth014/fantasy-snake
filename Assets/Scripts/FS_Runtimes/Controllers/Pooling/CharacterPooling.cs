@@ -43,10 +43,10 @@ namespace FS_Runtimes.Controllers.Pooling
         
         private CharacterGameObject CreatePooledItem()
         {
-            if (_poolingSetting.ObjectInPool is null) return null;
-            if (_poolingSetting.ObjectInPool.HasComponent<CharacterGameObject>() == false) return null;
+            if (_poolingSetting.ObjectInPool is null or {Count: 0}) return null;
+            if (_poolingSetting.ObjectInPool[0].HasComponent<CharacterGameObject>() == false) return null;
 
-            CharacterGameObject item = Instantiate(_poolingSetting.ObjectInPool).GetComponent<CharacterGameObject>();
+            CharacterGameObject item = Instantiate(_poolingSetting.ObjectInPool[0]).GetComponent<CharacterGameObject>();
 
             _stringBuilder.Clear();
             _stringBuilder.Append(_characterType.ToString());

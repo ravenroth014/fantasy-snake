@@ -44,4 +44,10 @@ namespace FS_Runtimes.Utilities
         Left
         , Right
     }
+
+    public enum EDecorateType
+    {
+        Decorate
+        , Obstacle
+    }
 }

@@ -58,6 +58,7 @@ namespace FS_Runtimes.Controllers.Level
                 GenerateDict();
             else
                 _gridDict.Values.ToList().ForEach(grid => grid.Reset());
+            
         }
 
         private Vector2 GetFreePosition()
@@ -99,6 +100,11 @@ namespace FS_Runtimes.Controllers.Level
 
             _enemyCharacter = character;
             _enemyCharacter.InitData(position);
+        }
+
+        public void GenerateObstacle()
+        {
+            
         }
 
         public CharacterGameObject GenerateHero()
