@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using System.Linq;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Pooling;
+using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Models.Levels;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -17,18 +18,24 @@ namespace FS_Runtimes.Controllers.Level
         [SerializeField, Tooltip("Obstacle Pooling")] private DecoratePooling _obstaclePooling;
         [SerializeField, Tooltip("Hero Pooling")] private CharacterPooling _heroPooling;
         [SerializeField, Tooltip("Enemy Pooling")] private CharacterPooling _enemyPooling;
+
+        [Header("Character Stat Data")] 
+        [SerializeField, Tooltip("Hero Base Stat")] private List<CharacterBaseStat> _heroStatList;
+        [SerializeField, Tooltip("Enemy Base Stat")] private List<CharacterBaseStat> _enemyStatList;
         
         private readonly int _horizontalMaxSize = 16;
         private readonly int _verticalMaxSize = 16;
         private readonly Dictionary<Vector2, GridData> _gridDict = new();
         
-        private CharacterGameObject _enlistCharacter;
-        private CharacterGameObject _enemyCharacter;
+        private CharacterPairData _enlistCharacter;
+        private CharacterPairData _enemyCharacter;
 
         #endregion
 
         #region Methods
 
+        #region Init Methods
+        
         public void Init()
         {
             GenerateDict();
@@ -55,6 +62,10 @@ namespace FS_Runtimes.Controllers.Level
                 }
             }
         }
+        
+        #endregion
+
+        #region Utility Methods
         
         public void ResetManager()
         {
@@ -83,27 +94,60 @@ namespace FS_Runtimes.Controllers.Level
                 gridData.UpdateData(uniqueID, gridState, characterType);
             }
         }
+        
+        public EGridState GetGridState(Vector2 position)
+        {
+            return _gridDict[position].GridState;
+        }
 
-        public void GenerateEnlist()
+        public ECharacterType GetGridOccupiedType(Vector2 position)
+        {
+            return _gridDict[position].CharacterType;
+        }
+        
+        #endregion
+
+        #region Generate Methods
+
+        public CharacterPairData GenerateHero(int level = 1)
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
+            CharacterData data = GenerateCharacterData(ECharacterType.Hero, level);
+            Vector2 position = GetFreePosition();
+            
+            UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Hero);
+            
+            character.InitData(position);
+
+            CharacterPairData pairData = new CharacterPairData(data, character);
+            
+            return pairData;
+        }
+        
+        public void GenerateEnlist(int level = 1)
+        {
+            CharacterGameObject character = _heroPooling.GetFromPool();
+            CharacterData data = GenerateCharacterData(ECharacterType.Enlist, level);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
+            character.InitData(position);
 
-            _enlistCharacter = character;
-            _enlistCharacter.InitData(position);
+            CharacterPairData pairData = new CharacterPairData(data, character);
+            _enlistCharacter = pairData;
         }
 
-        public void GenerateEnemy()
+        public void GenerateEnemy(int level = 1)
         {
             CharacterGameObject character = _enemyPooling.GetFromPool();
+            CharacterData data = GenerateCharacterData(ECharacterType.Enemy, level);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enemy);
+            character.InitData(position);
 
-            _enemyCharacter = character;
-            _enemyCharacter.InitData(position);
+            CharacterPairData pairData = new CharacterPairData(data, character);
+            _enemyCharacter = pairData;
         }
 
         public void GenerateDecoration()
@@ -115,46 +159,55 @@ namespace FS_Runtimes.Controllers.Level
         {
             
         }
-
-        public CharacterGameObject GenerateHero()
+        
+        public CharacterPairData GetGridOccupiedCharacter(Vector2 position, int level)
         {
-            CharacterGameObject character = _heroPooling.GetFromPool();
-            Vector2 position = GetFreePosition();
-            
-            UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Hero);
-            
-            character.InitData(position);
-            return character;
-        }
-
-        public EGridState GetGridState(Vector2 position)
-        {
-            return _gridDict[position].GridState;
-        }
-
-        public ECharacterType GetGridOccupiedType(Vector2 position)
-        {
-            return _gridDict[position].CharacterType;
-        }
-
-        public CharacterGameObject GetGridOccupiedCharacter(Vector2 position)
-        {
-            CharacterGameObject character;
+            CharacterPairData character;
             
             if (GetGridOccupiedType(position) == ECharacterType.Enlist)
             {
                 character = _enlistCharacter;
+                character.CharacterData.UpdateCharacterStat(level);
                 _enlistCharacter = null;
                 return character;
             }
             if (GetGridOccupiedType(position) == ECharacterType.Enemy)
             {
                 character = _enemyCharacter;
+                character.CharacterData.UpdateCharacterStat(level);
                 _enemyCharacter = null;
                 return character;
             }
             return null;
         }
+
+        private CharacterData GenerateCharacterData(ECharacterType characterType, int level)
+        {
+            switch (characterType)
+            {
+                case ECharacterType.Enlist or ECharacterType.Hero when _heroStatList is null or { Count: 0 }:
+                case ECharacterType.Enemy when _enemyStatList is null or { Count: 0}:
+                {
+                    return null;
+                }
+                case ECharacterType.Enlist or ECharacterType.Hero:
+                {
+                    int randIndex = Random.Range(0, _heroStatList.Count);
+                    CharacterData newData = new CharacterData(_heroStatList[randIndex], level);
+                    return newData;
+                }
+                case ECharacterType.Enemy:
+                {
+                    int randIndex = Random.Range(0, _enemyStatList.Count);
+                    CharacterData newData = new CharacterData(_enemyStatList[randIndex], level);
+                    return newData;
+                }
+                default:
+                    return null;
+            }
+        }
+        
+        #endregion
         
         #endregion
     }

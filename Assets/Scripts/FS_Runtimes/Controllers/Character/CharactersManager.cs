@@ -25,35 +25,25 @@ namespace FS_Runtimes.Controllers.Character
             
         }
 
-        public void AddCharacter(CharacterGameObject newCharacter, Vector2 targetPos, Action<Vector2, string> onUpdateGrid = null)
+        public void AddCharacter(CharacterPairData newCharacter, Vector2 targetPos, Action<Vector2, string> onUpdateGrid = null)
         {
-            string uniqueID = newCharacter.UniqueID;
-            
-            // TODO: Generate character data base on stage level.
-            CharacterData newData = new CharacterData
-            {
-                UniqueID = uniqueID
-                , CharacterType =  ECharacterType.Hero
-                , Level = 1
-                , AttackPoint = 1
-                , HealthPoint = 5
-            };
+            string uniqueID = newCharacter.CharacterData.UniqueID;
 
             if (_heroGameObjectDict is { Count: > 0 })
             {
                 string lastUniqueID = _heroDataList[^1].UniqueID;
                 Vector2 lastPos = _heroGameObjectDict[lastUniqueID].CurrentPosition;
                 MoveCharacter(targetPos, onUpdateGrid);
-                newCharacter.SetCharacterPosition(lastPos);
+                newCharacter.CharacterGameObject.SetCharacterPosition(lastPos);
                 onUpdateGrid?.Invoke(lastPos, uniqueID);
             }
             else
             {
-                newCharacter.SetHighlightState(true);
+                newCharacter.CharacterGameObject.SetHighlightState(true);
             }
 
-            _heroGameObjectDict[uniqueID] = newCharacter;
-            _heroDataList.Add(newData);
+            _heroGameObjectDict[uniqueID] = newCharacter.CharacterGameObject;
+            _heroDataList.Add(newCharacter.CharacterData);
         }
 
         public void MoveCharacter(Vector2 targetPosition, Action<Vector2, string> onUpdateGrid = null)

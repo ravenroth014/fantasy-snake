@@ -4,6 +4,7 @@ using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Utilities;
+using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 
@@ -20,6 +21,7 @@ namespace FS_Runtimes.States
         private readonly LogManager _logManager = LogManager.Instance;
 
         private EPlayerAction _lastAction;
+        private int _currentLevel;
         
         #endregion
 
@@ -58,6 +60,7 @@ namespace FS_Runtimes.States
             isComplete &= InitStageLevel();
 
             _lastAction = EPlayerAction.None;
+            _currentLevel = 1;
 
             return isComplete;
         }
@@ -73,7 +76,7 @@ namespace FS_Runtimes.States
 
         private bool InitPlayer()
         {
-            CharacterGameObject character = _levelManager.GenerateHero();
+            CharacterPairData character = _levelManager.GenerateHero(_currentLevel);
             _charactersManager.AddCharacter(character, Vector2.zero);
 
             return true;
@@ -214,7 +217,7 @@ namespace FS_Runtimes.States
         private void OnRecruitEnlist(Vector2 targetPos)
         {
             _logManager.Log("Recruiting enlist ...");
-            CharacterGameObject character = _levelManager.GetGridOccupiedCharacter(targetPos);
+            CharacterPairData character = _levelManager.GetGridOccupiedCharacter(targetPos, _currentLevel);
             
             _charactersManager.AddCharacter(character, targetPos, OnUpdateGridCallback);
             _levelManager.GenerateEnlist();

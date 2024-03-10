@@ -558,6 +558,14 @@ MonoBehaviour:
   _obstaclePooling: {fileID: 1652093352}
   _heroPooling: {fileID: 666223721}
   _enemyPooling: {fileID: 524786098}
+  _heroStatList:
+  - {fileID: 11400000, guid: b9eca9bc238a0bd46bf25f52d234f178, type: 2}
+  - {fileID: 11400000, guid: 3bde5cc7be70b8845bd772d10791b0dc, type: 2}
+  - {fileID: 11400000, guid: e94ef575a6053eb42a51ce3cc0e6b0be, type: 2}
+  _enemyStatList:
+  - {fileID: 11400000, guid: a540e973c339268448557124fbd7dac1, type: 2}
+  - {fileID: 11400000, guid: 90f0b38f1993ded4b97613d139079735, type: 2}
+  - {fileID: 11400000, guid: 7f8ca50e63f3fbb4b8bb6308045ee9a4, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0

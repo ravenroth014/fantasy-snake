@@ -12,10 +12,10 @@ namespace FS_Runtimes.Models.Characters
         [SerializeField, Tooltip("Attack Growth Rate"), Range(0, 1)] private float _atkGrowthRate = 0.2f;
         [SerializeField, Tooltip("Health Growth Rate"), Range(0, 1)] private float _hpGrowthRate = 0.2f;
 
-        private int BaseAtk => _baseAtk;
-        private int BaseHp => _baseHp;
-        private float AtkGrowthRate => _atkGrowthRate;
-        private float HpGrowthRate => _hpGrowthRate;
+        public int BaseAtk => _baseAtk;
+        public int BaseHp => _baseHp;
+        public float AtkGrowthRate => _atkGrowthRate;
+        public float HpGrowthRate => _hpGrowthRate;
 
         #endregion
     }
