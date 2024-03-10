@@ -54,6 +54,7 @@ namespace FS_Runtimes.Utilities
     {
         Left
         , Right
+        , None
     }
 
     public enum EDecorateType

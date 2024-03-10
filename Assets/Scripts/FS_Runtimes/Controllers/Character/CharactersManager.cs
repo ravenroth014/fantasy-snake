@@ -60,7 +60,7 @@ namespace FS_Runtimes.Controllers.Character
         {
             Vector2 cachePos = Vector2.zero;
 
-            for (int index = 0; index < _heroGameObjectDict.Count; index++)
+            for (int index = 0; index < _heroDataList.Count; index++)
             {
                 string uniqueID = _heroDataList[index].UniqueID;
 
@@ -82,12 +82,13 @@ namespace FS_Runtimes.Controllers.Character
             onUpdateGrid?.Invoke(cachePos, string.Empty);
         }
 
-        public void SwitchCharacter(ECharacterSwitch switchDirection)
+        public void SwitchCharacter(ECharacterSwitch switchDirection, Action<Vector2, string> onUpdateGrid = null)
         {
-            // TODO: Change parameter.
-            
-            if (_heroDataList is null or {Count: 0})
+            if (_heroDataList is null or {Count: <= 1})
                 return;
+
+            List<Vector2> cachePosList = new();
+            _heroDataList.ForEach(characterData => cachePosList.Add(_heroGameObjectDict[characterData.UniqueID].CurrentPosition));
             
             if (switchDirection == ECharacterSwitch.Left)
             {
@@ -103,6 +104,7 @@ namespace FS_Runtimes.Controllers.Character
                 _heroDataList.Insert(0, data);
             }
 
+            UpdateCharactersPosition(cachePosList, onUpdateGrid);
             SetHighlightState();
         }
 
@@ -164,6 +166,19 @@ namespace FS_Runtimes.Controllers.Character
             foreach (KeyValuePair<string,CharacterGameObject> characterGameObject in _heroGameObjectDict)
             {
                 _heroGameObjectDict[uniqueID].SetHighlightState(characterGameObject.Key == uniqueID);
+            }
+        }
+
+        private void UpdateCharactersPosition(List<Vector2> cachePosList, Action<Vector2, string> onUpdateGrid = null)
+        {
+            for (int index = 0; index < cachePosList.Count; index++)
+            {
+                string uniqueID = _heroDataList[index].UniqueID;
+                Vector2 newPos = cachePosList[index];
+                CharacterGameObject character = _heroGameObjectDict[uniqueID];
+                
+                character.SetCharacterPosition(newPos);
+                onUpdateGrid?.Invoke(newPos, uniqueID);
             }
         }
 

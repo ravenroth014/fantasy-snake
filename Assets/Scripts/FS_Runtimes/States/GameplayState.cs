@@ -110,7 +110,35 @@ namespace FS_Runtimes.States
             }
             
             _logManager.Log($"Action {playerAction} is valid for previous action, {_lastAction}");
-            _lastAction = playerAction;
+
+            switch (playerAction)
+            {
+                case EPlayerAction.Up:
+                case EPlayerAction.Right:
+                case EPlayerAction.Down:
+                case EPlayerAction.Left:
+                {
+                    _lastAction = playerAction;
+                    OnMovementAction(playerAction);
+                    break;
+                }
+                case EPlayerAction.RotateLeft:
+                case EPlayerAction.RotateRight:
+                {
+                    OnSwitchCharacterAction(playerAction);
+                    break;
+                }
+                case EPlayerAction.None:
+                default:
+                {
+                    _logManager.LogWarning($"Action {playerAction} is not valid for gameplay state");
+                    break;
+                }
+            }
+        }
+
+        private void OnMovementAction(EPlayerAction playerAction)
+        {
             
             Vector2 currentPosition = _charactersManager.GetMainCharacterPosition();
             Vector2 direction = GameHelper.GetVector2Direction(playerAction);
@@ -136,6 +164,19 @@ namespace FS_Runtimes.States
             }
         }
 
+        private void OnSwitchCharacterAction(EPlayerAction playerAction)
+        {
+            _logManager.Log("Switching characters ...");
+            ECharacterSwitch switchAction = GameHelper.GetCharacterSwitchAction(playerAction);
+            if (switchAction == ECharacterSwitch.None)
+            {
+                _logManager.LogWarning($"Action {playerAction} is not valid for switching player characters");
+                return;
+            }
+            
+            _charactersManager.SwitchCharacter(switchAction, OnUpdateGridCallback);
+        }
+        
         private void OnMoveCharacter(Vector2 targetPos)
         {
             _logManager.Log("Moving characters ...");
