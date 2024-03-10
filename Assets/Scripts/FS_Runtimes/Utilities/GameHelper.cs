@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using FS_Runtimes.States;
 using UnityEngine;
 using UnityEngine.InputSystem;
@@ -8,6 +6,8 @@ namespace FS_Runtimes.Utilities
 {
     public static class GameHelper
     {
+        #region Fields & Properties
+
         public static readonly string LoaderScene = "Loader";
         public static readonly string GameplayScene = "Gameplay";
         public static readonly string NavigatorScene = "Navigator";
@@ -17,39 +17,8 @@ namespace FS_Runtimes.Utilities
         public static readonly string RunState = "run";
         
         public static readonly string MainTexture = "_MainTex";
-
-        private static readonly Dictionary<EDirection, List<EDirection>> _availableDirectionDict = new();
         
-        public static Vector3 GetWorldSpaceDirection(EDirection direction)
-        {
-            switch (direction)
-            {
-                case EDirection.Up:
-                    return Vector3.forward;
-                case EDirection.Down:
-                    return Vector3.back;
-                case EDirection.Left:
-                    return Vector3.left;
-                case EDirection.Right:
-                    return Vector3.right;
-                case EDirection.None:
-                default:
-                    return Vector3.zero;
-            }
-        }
-
-        public static EDirection GetDirection(Vector3 vector3)
-        {
-            if (vector3.normalized == Vector3.forward)
-                return EDirection.Up;
-            if (vector3.normalized == Vector3.back)
-                return EDirection.Down;
-            if (vector3.normalized == Vector3.left)
-                return EDirection.Left;
-            if (vector3.normalized == Vector3.right)
-                return EDirection.Right;
-            return EDirection.None;
-        }
+        #endregion
 
         #region Gameplay Direction Methods
 
@@ -163,6 +132,15 @@ namespace FS_Runtimes.Utilities
             }
         }
         
+        #endregion
+
+        #region Character Stat Calculation Methods
+
+        public static int CalculateCharacterStat(int baseValue, int level, float growthRate)
+        {
+            return (int)(baseValue * (1 + (growthRate * level)));
+        }
+
         #endregion
     }
 }
