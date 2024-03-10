@@ -88,7 +88,13 @@ namespace FS_Runtimes.Controllers.Character
                 return;
 
             List<Vector2> cachePosList = new();
-            _heroDataList.ForEach(characterData => cachePosList.Add(_heroGameObjectDict[characterData.UniqueID].CurrentPosition));
+            List<Vector3> cacheDirList = new();
+            
+            _heroDataList.ForEach(characterData =>
+            {
+                cachePosList.Add(_heroGameObjectDict[characterData.UniqueID].CurrentPosition);
+                cacheDirList.Add(_heroGameObjectDict[characterData.UniqueID].CurrentDirection);
+            });
             
             if (switchDirection == ECharacterSwitch.Left)
             {
@@ -104,7 +110,7 @@ namespace FS_Runtimes.Controllers.Character
                 _heroDataList.Insert(0, data);
             }
 
-            UpdateCharactersPosition(cachePosList, onUpdateGrid);
+            UpdateCharactersTransform(cachePosList, cacheDirList, onUpdateGrid);
             SetHighlightState();
         }
 
@@ -169,15 +175,17 @@ namespace FS_Runtimes.Controllers.Character
             }
         }
 
-        private void UpdateCharactersPosition(List<Vector2> cachePosList, Action<Vector2, string> onUpdateGrid = null)
+        private void UpdateCharactersTransform(List<Vector2> cachePosList, List<Vector3> cacheDirList, Action<Vector2, string> onUpdateGrid = null)
         {
             for (int index = 0; index < cachePosList.Count; index++)
             {
                 string uniqueID = _heroDataList[index].UniqueID;
                 Vector2 newPos = cachePosList[index];
+                Vector3 newDir = cacheDirList[index];
                 CharacterGameObject character = _heroGameObjectDict[uniqueID];
                 
                 character.SetCharacterPosition(newPos);
+                character.SetCharacterDirection(newDir);
                 onUpdateGrid?.Invoke(newPos, uniqueID);
             }
         }

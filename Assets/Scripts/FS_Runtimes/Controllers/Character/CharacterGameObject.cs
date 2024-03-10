@@ -21,7 +21,7 @@ namespace FS_Runtimes.Controllers.Character
         private CharacterPooling _pooling;
         
         public Vector2 CurrentPosition { get; private set; }
-        public Vector2 CurrentDirection { get; private set; }
+        public Vector3 CurrentDirection { get; private set; }
         
         public string UniqueID { get; private set; }
         public bool IsMoving => _isMoving;
@@ -65,13 +65,13 @@ namespace FS_Runtimes.Controllers.Character
             _animator.Play(stateName);
         }
 
-        private void SetCharacterDirection(EDirection direction)
+        public void SetCharacterDirection(Vector3 direction)
         {
-            Vector3 directionVector = GameHelper.GetWorldSpaceDirection(direction);
-            if (directionVector == Vector3.zero) return;
+            if (direction == Vector3.zero) return;
 
-            Quaternion rotation = Quaternion.LookRotation(directionVector);
+            Quaternion rotation = Quaternion.LookRotation(direction);
             transform.rotation = rotation;
+            CurrentDirection = direction;
         }
 
         public void SetCharacterPosition(Vector2 position)
@@ -81,33 +81,17 @@ namespace FS_Runtimes.Controllers.Character
             CurrentPosition = position;
         }
 
-        public void MoveCharacterPosition(EDirection direction)
-        {
-            if (_isMoving) return;
-            
-            Vector3 directionVector = GameHelper.GetWorldSpaceDirection(direction);
-            if (directionVector == Vector3.zero) return;
-
-            _isMoving = true;
-            Vector3 destination = gameObject.transform.position + directionVector;
-            
-            SetCharacterDirection(direction);
-            SetCharacterAnimation(GameHelper.RunState);
-            StartCoroutine(MoveCharacter(directionVector, destination));
-        }
-
         public void MoveCharacterPosition(Vector2 targetPos)
         {
             if (_isMoving) return;
             
             _isMoving = true;
-            Vector3 directionVector = new Vector3(targetPos.x - CurrentPosition.x, 0, targetPos.y - CurrentPosition.y);
-            Vector3 destination = gameObject.transform.position + directionVector;
-            EDirection direction = GameHelper.GetDirection(directionVector);
+            Vector3 direction = new Vector3(targetPos.x - CurrentPosition.x, 0, targetPos.y - CurrentPosition.y);
+            Vector3 destination = gameObject.transform.position + direction;
             
             SetCharacterDirection(direction);
             SetCharacterAnimation(GameHelper.RunState);
-            StartCoroutine(MoveCharacter(directionVector, destination));
+            StartCoroutine(MoveCharacter(direction, destination));
         }
 
         private IEnumerator MoveCharacter(Vector3 direction, Vector3 destination)
