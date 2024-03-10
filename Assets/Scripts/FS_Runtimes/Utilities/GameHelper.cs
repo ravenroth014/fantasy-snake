@@ -68,41 +68,30 @@ namespace FS_Runtimes.Utilities
                 return EDirection.Right;
             return EDirection.None;
         }
-        
-        public static EDirection GetDirection(Key keyCode)
+
+        #region Gameplay Direction Methods
+
+        public static Vector2 GetVector2Direction(EPlayerAction playerAction)
         {
-            switch (keyCode)
+            switch (playerAction)
             {
-                case Key.A:
-                    return EDirection.Left;
-                case Key.W:
-                    return EDirection.Up;
-                case Key.S:
-                    return EDirection.Down;
-                case Key.D:
-                    return EDirection.Right;
+                case EPlayerAction.Up:
+                    return Vector2.up;
+                case EPlayerAction.Right:
+                    return Vector2.right;
+                case EPlayerAction.Down:
+                    return Vector2.down;
+                case EPlayerAction.Left:
+                    return Vector2.left;
                 default:
-                    return EDirection.None;
-            }
-        }
-        
-        public static EDirection GetDirection(int minValue, int maxValue)
-        {
-            switch (minValue)
-            {
-                case 7 when maxValue == 1:
-                    return EDirection.Up;
-                case 1 when maxValue == 3:
-                    return EDirection.Right;
-                case 3 when maxValue == 5:
-                    return EDirection.Down;
-                case 5 when maxValue == 7:
-                    return EDirection.Left;
-                default:
-                    return EDirection.None;
+                    return Vector2.zero;
             }
         }
 
+        #endregion
+
+        #region Player Action Methods
+        
         public static EPlayerAction GetPlayerAction(int minValue, int maxValue)
         {
             switch (minValue)
@@ -154,6 +143,10 @@ namespace FS_Runtimes.Utilities
             }
         }
         
+        #endregion
+
+        #region Game State Methods
+        
         public static GameState GetGameState(EGameState gameState)
         {
             switch (gameState)
@@ -170,5 +163,7 @@ namespace FS_Runtimes.Utilities
                     return null;
             }
         }
+        
+        #endregion
     }
 }
