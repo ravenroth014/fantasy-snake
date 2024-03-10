@@ -165,7 +165,7 @@ namespace FS_Runtimes.Controllers.Character
             
             foreach (KeyValuePair<string,CharacterGameObject> characterGameObject in _heroGameObjectDict)
             {
-                _heroGameObjectDict[uniqueID].SetHighlightState(characterGameObject.Key == uniqueID);
+                characterGameObject.Value.SetHighlightState(characterGameObject.Key == uniqueID);
             }
         }
 

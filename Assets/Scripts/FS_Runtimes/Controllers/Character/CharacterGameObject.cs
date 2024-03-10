@@ -21,6 +21,7 @@ namespace FS_Runtimes.Controllers.Character
         private CharacterPooling _pooling;
         
         public Vector2 CurrentPosition { get; private set; }
+        public Vector2 CurrentDirection { get; private set; }
         
         public string UniqueID { get; private set; }
         public bool IsMoving => _isMoving;
