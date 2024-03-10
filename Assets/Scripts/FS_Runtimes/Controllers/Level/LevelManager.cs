@@ -112,7 +112,7 @@ namespace FS_Runtimes.Controllers.Level
         public CharacterPairData GenerateHero(int level = 1)
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Hero, level);
+            CharacterData data = GenerateCharacterData(ECharacterType.Hero, character.UniqueID, level);
             Vector2 position = GetFreePosition();
             
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Hero);
@@ -127,7 +127,7 @@ namespace FS_Runtimes.Controllers.Level
         public void GenerateEnlist(int level = 1)
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Enlist, level);
+            CharacterData data = GenerateCharacterData(ECharacterType.Enlist, character.UniqueID, level);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
@@ -140,11 +140,12 @@ namespace FS_Runtimes.Controllers.Level
         public void GenerateEnemy(int level = 1)
         {
             CharacterGameObject character = _enemyPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Enemy, level);
+            CharacterData data = GenerateCharacterData(ECharacterType.Enemy, character.UniqueID, level);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enemy);
             character.InitData(position);
+            character.SetHighlightState(true);
 
             CharacterPairData pairData = new CharacterPairData(data, character);
             _enemyCharacter = pairData;
@@ -160,28 +161,20 @@ namespace FS_Runtimes.Controllers.Level
             
         }
         
-        public CharacterPairData GetGridOccupiedCharacter(Vector2 position, int level)
+        public CharacterPairData GetEnlistCharacter(int level)
         {
-            CharacterPairData character;
-            
-            if (GetGridOccupiedType(position) == ECharacterType.Enlist)
-            {
-                character = _enlistCharacter;
-                character.CharacterData.UpdateCharacterStat(level);
-                _enlistCharacter = null;
-                return character;
-            }
-            if (GetGridOccupiedType(position) == ECharacterType.Enemy)
-            {
-                character = _enemyCharacter;
-                character.CharacterData.UpdateCharacterStat(level);
-                _enemyCharacter = null;
-                return character;
-            }
-            return null;
+            CharacterPairData character = _enlistCharacter;
+            character.CharacterData.UpdateCharacterStat(level);
+            _enlistCharacter = null;
+            return character;
         }
 
-        private CharacterData GenerateCharacterData(ECharacterType characterType, int level)
+        public CharacterPairData GetEnemyCharacter()
+        {
+            return _enemyCharacter;
+        }
+
+        private CharacterData GenerateCharacterData(ECharacterType characterType, string uniqueID, int level)
         {
             switch (characterType)
             {
@@ -193,18 +186,25 @@ namespace FS_Runtimes.Controllers.Level
                 case ECharacterType.Enlist or ECharacterType.Hero:
                 {
                     int randIndex = Random.Range(0, _heroStatList.Count);
-                    CharacterData newData = new CharacterData(_heroStatList[randIndex], level);
+                    CharacterData newData = new CharacterData(_heroStatList[randIndex], uniqueID, level);
                     return newData;
                 }
                 case ECharacterType.Enemy:
                 {
                     int randIndex = Random.Range(0, _enemyStatList.Count);
-                    CharacterData newData = new CharacterData(_enemyStatList[randIndex], level);
+                    CharacterData newData = new CharacterData(_enemyStatList[randIndex], uniqueID, level);
                     return newData;
                 }
                 default:
                     return null;
             }
+        }
+
+        public void RemoveEnemy(Vector2 targetPos)
+        {
+            UpdateGridData(targetPos, string.Empty, EGridState.Empty, ECharacterType.None);
+            _enemyCharacter.CharacterGameObject.Release();
+            _enemyCharacter = null;
         }
         
         #endregion

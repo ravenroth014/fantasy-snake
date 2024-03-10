@@ -1,4 +1,5 @@
 using System;
+using System.Collections;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.States;
@@ -36,6 +37,11 @@ namespace FS_Runtimes.Controllers.Gameplay
         public void SetOnPlayerActionTriggerCallback(Action<EPlayerAction> callback = null)
         {
             _onPlayerTrigger = callback;
+        }
+
+        public void ExecuteCoroutine(IEnumerator coroutine)
+        {
+            StartCoroutine(coroutine);
         }
 
         #endregion

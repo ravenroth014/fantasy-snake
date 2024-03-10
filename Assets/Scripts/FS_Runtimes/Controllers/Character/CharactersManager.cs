@@ -14,6 +14,8 @@ namespace FS_Runtimes.Controllers.Character
         private readonly List<CharacterData> _heroDataList = new();
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
 
+        public CharacterPairData CurrentMainHero { get; private set; }
+
         public bool IsMoving => _heroGameObjectDict.Values.ToList().Any(character => character.IsMoving);
         
         #endregion
@@ -40,12 +42,13 @@ namespace FS_Runtimes.Controllers.Character
             else
             {
                 newCharacter.CharacterGameObject.SetHighlightState(true);
+                CurrentMainHero = newCharacter;
             }
 
             _heroGameObjectDict[uniqueID] = newCharacter.CharacterGameObject;
             _heroDataList.Add(newCharacter.CharacterData);
         }
-
+        
         public void MoveCharacter(Vector2 targetPosition, Action<Vector2, string> onUpdateGrid = null)
         {
             Vector2 cachePos = Vector2.zero;
@@ -100,6 +103,10 @@ namespace FS_Runtimes.Controllers.Character
                 _heroDataList.Insert(0, data);
             }
 
+            string currentUniqueID = _heroDataList[0].UniqueID;
+            CurrentMainHero.CharacterData = _heroDataList[0];
+            CurrentMainHero.CharacterGameObject = _heroGameObjectDict[currentUniqueID];
+            
             UpdateCharactersTransform(cachePosList, cacheDirList, onUpdateGrid);
             SetHighlightState();
         }
@@ -150,6 +157,8 @@ namespace FS_Runtimes.Controllers.Character
                 _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
                 _heroGameObjectDict.Clear();
             }
+
+            CurrentMainHero = null;
         }
 
         private void SetHighlightState()

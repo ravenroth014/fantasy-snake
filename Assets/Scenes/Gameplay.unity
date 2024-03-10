@@ -283,7 +283,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolingSetting: {fileID: 11400000, guid: 3868a031403d173489fac9e88062c1cf, type: 2}
-  _characterType: 0
+  _characterType: 2
 --- !u!1 &651146930
 GameObject:
   m_ObjectHideFlags: 0

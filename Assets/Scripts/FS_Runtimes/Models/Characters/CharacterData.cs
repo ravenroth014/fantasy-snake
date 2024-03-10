@@ -12,7 +12,7 @@ namespace FS_Runtimes.Models.Characters
         public string UniqueID { get; private set; }
         public ECharacterType CharacterType { get; private set; }
 
-        public bool IsDead => CurrentHp > 0;
+        public bool IsDead => CurrentHp <= 0;
         
         private readonly int _baseHpStat;
         private readonly int _baseAtkStat;
@@ -24,13 +24,15 @@ namespace FS_Runtimes.Models.Characters
 
         #region Constructors
 
-        public CharacterData(CharacterBaseStat baseStat, int currentLevel)
+        public CharacterData(CharacterBaseStat baseStat, string uniqueID, int currentLevel)
         {
             _baseHpStat = baseStat.BaseHp;
-            _baseAtkStat = baseStat.BaseHp;
+            _baseAtkStat = baseStat.BaseAtk;
             _hpGrowthRate = baseStat.HpGrowthRate;
             _atkGrowthRate = baseStat.AtkGrowthRate;
             _currentLevel = 0;
+
+            UniqueID = uniqueID;
 
             UpdateCharacterStat(currentLevel);
         }
@@ -53,6 +55,9 @@ namespace FS_Runtimes.Models.Characters
         public void TakeDamage(int value)
         {
             CurrentHp -= value;
+
+            if (CurrentHp < 0)
+                CurrentHp = 0;
         }
 
         #endregion

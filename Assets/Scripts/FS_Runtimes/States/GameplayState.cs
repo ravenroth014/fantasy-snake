@@ -1,4 +1,4 @@
-﻿using System;
+﻿using System.Collections;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
@@ -20,8 +20,11 @@ namespace FS_Runtimes.States
         private readonly SettingManager _settingManager = SettingManager.Instance;
         private readonly LogManager _logManager = LogManager.Instance;
 
+        private CharacterPairData _currentHero;
+        private CharacterPairData _currentEnemy;
         private EPlayerAction _lastAction;
         private int _currentLevel;
+        private bool _isBattle;
         
         #endregion
 
@@ -53,6 +56,8 @@ namespace FS_Runtimes.States
         
         private bool Init()
         {
+            _currentLevel = 1;
+            
             bool isComplete = true;
             
             isComplete &= InitCallback();
@@ -60,7 +65,6 @@ namespace FS_Runtimes.States
             isComplete &= InitStageLevel();
 
             _lastAction = EPlayerAction.None;
-            _currentLevel = 1;
 
             return isComplete;
         }
@@ -105,6 +109,7 @@ namespace FS_Runtimes.States
         
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
+            if (_isBattle) return;
             if (_charactersManager.IsMoving) return;
             if (_settingManager.IsGameplayButtonActionValid(_lastAction, playerAction) == false)
             {
@@ -206,7 +211,7 @@ namespace FS_Runtimes.States
                     OnRecruitEnlist(targetPos);
                     break;
                 case ECharacterType.Enemy:
-                    OnAttackEnemy(targetPos);
+                    _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos));
                     break;
                 default:
                     _logManager.LogWarning($"Character type, {characterType} is not a valid type for move to occupied grid action.");
@@ -217,18 +222,48 @@ namespace FS_Runtimes.States
         private void OnRecruitEnlist(Vector2 targetPos)
         {
             _logManager.Log("Recruiting enlist ...");
-            CharacterPairData character = _levelManager.GetGridOccupiedCharacter(targetPos, _currentLevel);
+            CharacterPairData character = _levelManager.GetEnlistCharacter(_currentLevel);
             
             _charactersManager.AddCharacter(character, targetPos, OnUpdateGridCallback);
             _levelManager.GenerateEnlist();
         }
 
-        private void OnAttackEnemy(Vector2 targetPos)
+        private IEnumerator OnAttackEnemy(Vector2 targetPos)
         {
-            // TODO: Attack enemy logic.
-            
-            // TODO: If player is dead, Remove player
-            // TODO: If enemy is dead, Remove enemy and generate new one.
+            _isBattle = true;
+
+            _currentEnemy = _levelManager.GetEnemyCharacter();
+            _currentHero = _charactersManager.CurrentMainHero;
+            _currentHero.CharacterGameObject.SetCharacterDirection(targetPos);
+
+            int targetDamage = _currentEnemy.CharacterData.AtkPoint;
+            int heroDamage = _currentHero.CharacterData.AtkPoint;
+
+            do
+            {
+                _currentEnemy.CharacterData.TakeDamage(heroDamage);
+                _currentHero.CharacterData.TakeDamage(targetDamage);
+                
+                _logManager.Log($"{_currentEnemy.CharacterData.UniqueID} take damage {_currentHero.CharacterData.AtkPoint} from {_currentHero.CharacterData.UniqueID}, HP: {_currentEnemy.CharacterData.CurrentHp.ToString()}/{_currentEnemy.CharacterData.MaxHp}");
+                _logManager.Log($"{_currentHero.CharacterData.UniqueID} take damage {_currentEnemy.CharacterData.AtkPoint} from {_currentEnemy.CharacterData.UniqueID}, HP: {_currentHero.CharacterData.CurrentHp.ToString()}/{_currentHero.CharacterData.MaxHp}");
+                
+                // TODO: Update UI.
+
+                yield return new WaitForSeconds(1.5f);
+                
+            } while (_currentEnemy.CharacterData.IsDead == false && _charactersManager.CurrentMainHero.CharacterData.IsDead == false);
+
+            if (_currentHero.CharacterData.IsDead)
+            {
+                _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
+            }
+            if (_currentEnemy.CharacterData.IsDead)
+            {
+                _levelManager.RemoveEnemy(targetPos);
+                _levelManager.GenerateEnemy(_currentLevel);
+            }
+
+            _isBattle = false;
         }
 
         #region Generation Methods

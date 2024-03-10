@@ -65,6 +65,12 @@ namespace FS_Runtimes.Controllers.Character
             _animator.Play(stateName);
         }
 
+        public void SetCharacterDirection(Vector2 targetPos)
+        {
+            Vector3 direction = new Vector3(targetPos.x - CurrentPosition.x, 0, targetPos.y - CurrentPosition.y);
+            SetCharacterDirection(direction);
+        }
+        
         public void SetCharacterDirection(Vector3 direction)
         {
             if (direction == Vector3.zero) return;
