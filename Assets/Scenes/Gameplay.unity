@@ -198,6 +198,8 @@ Transform:
   m_Children:
   - {fileID: 666223720}
   - {fileID: 524786097}
+  - {fileID: 1452674133}
+  - {fileID: 1652093351}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &272584305
@@ -500,6 +502,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7e0eda620ebccb64b80006f238539e15, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _decoratePooling: {fileID: 0}
+  _obstaclePooling: {fileID: 0}
+  _heroPooling: {fileID: 0}
+  _enemyPooling: {fileID: 0}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
@@ -701,6 +707,52 @@ Transform:
   - {fileID: 1500662234}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1452674132
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1452674133}
+  - component: {fileID: 1452674134}
+  m_Layer: 0
+  m_Name: decorate_pooling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1452674133
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452674132}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 111329587}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1452674134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1452674132}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a058e4f507462c48b01371c2af77545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolingSetting: {fileID: 11400000, guid: 5fe38bd8057acb94eb042b9a9d490772, type: 2}
+  _decorateType: 0
 --- !u!1 &1500662232
 GameObject:
   m_ObjectHideFlags: 0
@@ -745,6 +797,52 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1236733215}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1652093350
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1652093351}
+  - component: {fileID: 1652093352}
+  m_Layer: 0
+  m_Name: obstacle_pooling
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1652093351
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652093350}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 111329587}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1652093352
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1652093350}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a058e4f507462c48b01371c2af77545, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _poolingSetting: {fileID: 11400000, guid: beec007a51a051042a8780419377cf6c, type: 2}
+  _decorateType: 1
 --- !u!1 &1698534516
 GameObject:
   m_ObjectHideFlags: 0

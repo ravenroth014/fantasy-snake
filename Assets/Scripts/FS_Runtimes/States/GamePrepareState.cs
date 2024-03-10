@@ -1,7 +1,6 @@
 ﻿using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
-using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Utilities;
 
 namespace FS_Runtimes.States
@@ -11,7 +10,6 @@ namespace FS_Runtimes.States
         #region Fields & Properties
 
         private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
-        private readonly CharacterPooling _heroPooling = GameManager.Instance.HeroPooling;
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
 
         #endregion

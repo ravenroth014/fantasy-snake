@@ -14,14 +14,6 @@ namespace FS_Runtimes.Controllers.Core
     {
         #region Fields & Properties
 
-        public CharacterPooling HeroPooling => _heroPooling;
-        [SerializeField, Tooltip("Hero Pooling")]
-        private CharacterPooling _heroPooling;
-
-        public CharacterPooling EnemyPooling => _enemyPooling;
-        [SerializeField, Tooltip("Enemy Pooling")]
-        private CharacterPooling _enemyPooling;
-
         public LevelManager LevelManager => _levelManager;
         [SerializeField, Tooltip("Level Manager")]
         private LevelManager _levelManager;
@@ -67,8 +59,6 @@ namespace FS_Runtimes.Controllers.Core
 
         private void InitControllers()
         {
-            _heroPooling.Init();
-            _enemyPooling.Init();
             _levelManager.Init();
             _charactersManager.Init();
             _playerController.Init();

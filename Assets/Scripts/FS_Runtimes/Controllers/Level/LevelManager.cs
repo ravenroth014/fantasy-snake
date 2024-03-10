@@ -1,7 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using FS_Runtimes.Controllers.Character;
-using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Models.Levels;
 using FS_Runtimes.Utilities;
@@ -13,12 +12,15 @@ namespace FS_Runtimes.Controllers.Level
     {
         #region Fields & Properties
 
+        [Header("Pooling")]
+        [SerializeField, Tooltip("Decorate Pooling")] private DecoratePooling _decoratePooling;
+        [SerializeField, Tooltip("Obstacle Pooling")] private DecoratePooling _obstaclePooling;
+        [SerializeField, Tooltip("Hero Pooling")] private CharacterPooling _heroPooling;
+        [SerializeField, Tooltip("Enemy Pooling")] private CharacterPooling _enemyPooling;
+        
         private readonly int _horizontalMaxSize = 16;
         private readonly int _verticalMaxSize = 16;
         private readonly Dictionary<Vector2, GridData> _gridDict = new();
-
-        private CharacterPooling _heroPooling;
-        private CharacterPooling _enemyPooling;
         
         private CharacterGameObject _enlistCharacter;
         private CharacterGameObject _enemyCharacter;
@@ -30,9 +32,11 @@ namespace FS_Runtimes.Controllers.Level
         public void Init()
         {
             GenerateDict();
-
-            _heroPooling = GameManager.Instance.HeroPooling;
-            _enemyPooling = GameManager.Instance.EnemyPooling;
+            
+            _decoratePooling.Init();
+            _obstaclePooling.Init();
+            _heroPooling.Init();
+            _enemyPooling.Init();
         }
         
         private void GenerateDict()
