@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "CharacterGameObjectSetting", menuName = "Settings/Character GameObject Setting")]
     public class CharacterGameObjectSetting : ScriptableObject

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "GameplayButtonSetting", menuName = "Settings/Gameplay Button Setting")]
     public class GameplayButtonSetting : ScriptableObject

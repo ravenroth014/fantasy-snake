@@ -1,6 +1,7 @@
 using System.Text;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Utilities;
+using FS_Runtimes.Utilities.Setting;
 using UnityEngine;
 using UnityEngine.Pool;
 

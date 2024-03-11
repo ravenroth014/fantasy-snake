@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "PoolingSetting", menuName = "Settings/Pooling Setting")]
     public class PoolingSetting : ScriptableObject

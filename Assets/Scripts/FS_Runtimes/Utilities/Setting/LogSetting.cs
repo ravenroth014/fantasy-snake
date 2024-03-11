@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "LogSetting", menuName = "Settings/Log Setting")]
     public class LogSetting : ScriptableObject

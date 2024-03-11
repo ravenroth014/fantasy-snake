@@ -7,6 +7,7 @@ using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Models.Levels;
 using FS_Runtimes.Utilities;
+using FS_Runtimes.Utilities.Setting;
 using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Level

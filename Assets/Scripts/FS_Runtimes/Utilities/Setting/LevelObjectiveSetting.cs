@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "LevelObjectiveSetting", menuName = "Settings/Level Objective Setting")]
     public class LevelObjectiveSetting : ScriptableObject

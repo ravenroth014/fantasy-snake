@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace FS_Runtimes.Utilities
+namespace FS_Runtimes.Utilities.Setting
 {
     [CreateAssetMenu(fileName = "ObstacleSetting", menuName = "Settings/Obstacle Setting")]
     public class ObstacleSetting : ScriptableObject
