@@ -15,12 +15,6 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Setting Button")] private SelectedButton _settingButton;
         [SerializeField, Tooltip("Exit Button")] private SelectedButton _exitButton;
 
-        [Header("Setting Buttons")] 
-        [SerializeField, Tooltip("Entity Setting Button")] private SelectedButton _entiryButton;
-        [SerializeField, Tooltip("Stat Setting Button")] private SelectedButton _selectedButton;
-        [SerializeField, Tooltip("Growth Setting Button")] private SelectedButton _growthButton;
-        [SerializeField, Tooltip("Spawn Setting Button")] private SelectedButton _spawnButton;
-
         [Header("Event Systems")] 
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
 
