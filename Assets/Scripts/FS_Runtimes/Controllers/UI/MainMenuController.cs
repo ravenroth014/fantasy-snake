@@ -10,10 +10,16 @@ namespace FS_Runtimes.Controllers.UI
     {
         #region Fields & Properties
 
-        [Header("Buttons")] 
+        [Header("Main Menu Buttons")] 
         [SerializeField, Tooltip("Start Button")] private SelectedButton _startButton;
         [SerializeField, Tooltip("Setting Button")] private SelectedButton _settingButton;
         [SerializeField, Tooltip("Exit Button")] private SelectedButton _exitButton;
+
+        [Header("Setting Buttons")] 
+        [SerializeField, Tooltip("Entity Setting Button")] private SelectedButton _entiryButton;
+        [SerializeField, Tooltip("Stat Setting Button")] private SelectedButton _selectedButton;
+        [SerializeField, Tooltip("Growth Setting Button")] private SelectedButton _growthButton;
+        [SerializeField, Tooltip("Spawn Setting Button")] private SelectedButton _spawnButton;
 
         [Header("Event Systems")] 
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
