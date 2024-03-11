@@ -24,6 +24,7 @@ namespace FS_Runtimes.States
         private CharacterPairData _currentEnemy;
         private EPlayerAction _lastAction;
         private int _currentLevel;
+        private int _currentObjective;
         private bool _isBattle;
         
         #endregion
@@ -63,6 +64,7 @@ namespace FS_Runtimes.States
             isComplete &= InitCallback();
             isComplete &= InitPlayer();
             isComplete &= InitStageLevel();
+            isComplete &= InitStageObjective();
 
             _lastAction = EPlayerAction.None;
 
@@ -94,9 +96,20 @@ namespace FS_Runtimes.States
             
             return true;
         }
+
+        private bool InitStageObjective()
+        {
+            if (_levelManager is null) return false;
+
+            _currentObjective = _levelManager.GetCurrentLevelObjective(_currentLevel);
+
+            return true;
+        }
         
         #endregion
 
+        #region Decision Making Methods
+        
         private void StartGame()
         {
             GenerateEnlist();
@@ -249,6 +262,8 @@ namespace FS_Runtimes.States
                 
             } while (_currentEnemy.CharacterData.IsDead == false && _charactersManager.CurrentMainHero.CharacterData.IsDead == false);
 
+            _isBattle = false;
+            
             if (_currentHero.CharacterData.IsDead)
             {
                 _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
@@ -257,12 +272,26 @@ namespace FS_Runtimes.States
             if (_currentEnemy.CharacterData.IsDead)
             {
                 _levelManager.RemoveEnemy(targetPos);
+                OnUpdateObjective();
                 _levelManager.GenerateEnemy(_currentLevel);
-            }
 
-            _isBattle = false;
+            }
         }
 
+        private void OnUpdateObjective()
+        {
+            _currentObjective--;
+
+            if (_currentObjective == 0)
+            {
+                _currentLevel++;
+                _currentObjective = _levelManager.GetCurrentLevelObjective(_currentLevel);
+                _charactersManager.UpdateCharacterLevel(_currentLevel);
+            }
+        }
+
+        #endregion
+        
         #region Generation Methods
         
         private void GenerateEnlist()

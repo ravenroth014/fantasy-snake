@@ -34,6 +34,9 @@ namespace FS_Runtimes.Controllers.Level
         [Header("Character Stat Data")] 
         [SerializeField, Tooltip("Hero Base Stat")] private List<CharacterBaseStat> _heroStatList;
         [SerializeField, Tooltip("Enemy Base Stat")] private List<CharacterBaseStat> _enemyStatList;
+
+        [Header("Level Objective Setting")] 
+        [SerializeField, Tooltip("Level Objective Setting")] private LevelObjectiveSetting _levelObjectiveSetting;
         
         private readonly int _horizontalMaxSize = 16;
         private readonly int _verticalMaxSize = 16;
@@ -122,6 +125,11 @@ namespace FS_Runtimes.Controllers.Level
         public ECharacterType GetGridOccupiedType(Vector2 position)
         {
             return _gridDict[position].CharacterType;
+        }
+
+        public int GetCurrentLevelObjective(int level)
+        {
+            return (int)(_levelObjectiveSetting.BaseTarget * Mathf.Pow(level, _levelObjectiveSetting.LevelExponential));
         }
         
         #endregion

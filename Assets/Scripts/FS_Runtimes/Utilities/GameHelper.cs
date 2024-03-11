@@ -134,7 +134,7 @@ namespace FS_Runtimes.Utilities
         
         #endregion
 
-        #region Character Stat Calculation Methods
+        #region Calculation Methods
 
         public static int CalculateCharacterStat(int baseStat, int level, float growthRate)
         {
@@ -142,5 +142,6 @@ namespace FS_Runtimes.Utilities
         }
 
         #endregion
+
     }
 }
