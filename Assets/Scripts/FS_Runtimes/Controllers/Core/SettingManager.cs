@@ -12,7 +12,9 @@ namespace FS_Runtimes.Controllers.Core
 
         [Header("Game Setting")]
         [SerializeField, Tooltip("Gameplay Button Setting")] private List<GameplayButtonSetting> _gameplayButtonSettingList;
-        [SerializeField, Tooltip("Gameplay Growth Setting")] private GrowthSetting _growthSetting;
+        [SerializeField, Tooltip("Gameplay Default Growth Setting")] private GrowthSetting _defaultGrowthSetting;
+        [SerializeField, Tooltip("Gameplay Default Entity Setting")] private EntitySetting _defaultEntitySetting;
+        [SerializeField, Tooltip("Gameplay Default Stat Setting")] private StatSetting _defaultStatSetting;
         
         public static SettingManager Instance => _instance;
         private static SettingManager _instance;
