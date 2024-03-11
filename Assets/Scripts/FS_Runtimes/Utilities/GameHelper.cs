@@ -17,6 +17,8 @@ namespace FS_Runtimes.Utilities
         public static readonly string RunState = "run";
         
         public static readonly string MainTexture = "_MainTex";
+
+        public static readonly string GameSettingKey = "GameSetting";
         
         #endregion
 

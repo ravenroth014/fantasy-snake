@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
+using FS_Runtimes.Models.Settings;
 using FS_Runtimes.Utilities;
 using FS_Runtimes.Utilities.Setting;
+using Newtonsoft.Json;
 using UnityEngine;
 
 namespace FS_Runtimes.Controllers.Core
@@ -15,6 +17,9 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Gameplay Default Growth Setting")] private GrowthSetting _defaultGrowthSetting;
         [SerializeField, Tooltip("Gameplay Default Entity Setting")] private EntitySetting _defaultEntitySetting;
         [SerializeField, Tooltip("Gameplay Default Stat Setting")] private StatSetting _defaultStatSetting;
+
+        private PersistenceGameSetting _defaultSetting;
+        private PersistenceGameSetting _customSetting;
         
         public static SettingManager Instance => _instance;
         private static SettingManager _instance;
@@ -26,6 +31,47 @@ namespace FS_Runtimes.Controllers.Core
         private void Awake()
         {
             _instance = this;
+        }
+
+        private void Start()
+        {
+            InitSetting();
+        }
+
+        private void InitSetting()
+        {
+            _defaultSetting = new PersistenceGameSetting(_defaultEntitySetting.DefaultStartEntity
+                , _defaultStatSetting.DefaultMinAttack
+                , _defaultStatSetting.DefaultMaxAttack
+                , _defaultStatSetting.DefaultMinHealth
+                , _defaultStatSetting.DefaultMaxHealth
+                , _defaultGrowthSetting.DefaultGrowthMoveCount
+                , _defaultGrowthSetting.MinGrowthMoveCount
+                , _defaultEntitySetting.DefaultMaxActiveEntity
+                , _defaultEntitySetting.DefaultMaxSpawnable);
+            
+            if (PlayerPrefs.HasKey(GameHelper.GameSettingKey) == false) return;
+
+            string customSettingJson = PlayerPrefs.GetString(GameHelper.GameSettingKey);
+            _customSetting = JsonConvert.DeserializeObject<PersistenceGameSetting>(customSettingJson);
+        }
+
+        public PersistenceGameSetting GetGameplaySetting()
+        {
+            return _customSetting ?? _defaultSetting;
+        }
+
+        public void UpdateCustomSetting(PersistenceGameSetting newSetting)
+        {
+            _customSetting = newSetting;
+
+            string customSettingJson = string.Empty;
+            
+            if (newSetting != null)
+                customSettingJson = JsonConvert.SerializeObject(_customSetting);
+            
+            PlayerPrefs.SetString(GameHelper.GameSettingKey, customSettingJson);
+            PlayerPrefs.Save();
         }
 
         public bool IsGameplayButtonActionValid(EPlayerAction lastAction, EPlayerAction currentAction)
