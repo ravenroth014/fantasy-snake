@@ -3,6 +3,7 @@ using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
+using FS_Runtimes.Controllers.UI;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Utilities;
@@ -19,6 +20,7 @@ namespace FS_Runtimes.States
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         private readonly SettingManager _settingManager = SettingManager.Instance;
         private readonly LogManager _logManager = LogManager.Instance;
+        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
 
         private CharacterPairData _currentHero;
         private CharacterPairData _currentEnemy;
@@ -33,15 +35,14 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
-            // TODO: Open Loading UI.
-            
             if (Init() == false)
             {
                 GameManager.Instance.ChangeState(EGameState.GameError);
                 return;
             }
             
-            // TODO: Close Loading UI, and countdown before start game.
+            _loadingStateController.Close();
+            // TODO: Countdown before start game.
             
             StartGame();
         }

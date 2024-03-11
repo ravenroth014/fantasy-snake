@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace FS_Runtimes.Controllers.UI
 {
-    public class MainMenuController : MonoBehaviour
+    public class MainMenuController : AbstractUIController
     {
         #region Fields & Properties
 
@@ -18,7 +18,7 @@ namespace FS_Runtimes.Controllers.UI
         [Header("Event Systems")] 
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
 
-        private SettingManager _settingManager;
+        private SettingMenuController _settingMenuController;
         private ECurrentMainMenu _currentMainMenuState;
 
         #endregion
@@ -27,8 +27,10 @@ namespace FS_Runtimes.Controllers.UI
 
         public void Init()
         {
-            _settingManager ??= SettingManager.Instance;
+            _settingMenuController ??= NavigatorManager.Instance.SettingMenuController;
             _eventSystem.firstSelectedGameObject = _startButton.gameObject;
+
+            InitCallback();
         }
 
         public void OnPlayerTrigger(EPlayerAction playerAction)
@@ -48,6 +50,31 @@ namespace FS_Runtimes.Controllers.UI
         private void OnControlSettingMenu(EPlayerAction playerAction)
         {
             
+        }
+
+        private void InitCallback()
+        {
+            if (_startButton is not null)
+            {
+                _startButton.SetCallback(() =>
+                {
+                    GameManager.Instance.ChangeState(EGameState.GamePlay);
+                });
+            }
+
+            if (_settingButton is not null)
+            {
+                _settingButton.SetCallback(() =>
+                {
+                    _settingMenuController.Open();
+                    Close();
+                });
+            }
+
+            if (_exitButton is not null)
+            {
+                Application.Quit();
+            }
         }
 
         #endregion

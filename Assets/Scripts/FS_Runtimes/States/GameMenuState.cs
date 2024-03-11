@@ -12,6 +12,8 @@ namespace FS_Runtimes.States
 
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         private readonly MainMenuController _mainMenuController = NavigatorManager.Instance.MainMenuController;
+        private readonly SettingMenuController _settingMenuController = NavigatorManager.Instance.SettingMenuController;
+        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
         private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
@@ -24,6 +26,10 @@ namespace FS_Runtimes.States
 
         public override void OnExit()
         {
+            _loadingStateController.Open();
+            
+            _settingMenuController.Close();
+            _mainMenuController.Close();
         }
 
         private bool Init()
@@ -39,8 +45,10 @@ namespace FS_Runtimes.States
         private bool InitController()
         {
             if (_mainMenuController is null) return false;
+            if (_settingMenuController is null) return false;
             
             _mainMenuController.Init();
+            _settingMenuController.Init();
 
             return true;
         }

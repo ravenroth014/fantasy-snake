@@ -574,6 +574,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: a540e973c339268448557124fbd7dac1, type: 2}
   - {fileID: 11400000, guid: 90f0b38f1993ded4b97613d139079735, type: 2}
   - {fileID: 11400000, guid: 7f8ca50e63f3fbb4b8bb6308045ee9a4, type: 2}
+  _levelObjectiveSetting: {fileID: 11400000, guid: 15af07dd35ff7ef41b615b0994a5c7eb, type: 2}
 --- !u!1 &963194225
 GameObject:
   m_ObjectHideFlags: 0
