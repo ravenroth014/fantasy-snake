@@ -40,6 +40,7 @@ namespace FS_Runtimes.Controllers.UI
 
         [Header("Growth Option UI")] 
         [SerializeField, Tooltip("Growing by Count InputField")] private TMP_InputField _growByCountInputField;
+        [SerializeField, Tooltip("Stat Growing rate")] private TMP_InputField _statGrowingRateInputField;
 
         [Header("Spawn Option UI")] 
         [SerializeField, Tooltip("Spawn Max Entity InputField")] private TMP_InputField _spawnMaxEntityInputField;
@@ -191,6 +192,12 @@ namespace FS_Runtimes.Controllers.UI
                 _spawnMaxSpawnableField.onEndEdit.RemoveAllListeners();
                 _spawnMaxSpawnableField.onEndEdit.AddListener(OnMaxSpawnableInputUpdate);
             }
+
+            if (_statGrowingRateInputField is not null)
+            {
+                _statGrowingRateInputField.onEndEdit.RemoveAllListeners();
+                _statGrowingRateInputField.onEndEdit.AddListener(OnGrowingStatRateInputUpdate);
+            }
         }
         
         private void InitUI()
@@ -245,11 +252,12 @@ namespace FS_Runtimes.Controllers.UI
             int maxAtk = int.Parse(_statMaxAtkInputField.text);
             int minHp = int.Parse(_statMinHpInputField.text);
             int maxHp = int.Parse(_statMaxHpInputField.text);
-            int growRate = int.Parse(_growByCountInputField.text);
+            int growthByMove = int.Parse(_growByCountInputField.text);
+            float growRate = float.Parse(_statGrowingRateInputField.text);
             int maxActiveEntity = int.Parse(_spawnMaxEntityInputField.text);
             int maxSpawnable = int.Parse(_spawnMaxSpawnableField.text);
 
-            PersistenceGameSetting newSetting = new PersistenceGameSetting(startEntity, minAtk, maxAtk, minHp, maxHp, growRate, maxActiveEntity, maxSpawnable);
+            PersistenceGameSetting newSetting = new PersistenceGameSetting(startEntity, minAtk, maxAtk, minHp, maxHp, growthByMove, growRate, maxActiveEntity, maxSpawnable);
             SettingManager.Instance.UpdateCustomSetting(newSetting);
             _cacheSetting = newSetting;
         }
@@ -438,6 +446,24 @@ namespace FS_Runtimes.Controllers.UI
                 _spawnMaxSpawnableField.text = defaultValue.ToString("D");
             }
         }
+
+        private void OnGrowingStatRateInputUpdate(string value)
+        {
+            bool isParsed = float.TryParse(value, out float result);
+
+            float defaultValue = SettingManager.Instance.DefaultGrowingRate;
+
+            if (isParsed == false)
+            {
+                _spawnMaxSpawnableField.text = defaultValue.ToString("F1");
+                return;
+            }
+
+            if (result <= 0)
+            {
+                _spawnMaxSpawnableField.text = defaultValue.ToString("F1");
+            }
+        }
         
         #endregion
 
@@ -468,6 +494,9 @@ namespace FS_Runtimes.Controllers.UI
 
             if (_spawnMaxSpawnableField is not null)
                 _spawnMaxSpawnableField.text = setting.MaxSpawnable.ToString("D");
+
+            if (_statGrowingRateInputField is not null)
+                _statGrowingRateInputField.text = setting.StatGrowthRate.ToString("F1");
         }
         
         #endregion

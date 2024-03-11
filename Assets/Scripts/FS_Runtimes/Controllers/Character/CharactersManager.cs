@@ -193,12 +193,12 @@ namespace FS_Runtimes.Controllers.Character
             }
         }
 
-        public void UpdateCharacterLevel(int level)
+        public void OnTriggerActionEndPhase()
         {
             if (_heroDataList is null or {Count: 0})
                 return;
             
-            _heroDataList.ForEach(data => data.UpdateCharacterStat(level));
+            _heroDataList.ForEach(data => data.OnTakeAction());
         }
 
         #endregion

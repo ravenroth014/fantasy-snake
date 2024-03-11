@@ -18,38 +18,39 @@ namespace FS_Runtimes.Models.Characters
         private readonly int _baseAtkStat;
         private readonly float _hpGrowthRate;
         private readonly float _atkGrowthRate;
+        private readonly int _growthByMoveRule;
         private int _currentLevel;
+        private int _growthMoveLeft;
         
         #endregion
 
         #region Constructors
 
-        public CharacterData(CharacterBaseStat baseStat, string uniqueID, int currentLevel)
+        public CharacterData(int baseAtkStat, int baseHpStat, float growingRate, int growthByMoveRule, string uniqueID)
         {
-            _baseHpStat = baseStat.BaseHp;
-            _baseAtkStat = baseStat.BaseAtk;
-            _hpGrowthRate = baseStat.HpGrowthRate;
-            _atkGrowthRate = baseStat.AtkGrowthRate;
-            _currentLevel = 0;
+            _baseAtkStat = baseAtkStat;
+            _baseHpStat = baseHpStat;
+            _hpGrowthRate = growingRate;
+            _atkGrowthRate = growingRate;
+            _growthByMoveRule = growthByMoveRule;
+            _growthMoveLeft = growthByMoveRule;
+            _currentLevel = 1;
 
             UniqueID = uniqueID;
-
-            UpdateCharacterStat(currentLevel);
+            
+            UpdateCharacterStat();
         }
 
         #endregion
         
         #region Methods
 
-        public void UpdateCharacterStat(int level)
+        private void UpdateCharacterStat()
         {
-            if (level <= _currentLevel) return;
-            
-            MaxHp = GameHelper.CalculateCharacterStat(_baseHpStat, level, _hpGrowthRate);
+            MaxHp = GameHelper.CalculateCharacterStat(_baseHpStat, _currentLevel, _hpGrowthRate);
             CurrentHp = MaxHp;
 
-            AtkPoint = GameHelper.CalculateCharacterStat(_baseAtkStat, level, _atkGrowthRate);
-            _currentLevel = level;
+            AtkPoint = GameHelper.CalculateCharacterStat(_baseAtkStat, _currentLevel, _atkGrowthRate);
         }
 
         public void TakeDamage(int value)
@@ -58,6 +59,18 @@ namespace FS_Runtimes.Models.Characters
 
             if (CurrentHp < 0)
                 CurrentHp = 0;
+        }
+
+        public void OnTakeAction()
+        {
+            _growthMoveLeft--;
+
+            if (_growthMoveLeft <= 0)
+            {
+                _growthMoveLeft = _growthByMoveRule;
+                _currentLevel++;
+                UpdateCharacterStat();
+            }
         }
 
         #endregion

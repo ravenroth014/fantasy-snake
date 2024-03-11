@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
@@ -6,6 +7,7 @@ using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.UI;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
+using FS_Runtimes.Models.Settings;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 
@@ -25,9 +27,9 @@ namespace FS_Runtimes.States
         private CharacterPairData _currentHero;
         private CharacterPairData _currentEnemy;
         private EPlayerAction _lastAction;
-        private int _currentLevel;
-        private int _currentObjective;
         private bool _isBattle;
+
+        private PersistenceGameSetting _gameSetting;
         
         #endregion
 
@@ -43,8 +45,6 @@ namespace FS_Runtimes.States
             
             _loadingStateController.Close();
             // TODO: Countdown before start game.
-            
-            StartGame();
         }
 
         public override void OnExit()
@@ -58,14 +58,13 @@ namespace FS_Runtimes.States
         
         private bool Init()
         {
-            _currentLevel = 1;
+            _gameSetting = SettingManager.Instance.GetCurrentGameplaySetting();
             
             bool isComplete = true;
             
             isComplete &= InitCallback();
-            isComplete &= InitPlayer();
             isComplete &= InitStageLevel();
-            isComplete &= InitStageObjective();
+            isComplete &= InitPlayer();
 
             _lastAction = EPlayerAction.None;
 
@@ -83,8 +82,9 @@ namespace FS_Runtimes.States
 
         private bool InitPlayer()
         {
-            CharacterPairData character = _levelManager.GenerateHero(_currentLevel);
+            CharacterPairData character = _levelManager.GenerateHero();
             _charactersManager.AddCharacter(character, Vector2.zero);
+            _levelManager.GenerateCharactersOnStart();
 
             return true;
         }
@@ -97,25 +97,10 @@ namespace FS_Runtimes.States
             
             return true;
         }
-
-        private bool InitStageObjective()
-        {
-            if (_levelManager is null) return false;
-
-            _currentObjective = _levelManager.GetCurrentLevelObjective(_currentLevel);
-
-            return true;
-        }
         
         #endregion
 
         #region Decision Making Methods
-        
-        private void StartGame()
-        {
-            GenerateEnlist();
-            GenerateEnemy();
-        }
         
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
@@ -167,11 +152,16 @@ namespace FS_Runtimes.States
             switch (gridState)
             {
                 case EGridState.Empty:
+                {
                     OnMoveCharacter(targetPosition);
+                    OnEndPhase();
                     break;
+                }
                 case EGridState.Occupied:
+                {
                     OnMoveToOccupiedGrid(targetPosition);
                     break;
+                }
                 case EGridState.Obstacle:
                 case EGridState.Walled:
                     OnRemoveCharacter(targetPosition);
@@ -208,6 +198,8 @@ namespace FS_Runtimes.States
             
             // TODO: Need to check if this is the last character
             // If so, game over.
+            // Else
+            OnEndPhase();
         }
 
         private void OnMoveToOccupiedGrid(Vector2 targetPos)
@@ -219,9 +211,10 @@ namespace FS_Runtimes.States
             {
                 case ECharacterType.Enlist:
                     OnRecruitEnlist(targetPos);
+                    OnEndPhase();
                     break;
                 case ECharacterType.Enemy:
-                    _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos));
+                    _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos, OnEndPhase));
                     break;
                 default:
                     _logManager.LogWarning($"Character type, {characterType} is not a valid type for move to occupied grid action.");
@@ -232,17 +225,17 @@ namespace FS_Runtimes.States
         private void OnRecruitEnlist(Vector2 targetPos)
         {
             _logManager.Log("Recruiting enlist ...");
-            CharacterPairData character = _levelManager.GetEnlistCharacter(_currentLevel);
+            CharacterPairData character = _levelManager.GetEnlistCharacter(targetPos);
             
             _charactersManager.AddCharacter(character, targetPos, OnUpdateGridCallback);
-            _levelManager.GenerateEnlist();
+            _levelManager.GenerateCharacters();
         }
 
-        private IEnumerator OnAttackEnemy(Vector2 targetPos)
+        private IEnumerator OnAttackEnemy(Vector2 targetPos, Action onComplete = null)
         {
             _isBattle = true;
 
-            _currentEnemy = _levelManager.GetEnemyCharacter();
+            _currentEnemy = _levelManager.GetEnemyCharacter(targetPos);
             _currentHero = _charactersManager.CurrentMainHero;
             _currentHero.CharacterGameObject.SetCharacterDirection(targetPos);
 
@@ -264,47 +257,23 @@ namespace FS_Runtimes.States
             } while (_currentEnemy.CharacterData.IsDead == false && _charactersManager.CurrentMainHero.CharacterData.IsDead == false);
 
             _isBattle = false;
-            
+
             if (_currentHero.CharacterData.IsDead)
             {
                 _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
                 // TODO: If it's last one, Game Over.
+                // return;
             }
             if (_currentEnemy.CharacterData.IsDead)
             {
                 _levelManager.RemoveEnemy(targetPos);
-                OnUpdateObjective();
-                _levelManager.GenerateEnemy(_currentLevel);
 
             }
+            
+            _levelManager.GenerateCharacters();
+            onComplete?.Invoke();
         }
 
-        private void OnUpdateObjective()
-        {
-            _currentObjective--;
-
-            if (_currentObjective == 0)
-            {
-                _currentLevel++;
-                _currentObjective = _levelManager.GetCurrentLevelObjective(_currentLevel);
-                _charactersManager.UpdateCharacterLevel(_currentLevel);
-            }
-        }
-
-        #endregion
-        
-        #region Generation Methods
-        
-        private void GenerateEnlist()
-        {
-            _levelManager.GenerateEnlist();
-        }
-
-        private void GenerateEnemy()
-        {
-            _levelManager.GenerateEnemy();
-        }
-        
         #endregion
 
         #region Callback Methods
@@ -319,6 +288,12 @@ namespace FS_Runtimes.States
                 _levelManager.UpdateGridData(position, string.Empty, EGridState.Empty, ECharacterType.None);
             else
                 _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
+        }
+
+        private void OnEndPhase()
+        {
+            _levelManager.OnTriggerActionEndPhase();
+            _charactersManager.OnTriggerActionEndPhase();
         }
 
         #endregion

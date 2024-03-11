@@ -22,6 +22,7 @@ namespace FS_Runtimes.Controllers.Core
         public int MinGrowthMoveCount => _defaultGrowthSetting.MinGrowthMoveCount;
         public int DefaultMaxAtkStat => _defaultStatSetting.DefaultMaxAttack;
         public int DefaultMaxHpStat => _defaultStatSetting.DefaultMaxHealth;
+        public float DefaultGrowingRate => _defaultGrowthSetting.DefaultGrowthRate;
         
         private PersistenceGameSetting _defaultSetting;
         private PersistenceGameSetting _customSetting;
@@ -48,6 +49,7 @@ namespace FS_Runtimes.Controllers.Core
                 , _defaultStatSetting.DefaultMinHealth
                 , _defaultStatSetting.DefaultMaxHealth
                 , _defaultGrowthSetting.DefaultGrowthMoveCount
+                , _defaultGrowthSetting.DefaultGrowthRate
                 , _defaultEntitySetting.DefaultMaxActiveEntity
                 , _defaultEntitySetting.DefaultMaxSpawnable);
             

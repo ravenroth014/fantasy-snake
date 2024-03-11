@@ -1,11 +1,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Decorate;
 using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Models.Levels;
+using FS_Runtimes.Models.Settings;
 using FS_Runtimes.Utilities;
 using FS_Runtimes.Utilities.Setting;
 using UnityEngine;
@@ -32,21 +34,17 @@ namespace FS_Runtimes.Controllers.Level
         [SerializeField, Tooltip("Obstacle Setting")] private ObstacleSetting _obstacleSetting;
         [SerializeField, Tooltip("Decorate Setting")] private ObstacleSetting _decorateSetting;
 
-        [Header("Character Stat Data")] 
-        [SerializeField, Tooltip("Hero Base Stat")] private List<CharacterBaseStat> _heroStatList;
-        [SerializeField, Tooltip("Enemy Base Stat")] private List<CharacterBaseStat> _enemyStatList;
-
-        [Header("Level Objective Setting")] 
-        [SerializeField, Tooltip("Level Objective Setting")] private LevelObjectiveSetting _levelObjectiveSetting;
-        
         private readonly int _horizontalMaxSize = 16;
         private readonly int _verticalMaxSize = 16;
-        private readonly Dictionary<Vector2, GridData> _gridDict = new();
         private readonly List<DecorateGameObject> _obstacleList = new();
         private readonly List<DecorateGameObject> _decorateList = new();
+        private readonly Dictionary<Vector2, GridData> _gridDict = new();
+        private readonly Dictionary<Vector2, CharacterPairData> _enlistCharacterDict = new();
+        private readonly Dictionary<Vector2, CharacterPairData> _enemyCharacterDict = new();
+
+        private PersistenceGameSetting _levelSetting;
         
-        private CharacterPairData _enlistCharacter;
-        private CharacterPairData _enemyCharacter;
+        public int TotalKillEnemies { get; private set; }
 
         #endregion
 
@@ -84,7 +82,7 @@ namespace FS_Runtimes.Controllers.Level
         #endregion
 
         #region Utility Methods
-        
+
         public void ResetManager()
         {
             if (_gridDict is null or { Count: 0 })
@@ -127,11 +125,6 @@ namespace FS_Runtimes.Controllers.Level
         {
             return _gridDict[position].CharacterType;
         }
-
-        public int GetCurrentLevelObjective(int level)
-        {
-            return (int)(_levelObjectiveSetting.BaseTarget * Mathf.Pow(level, _levelObjectiveSetting.LevelExponential));
-        }
         
         #endregion
 
@@ -139,6 +132,9 @@ namespace FS_Runtimes.Controllers.Level
 
         public void GenerateLevel()
         {
+            _levelSetting = SettingManager.Instance.GetCurrentGameplaySetting();
+            TotalKillEnemies = 0;
+            
             LogManager.Instance.Log("Generating obstacle decoration...");
             GenerateObstacle();
             
@@ -146,10 +142,10 @@ namespace FS_Runtimes.Controllers.Level
             GenerateDecoration();
         }
         
-        public CharacterPairData GenerateHero(int level = 1)
+        public CharacterPairData GenerateHero()
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Hero, character.UniqueID, level);
+            CharacterData data = GenerateCharacterData(character.UniqueID);
             Vector2 position = GetFreePosition();
             
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Hero);
@@ -161,10 +157,10 @@ namespace FS_Runtimes.Controllers.Level
             return pairData;
         }
         
-        public void GenerateEnlist(int level = 1)
+        private void GenerateEnlist()
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Enlist, character.UniqueID, level);
+            CharacterData data = GenerateCharacterData(character.UniqueID);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
@@ -172,13 +168,13 @@ namespace FS_Runtimes.Controllers.Level
             character.SetParent(_enlistParent);
 
             CharacterPairData pairData = new CharacterPairData(data, character);
-            _enlistCharacter = pairData;
+            _enlistCharacterDict[position] = pairData;
         }
 
-        public void GenerateEnemy(int level = 1)
+        private void GenerateEnemy()
         {
             CharacterGameObject character = _enemyPooling.GetFromPool();
-            CharacterData data = GenerateCharacterData(ECharacterType.Enemy, character.UniqueID, level);
+            CharacterData data = GenerateCharacterData(character.UniqueID);
             Vector2 position = GetFreePosition();
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enemy);
@@ -187,7 +183,42 @@ namespace FS_Runtimes.Controllers.Level
             character.SetParent(_enemyParent);
 
             CharacterPairData pairData = new CharacterPairData(data, character);
-            _enemyCharacter = pairData;
+            _enemyCharacterDict[position] = pairData;
+        }
+
+        public void GenerateCharactersOnStart()
+        {
+            int totalSpawnable = _levelSetting.StartEntity;
+
+            for (int i = 0; i < totalSpawnable; i++)
+            {
+                int randIndex = Random.Range(0, 2);
+                if (randIndex == 0)
+                    GenerateEnlist();
+                else
+                    GenerateEnemy();
+            }
+        }
+        
+        public void GenerateCharacters()
+        {
+            int currentActiveEntity = _enlistCharacterDict.Count + _enemyCharacterDict.Count;
+            
+            if (currentActiveEntity >= _levelSetting.MaxActiveEntity)
+                return;
+
+            int totalSpawnable = _levelSetting.MaxActiveEntity - currentActiveEntity;
+            totalSpawnable = totalSpawnable > _levelSetting.MaxSpawnable ? _levelSetting.MaxSpawnable : totalSpawnable;
+            totalSpawnable = Random.Range(0, totalSpawnable);
+
+            for (int i = 0; i < totalSpawnable; i++)
+            {
+                int randIndex = Random.Range(0, 2);
+                if (randIndex == 0)
+                    GenerateEnlist();
+                else
+                    GenerateEnemy();
+            }
         }
 
         private void GenerateDecoration()
@@ -285,50 +316,44 @@ namespace FS_Runtimes.Controllers.Level
             return true;
         }
         
-        public CharacterPairData GetEnlistCharacter(int level)
+        public CharacterPairData GetEnlistCharacter(Vector2 targetPos)
         {
-            CharacterPairData character = _enlistCharacter;
-            character.CharacterData.UpdateCharacterStat(level);
-            _enlistCharacter = null;
-            return character;
+            if (_enlistCharacterDict is { Count: > 0 } && _enlistCharacterDict.Remove(targetPos, out CharacterPairData enlist))
+                return enlist;
+            return null;
         }
 
-        public CharacterPairData GetEnemyCharacter()
+        public CharacterPairData GetEnemyCharacter(Vector2 targetPos)
         {
-            return _enemyCharacter;
+            return _enemyCharacterDict is {Count: > 0} && _enemyCharacterDict.TryGetValue(targetPos, out CharacterPairData enemy) ? enemy : null;
         }
 
-        private CharacterData GenerateCharacterData(ECharacterType characterType, string uniqueID, int level)
+        private CharacterData GenerateCharacterData(string uniqueID)
         {
-            switch (characterType)
-            {
-                case ECharacterType.Enlist or ECharacterType.Hero when _heroStatList is null or { Count: 0 }:
-                case ECharacterType.Enemy when _enemyStatList is null or { Count: 0}:
-                {
-                    return null;
-                }
-                case ECharacterType.Enlist or ECharacterType.Hero:
-                {
-                    int randIndex = Random.Range(0, _heroStatList.Count);
-                    CharacterData newData = new CharacterData(_heroStatList[randIndex], uniqueID, level);
-                    return newData;
-                }
-                case ECharacterType.Enemy:
-                {
-                    int randIndex = Random.Range(0, _enemyStatList.Count);
-                    CharacterData newData = new CharacterData(_enemyStatList[randIndex], uniqueID, level);
-                    return newData;
-                }
-                default:
-                    return null;
-            }
+            int attackStat = Random.Range(_levelSetting.MinAttack, _levelSetting.MaxAttack + 1);
+            int healthStat = Random.Range(_levelSetting.MinHealth, _levelSetting.MaxHealth + 1);
+            int growthByMove = _levelSetting.GrowthWithMove;
+            float growthRate = _levelSetting.StatGrowthRate;
+
+            return new CharacterData(attackStat, healthStat, growthRate, growthByMove, uniqueID);
         }
 
         public void RemoveEnemy(Vector2 targetPos)
         {
             UpdateGridData(targetPos, string.Empty, EGridState.Empty, ECharacterType.None);
-            _enemyCharacter.CharacterGameObject.Release();
-            _enemyCharacter = null;
+            
+            if (_enemyCharacterDict is null or {Count: 0}) return;
+            if (_enemyCharacterDict.TryGetValue(targetPos, out CharacterPairData enemyCharacter) == false) return;
+            
+            enemyCharacter.CharacterGameObject.Release();
+            _enemyCharacterDict.Remove(targetPos);
+            TotalKillEnemies++;
+        }
+        
+        public void OnTriggerActionEndPhase()
+        {
+            _enlistCharacterDict.Values.ToList().ForEach(enlist => enlist.CharacterData.OnTakeAction());
+            _enemyCharacterDict.Values.ToList().ForEach(enemy => enemy.CharacterData.OnTakeAction());
         }
         
         #endregion
