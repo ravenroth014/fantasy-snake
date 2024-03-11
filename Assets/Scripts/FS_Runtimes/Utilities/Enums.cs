@@ -62,4 +62,10 @@ namespace FS_Runtimes.Utilities
         Decorate
         , Obstacle
     }
+
+    public enum ECurrentMainMenu
+    {
+        Main
+        , Setting
+    }
 }

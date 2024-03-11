@@ -1,5 +1,6 @@
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.UI_Extension;
+using FS_Runtimes.Utilities;
 using UnityEngine;
 using UnityEngine.EventSystems;
 
@@ -18,6 +19,7 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
 
         private SettingManager _settingManager;
+        private ECurrentMainMenu _currentMainMenuState;
 
         #endregion
 
@@ -27,6 +29,25 @@ namespace FS_Runtimes.Controllers.UI
         {
             _settingManager ??= SettingManager.Instance;
             _eventSystem.firstSelectedGameObject = _startButton.gameObject;
+        }
+
+        public void OnPlayerTrigger(EPlayerAction playerAction)
+        {
+            if (_currentMainMenuState == ECurrentMainMenu.Main)
+                OnControlMainMenu();
+            if (_currentMainMenuState == ECurrentMainMenu.Setting)
+                OnControlSettingMenu(playerAction);
+        }
+
+        private void OnControlMainMenu()
+        {
+            if (_eventSystem.currentSelectedGameObject is not null) return;
+            _eventSystem.SetSelectedGameObject(_startButton.gameObject);
+        }
+
+        private void OnControlSettingMenu(EPlayerAction playerAction)
+        {
+            
         }
 
         #endregion

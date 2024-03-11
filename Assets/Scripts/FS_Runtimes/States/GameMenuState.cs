@@ -1,5 +1,7 @@
 ﻿using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.UI;
+using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Utilities;
 
 namespace FS_Runtimes.States
@@ -8,7 +10,9 @@ namespace FS_Runtimes.States
     {
         #region Fields & Properties
 
+        private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         private readonly MainMenuController _mainMenuController = NavigatorManager.Instance.MainMenuController;
+        private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
         
@@ -43,7 +47,33 @@ namespace FS_Runtimes.States
         
         private bool InitCallback()
         {
+            if (_gameplayManager is null) return false;
+            _gameplayManager.SetOnPlayerActionTriggerCallback(OnPlayerTrigger);
+            
             return true;
+        }
+
+        private void OnPlayerTrigger(EPlayerAction playerAction)
+        {
+            switch (playerAction)
+            {
+                case EPlayerAction.Up:
+                case EPlayerAction.Right:
+                case EPlayerAction.Down:
+                case EPlayerAction.Left:
+                {
+                    _mainMenuController.OnPlayerTrigger(playerAction);
+                    break;
+                }
+                case EPlayerAction.RotateLeft:
+                case EPlayerAction.RotateRight:
+                case EPlayerAction.None:
+                default:
+                {
+                    _logManager.LogWarning($"Action {playerAction} is not valid for gameplay state");
+                    break;
+                }
+            }
         }
     }
 }
