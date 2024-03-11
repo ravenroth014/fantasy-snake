@@ -13,6 +13,6 @@ MonoBehaviour:
   m_Name: StatSetting
   m_EditorClassIdentifier: 
   _defaultMinAttack: 10
-  _defaultMaxAttack: 100
+  _defaultMaxAttack: 20
   _defaultMinHealth: 50
-  _defaultMaxHealth: 500
+  _defaultMaxHealth: 70

@@ -209,7 +209,7 @@ namespace FS_Runtimes.Controllers.Level
 
             int totalSpawnable = _levelSetting.MaxActiveEntity - currentActiveEntity;
             totalSpawnable = totalSpawnable > _levelSetting.MaxSpawnable ? _levelSetting.MaxSpawnable : totalSpawnable;
-            totalSpawnable = Random.Range(0, totalSpawnable);
+            totalSpawnable = Random.Range(1, totalSpawnable + 1);
 
             for (int i = 0; i < totalSpawnable; i++)
             {

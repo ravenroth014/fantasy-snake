@@ -199,6 +199,7 @@ namespace FS_Runtimes.States
             // TODO: Need to check if this is the last character
             // If so, game over.
             // Else
+            _levelManager.GenerateCharacters();
             OnEndPhase();
         }
 
@@ -210,12 +211,21 @@ namespace FS_Runtimes.States
             switch (characterType)
             {
                 case ECharacterType.Enlist:
+                {
                     OnRecruitEnlist(targetPos);
                     OnEndPhase();
                     break;
+                }
                 case ECharacterType.Enemy:
+                {
                     _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos, OnEndPhase));
                     break;
+                }
+                case ECharacterType.Hero:
+                {
+                    // TODO: Game over.
+                    break;
+                }
                 default:
                     _logManager.LogWarning($"Character type, {characterType} is not a valid type for move to occupied grid action.");
                     break;
