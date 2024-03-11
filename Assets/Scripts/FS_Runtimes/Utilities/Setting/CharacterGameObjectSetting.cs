@@ -14,13 +14,6 @@ namespace FS_Runtimes.Utilities.Setting
         public float Speed => _speed;
         public float Threshold => _threshold;
 
-        public Texture2D GetTextureByIndex(int index)
-        {
-            if (index < 0 || index >= TextureCount)
-                return null;
-            return _textureList[index];
-        }
-
         public Texture2D GetRandomTexture()
         {
             int randomIndex = Random.Range(0, TextureCount);

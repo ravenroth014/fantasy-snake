@@ -42,6 +42,8 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Spawn Max Entity InputField")] private TMP_InputField _spawnMaxEntityInputField;
         [SerializeField, Tooltip("Spawn Max Spawnable")] private TMP_InputField _spawnMaxSpawnableField;
 
+        private SettingManager _settingManager;
+        
         #endregion
 
         #region Methods
