@@ -90,11 +90,7 @@ namespace FS_Runtimes.States
         {
             if (_levelManager is null) return false;
 
-            LogManager.Instance.Log("Generating level decoration...");
-            _levelManager.GenerateDecoration();
-            
-            LogManager.Instance.Log("Generating obstacle decoration...");
-            _levelManager.GenerateObstacle();
+            _levelManager.GenerateLevel();
             
             return true;
         }
@@ -256,6 +252,7 @@ namespace FS_Runtimes.States
             if (_currentHero.CharacterData.IsDead)
             {
                 _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
+                // TODO: If it's last one, Game Over.
             }
             if (_currentEnemy.CharacterData.IsDead)
             {
