@@ -1,7 +1,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using FS_Runtimes.Controllers.Character;
+using FS_Runtimes.Controllers.Decorate;
 using FS_Runtimes.Controllers.Pooling;
+using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
 using FS_Runtimes.Models.Levels;
 using FS_Runtimes.Utilities;
@@ -19,6 +21,9 @@ namespace FS_Runtimes.Controllers.Level
         [SerializeField, Tooltip("Hero Pooling")] private CharacterPooling _heroPooling;
         [SerializeField, Tooltip("Enemy Pooling")] private CharacterPooling _enemyPooling;
 
+        [Header("Grid Generate Rule Set")] 
+        [SerializeField, Tooltip("Obstacle Setting")] private ObstacleSetting _obstacleSetting;
+
         [Header("Character Stat Data")] 
         [SerializeField, Tooltip("Hero Base Stat")] private List<CharacterBaseStat> _heroStatList;
         [SerializeField, Tooltip("Enemy Base Stat")] private List<CharacterBaseStat> _enemyStatList;
@@ -26,6 +31,8 @@ namespace FS_Runtimes.Controllers.Level
         private readonly int _horizontalMaxSize = 16;
         private readonly int _verticalMaxSize = 16;
         private readonly Dictionary<Vector2, GridData> _gridDict = new();
+        private readonly List<DecorateGameObject> _obstacleList = new();
+        private readonly List<DecorateGameObject> _decorateList = new();
         
         private CharacterPairData _enlistCharacter;
         private CharacterPairData _enemyCharacter;
@@ -74,6 +81,11 @@ namespace FS_Runtimes.Controllers.Level
             else
                 _gridDict.Values.ToList().ForEach(grid => grid.Reset());
             
+            _obstacleList.ForEach(obstacle => obstacle.Release());
+            _obstacleList.Clear();
+            
+            _decorateList.ForEach(decorate => decorate.Release());
+            _decorateList.Clear();
         }
 
         private Vector2 GetFreePosition()
@@ -109,6 +121,15 @@ namespace FS_Runtimes.Controllers.Level
 
         #region Generate Methods
 
+        public void GenerateLevel()
+        {
+            LogManager.Instance.Log("Generating level decoration...");
+            GenerateDecoration();
+            
+            LogManager.Instance.Log("Generating obstacle decoration...");
+            GenerateObstacle();
+        }
+        
         public CharacterPairData GenerateHero(int level = 1)
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
@@ -151,14 +172,90 @@ namespace FS_Runtimes.Controllers.Level
             _enemyCharacter = pairData;
         }
 
-        public void GenerateDecoration()
+        private void GenerateDecoration()
         {
-            
+            List<GridData> availableGrid = _gridDict.Values.Where(gridData => gridData.GridState == EGridState.Empty).ToList();
+
+            foreach (GridData gridData in availableGrid)
+            {
+                DecorateGameObject decorate = _decoratePooling.GetFromPool();
+                decorate.SetDecoratePosition(gridData.GridIndex);
+                _decorateList.Add(decorate);
+            }
         }
-        
-        public void GenerateObstacle()
+
+        private void GenerateObstacle()
         {
+            List<GridData> availableGrid = _gridDict.Values.Where(gridData => gridData.GridState == EGridState.Empty).ToList();
+            int totalObstacle = _obstacleSetting.TotalObstacle;
             
+            do
+            {
+                if (availableGrid.Count == 0)
+                    return;
+
+                int randGridIndex = Random.Range(0, availableGrid.Count);
+                GridData selectedGrid = availableGrid[randGridIndex];
+                availableGrid.RemoveAt(randGridIndex);
+
+                int sizeX = Random.Range(1, _obstacleSetting.MaxWidthSize + 1);
+                int sizeY = Random.Range(1, _obstacleSetting.MaxHeightSize + 1);
+                int obstacleSize = sizeX * sizeY;
+                
+                if (obstacleSize > totalObstacle)
+                {
+                    sizeX = 1;
+                    sizeY = 1;
+                    obstacleSize = 1;
+                }
+
+                if (CanPlaceObstacle(selectedGrid, sizeX, sizeY) == false)
+                    continue;
+
+                GenerateObstacle(availableGrid, selectedGrid, sizeX, sizeY);
+                totalObstacle -= obstacleSize;
+                
+            } while (totalObstacle > 0);
+        }
+
+        private void GenerateObstacle(List<GridData> availableGrid, GridData gridData, int sizeX, int sizeY)
+        {
+            if (availableGrid is null or {Count: 0})
+                return;
+            
+            if (gridData == null)
+                return;
+
+            Vector2 basePos = gridData.GridIndex;
+            
+            for (int x = 0; x < sizeX; x++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    DecorateGameObject obstacle = _obstaclePooling.GetFromPool();
+                    Vector2 position = basePos + new Vector2(x, y);
+
+                    obstacle.SetDecoratePosition(position);
+                    UpdateGridData(position, string.Empty, EGridState.Obstacle, ECharacterType.None);
+                    
+                    _obstacleList.Add(obstacle);
+                }
+            }
+        }
+
+        private bool CanPlaceObstacle(GridData selectedGrid, int sizeX, int sizeY)
+        {
+            for (int x = 0; x < sizeX; x++)
+            {
+                for (int y = 0; y < sizeY; y++)
+                {
+                    Vector2 key = new Vector2(selectedGrid.GridIndex.x + x, selectedGrid.GridIndex.y + y);
+                    if (_gridDict[key].GridState != EGridState.Empty)
+                        return false;
+                }
+            }
+
+            return true;
         }
         
         public CharacterPairData GetEnlistCharacter(int level)

@@ -1,18 +1,20 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class ObstacleSetting : MonoBehaviour
+namespace FS_Runtimes.Utilities
 {
-    // Start is called before the first frame update
-    void Start()
+    [CreateAssetMenu(fileName = "ObstacleSetting", menuName = "Settings/Obstacle Setting")]
+    public class ObstacleSetting : ScriptableObject
     {
-        
-    }
+        #region Fields & Properties
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        [SerializeField, Tooltip("Total obstacle")] private int _totalObstacle = 12;
+        [SerializeField, Tooltip("Max width size")] private int _maxWidthSize = 2;
+        [SerializeField, Tooltip("Max height size")] private int _maxHeightSize = 2;
+
+        public int TotalObstacle => _totalObstacle;
+        public int MaxWidthSize => _maxWidthSize;
+        public int MaxHeightSize => _maxHeightSize;
+
+        #endregion
     }
 }

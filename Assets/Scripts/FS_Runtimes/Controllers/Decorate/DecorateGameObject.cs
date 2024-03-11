@@ -22,6 +22,12 @@ namespace FS_Runtimes.Controllers.Decorate
             _decorateType = decorateType;
         }
         
+        public void SetDecoratePosition(Vector2 position)
+        {
+            float height = transform.position.y;
+            gameObject.transform.position = new Vector3(position.x, height, position.y);
+        }
+        
         public void Release()
         {
             if (_pooling is null)
