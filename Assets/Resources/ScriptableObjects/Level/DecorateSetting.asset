@@ -10,8 +10,8 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: fae34a1d41daf8d42ac3ee3bc8100e09, type: 3}
-  m_Name: ObstacleSetting
+  m_Name: DecorateSetting
   m_EditorClassIdentifier: 
-  _totalObstacle: 20
-  _maxWidthSize: 2
-  _maxHeightSize: 2
+  _totalObstacle: 25
+  _maxWidthSize: 1
+  _maxHeightSize: 1

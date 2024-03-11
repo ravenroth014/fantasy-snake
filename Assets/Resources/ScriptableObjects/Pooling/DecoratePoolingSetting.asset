@@ -14,5 +14,9 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _poolingType: 1
   _poolMaxSize: 30
-  _objectInPool: []
+  _objectInPool:
+  - {fileID: 9088077076953729796, guid: 37a9620f1fa9b6f408d7fab2b1d5a410, type: 3}
+  - {fileID: 5833398029027552181, guid: 810e8af591e97ab4a887bcb50c417b3a, type: 3}
+  - {fileID: 2651508021305093654, guid: 55def6b874e17694cb31c3105182c7b7, type: 3}
+  - {fileID: 6193434503523067204, guid: 81693639f36ba0c4aa4c425d8adc7d3f, type: 3}
   _collectionCheck: 1

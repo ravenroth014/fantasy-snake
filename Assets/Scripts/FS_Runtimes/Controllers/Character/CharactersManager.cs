@@ -11,6 +11,9 @@ namespace FS_Runtimes.Controllers.Character
     {
         #region Fields & Properties
 
+        [Header("Player Line Reference")] 
+        [SerializeField, Tooltip("Player Line Parent")] private Transform _playerLine;
+        
         private readonly List<CharacterData> _heroDataList = new();
         private readonly Dictionary<string, CharacterGameObject> _heroGameObjectDict = new();
 
@@ -46,6 +49,7 @@ namespace FS_Runtimes.Controllers.Character
             }
 
             _heroGameObjectDict[uniqueID] = newCharacter.CharacterGameObject;
+            _heroGameObjectDict[uniqueID].SetParent(_playerLine);
             _heroDataList.Add(newCharacter.CharacterData);
         }
         

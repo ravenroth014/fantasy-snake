@@ -37,7 +37,7 @@ namespace FS_Runtimes.Controllers.Pooling
             int randIndex = Random.Range(0, _poolingSetting.ObjectInPool.Count);
             DecorateGameObject item = Instantiate(_poolingSetting.ObjectInPool[randIndex]).GetComponent<DecorateGameObject>();
             item.InitOnCreate(this, _decorateType);
-            item.transform.parent = gameObject.transform;
+            item.SetParent(gameObject.transform);
             return item;
         }
 

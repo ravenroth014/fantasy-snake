@@ -54,13 +54,14 @@ namespace FS_Runtimes.Controllers.Pooling
             _currentID++;
             
             item.InitOnCreate(this, _stringBuilder.ToString());
+            item.SetParent(gameObject.transform);
 
             return item;
         }
 
         private void OnReleaseToPool(CharacterGameObject item)
         {
-            item.gameObject.transform.parent = gameObject.transform;
+            item.SetParent(gameObject.transform);
             item.gameObject.SetActive(false);
         }
 

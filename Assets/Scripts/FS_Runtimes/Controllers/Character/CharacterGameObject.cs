@@ -135,6 +135,11 @@ namespace FS_Runtimes.Controllers.Character
             _highlight.SetActive(state);
         }
 
+        public void SetParent(Transform parent)
+        {
+            gameObject.transform.parent = parent;
+        }
+
         #endregion
     }
 }

@@ -21,8 +21,15 @@ namespace FS_Runtimes.Controllers.Level
         [SerializeField, Tooltip("Hero Pooling")] private CharacterPooling _heroPooling;
         [SerializeField, Tooltip("Enemy Pooling")] private CharacterPooling _enemyPooling;
 
+        [Header("Pool Parent")] 
+        [SerializeField, Tooltip("Enlist parent")] private Transform _enlistParent;
+        [SerializeField, Tooltip("Enemy parent")] private Transform _enemyParent;
+        [SerializeField, Tooltip("Obstacle parent")] private Transform _obstacleParent;
+        [SerializeField, Tooltip("Decorate parent")] private Transform _decorateParent;
+        
         [Header("Grid Generate Rule Set")] 
         [SerializeField, Tooltip("Obstacle Setting")] private ObstacleSetting _obstacleSetting;
+        [SerializeField, Tooltip("Decorate Setting")] private ObstacleSetting _decorateSetting;
 
         [Header("Character Stat Data")] 
         [SerializeField, Tooltip("Hero Base Stat")] private List<CharacterBaseStat> _heroStatList;
@@ -123,11 +130,11 @@ namespace FS_Runtimes.Controllers.Level
 
         public void GenerateLevel()
         {
-            LogManager.Instance.Log("Generating level decoration...");
-            GenerateDecoration();
-            
             LogManager.Instance.Log("Generating obstacle decoration...");
             GenerateObstacle();
+            
+            LogManager.Instance.Log("Generating level decoration...");
+            GenerateDecoration();
         }
         
         public CharacterPairData GenerateHero(int level = 1)
@@ -153,6 +160,7 @@ namespace FS_Runtimes.Controllers.Level
 
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enlist);
             character.InitData(position);
+            character.SetParent(_enlistParent);
 
             CharacterPairData pairData = new CharacterPairData(data, character);
             _enlistCharacter = pairData;
@@ -167,6 +175,7 @@ namespace FS_Runtimes.Controllers.Level
             UpdateGridData(position, character.UniqueID, EGridState.Occupied, ECharacterType.Enemy);
             character.InitData(position);
             character.SetHighlightState(true);
+            character.SetParent(_enemyParent);
 
             CharacterPairData pairData = new CharacterPairData(data, character);
             _enemyCharacter = pairData;
@@ -176,10 +185,18 @@ namespace FS_Runtimes.Controllers.Level
         {
             List<GridData> availableGrid = _gridDict.Values.Where(gridData => gridData.GridState == EGridState.Empty).ToList();
 
-            foreach (GridData gridData in availableGrid)
+            for(int i = 0; i < _decorateSetting.TotalObstacle; i++)
             {
+                if (availableGrid is null or {Count: 0})
+                    return;
+
+                int randGridIndex = Random.Range(0, availableGrid.Count);
+                GridData selectedGrid = availableGrid[randGridIndex];
+                availableGrid.RemoveAt(randGridIndex);
+                
                 DecorateGameObject decorate = _decoratePooling.GetFromPool();
-                decorate.SetDecoratePosition(gridData.GridIndex);
+                decorate.SetDecoratePosition(selectedGrid.GridIndex);
+                decorate.SetParent(_decorateParent);
                 _decorateList.Add(decorate);
             }
         }
@@ -191,7 +208,7 @@ namespace FS_Runtimes.Controllers.Level
             
             do
             {
-                if (availableGrid.Count == 0)
+                if (availableGrid is null or {Count: 0})
                     return;
 
                 int randGridIndex = Random.Range(0, availableGrid.Count);
@@ -236,6 +253,7 @@ namespace FS_Runtimes.Controllers.Level
                     Vector2 position = basePos + new Vector2(x, y);
 
                     obstacle.SetDecoratePosition(position);
+                    obstacle.SetParent(_obstacleParent);
                     UpdateGridData(position, string.Empty, EGridState.Obstacle, ECharacterType.None);
                     
                     _obstacleList.Add(obstacle);

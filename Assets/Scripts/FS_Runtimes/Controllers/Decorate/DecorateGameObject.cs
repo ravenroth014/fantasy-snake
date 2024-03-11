@@ -38,6 +38,11 @@ namespace FS_Runtimes.Controllers.Decorate
             }
         }
 
+        public void SetParent(Transform parent)
+        {
+            gameObject.transform.parent = parent;
+        }
+
         #endregion
     }
 }
