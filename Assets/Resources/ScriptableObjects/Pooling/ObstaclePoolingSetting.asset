@@ -17,4 +17,5 @@ MonoBehaviour:
   _objectInPool:
   - {fileID: 3729016254933287530, guid: 7de79fc8e9435bd4780cb8227783cdef, type: 3}
   - {fileID: 5590957356777089391, guid: 4321d04e78abbec41957ec5a43962b73, type: 3}
+  - {fileID: 3417198028599340388, guid: 9e53ca831bb9ad34197b94b735c5847c, type: 3}
   _collectionCheck: 1

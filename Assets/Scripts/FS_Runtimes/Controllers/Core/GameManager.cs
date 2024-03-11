@@ -3,7 +3,6 @@ using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.Player;
-using FS_Runtimes.Controllers.Pooling;
 using FS_Runtimes.States;
 using FS_Runtimes.Utilities;
 using UnityEngine;
@@ -50,8 +49,7 @@ namespace FS_Runtimes.Controllers.Core
         {
             InitControllers();
 
-            // TODO: In final, will need to change to GameMenu first.
-            ChangeState(EGameState.GamePlay);
+            ChangeState(EGameState.GameMenu);
         }
 
         #endregion
