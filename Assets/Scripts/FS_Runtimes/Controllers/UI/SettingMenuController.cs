@@ -1,3 +1,4 @@
+using FS_Runtimes.Controllers.Core;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -15,6 +16,7 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Spawn Setting Button")] private Button _spawnButton;
         [SerializeField, Tooltip("Apply Setting Button")] private Button _applyButton;
         [SerializeField, Tooltip("Back Setting Button")] private Button _backButton;
+        [SerializeField, Tooltip("Default Setting Button")] private Button _defaultButton;
 
         [Header("Setting Option UI")] 
         [SerializeField, Tooltip("Entity Option UI")] private GameObject _entityUI;
@@ -45,6 +47,104 @@ namespace FS_Runtimes.Controllers.UI
         #region Methods
 
         public void Init()
+        {
+            SetButtonCallback();
+        }
+
+        private void SetButtonCallback()
+        {
+            if (_entityButton is not null)
+            {
+                _entityButton.onClick.RemoveAllListeners();
+                _entityButton.onClick.AddListener(() =>
+                {
+                    _entityUI.SetActive(true);
+                    _statUI.SetActive(false);
+                    _growthUI.SetActive(false);
+                    _spawnUI.SetActive(false);
+                });
+            }
+
+            if (_statButton is not null)
+            {
+                _statButton.onClick.RemoveAllListeners();
+                _statButton.onClick.AddListener(() =>
+                {
+                    _entityUI.SetActive(false);
+                    _statUI.SetActive(true);
+                    _growthUI.SetActive(false);
+                    _spawnUI.SetActive(false);
+                });
+            }
+
+            if (_growthButton is not null)
+            {
+                _growthButton.onClick.RemoveAllListeners();
+                _growthButton.onClick.AddListener(() =>
+                {
+                    _entityUI.SetActive(false);
+                    _statUI.SetActive(false);
+                    _growthUI.SetActive(true);
+                    _spawnUI.SetActive(false);
+                });
+            }
+
+            if (_spawnButton is not null)
+            {
+                _spawnButton.onClick.RemoveAllListeners();
+                _spawnButton.onClick.AddListener(() =>
+                {
+                    _entityUI.SetActive(false);
+                    _statUI.SetActive(false);
+                    _growthUI.SetActive(false);
+                    _spawnUI.SetActive(true);
+                });
+            }
+
+            if (_backButton is not null)
+            {
+                _backButton.onClick.RemoveAllListeners();
+                _backButton.onClick.AddListener(OnClickBackButton);
+            }
+
+            if (_defaultButton is not null)
+            {
+                _defaultButton.onClick.RemoveAllListeners();
+                _defaultButton.onClick.AddListener(OnClickDefaultButton);
+            }
+
+            if (_applyButton is not null)
+            {
+                _applyButton.onClick.RemoveAllListeners();
+                _applyButton.onClick.AddListener(OnClickApplyButton);
+            }
+        }
+
+        public override void Open()
+        {
+            base.Open();
+            
+            _entityUI.SetActive(true);
+            _statUI.SetActive(false);
+            _growthUI.SetActive(false);
+            _spawnUI.SetActive(false);
+        }
+
+        private void OnClickBackButton()
+        {
+            // TODO: Check if there is a change in setting
+            // If so, will ask to apply the value or not.
+            
+            NavigatorManager.Instance.MainMenuController.Open();
+            Close();
+        }
+
+        private void OnClickDefaultButton()
+        {
+            
+        }
+
+        private void OnClickApplyButton()
         {
             
         }
