@@ -18,6 +18,8 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Gameplay Default Entity Setting")] private EntitySetting _defaultEntitySetting;
         [SerializeField, Tooltip("Gameplay Default Stat Setting")] private StatSetting _defaultStatSetting;
 
+        public int DefaultStartEntity => _defaultEntitySetting.DefaultStartEntity;
+        
         private PersistenceGameSetting _defaultSetting;
         private PersistenceGameSetting _customSetting;
         
@@ -31,10 +33,7 @@ namespace FS_Runtimes.Controllers.Core
         private void Awake()
         {
             _instance = this;
-        }
-
-        private void Start()
-        {
+            
             InitSetting();
         }
 
@@ -56,9 +55,14 @@ namespace FS_Runtimes.Controllers.Core
             _customSetting = JsonConvert.DeserializeObject<PersistenceGameSetting>(customSettingJson);
         }
 
-        public PersistenceGameSetting GetGameplaySetting()
+        public PersistenceGameSetting GetCurrentGameplaySetting()
         {
             return _customSetting ?? _defaultSetting;
+        }
+
+        public PersistenceGameSetting GetDefaultGameplaySetting()
+        {
+            return _defaultSetting;
         }
 
         public void UpdateCustomSetting(PersistenceGameSetting newSetting)

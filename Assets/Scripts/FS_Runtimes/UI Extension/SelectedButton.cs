@@ -28,6 +28,7 @@ namespace FS_Runtimes.UI_Extension
             _button.onClick.AddListener(() =>
             {
                 onClick?.Invoke();
+                SetHighlightActive(false);
             });
         }
 

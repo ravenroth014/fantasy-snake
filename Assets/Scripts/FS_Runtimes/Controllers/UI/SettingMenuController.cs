@@ -1,4 +1,5 @@
 using FS_Runtimes.Controllers.Core;
+using FS_Runtimes.Models.Settings;
 using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
@@ -50,10 +51,11 @@ namespace FS_Runtimes.Controllers.UI
 
         public void Init()
         {
-            SetButtonCallback();
+            InitButtonCallback();
+            InitUI();
         }
 
-        private void SetButtonCallback()
+        private void InitButtonCallback()
         {
             if (_entityButton is not null)
             {
@@ -122,9 +124,17 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        private void InitUI()
+        {
+            if (_entityWarningText is not null)
+                _entityWarningText.text = $"Cannot set to 0 or mor than {SettingManager.Instance.DefaultStartEntity.ToString()}";
+        }
+
         public override void Open()
         {
             base.Open();
+            
+            UpdateUI(SettingManager.Instance.GetCurrentGameplaySetting());
             
             _entityUI.SetActive(true);
             _statUI.SetActive(false);
@@ -151,6 +161,11 @@ namespace FS_Runtimes.Controllers.UI
             
         }
 
+        private void UpdateUI(PersistenceGameSetting setting)
+        {
+            
+        }
+        
         #endregion
     }
 }
