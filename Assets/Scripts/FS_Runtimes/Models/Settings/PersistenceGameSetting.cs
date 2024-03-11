@@ -10,7 +10,6 @@ namespace FS_Runtimes.Models.Settings
         public int MinHealth { get; private set; }
         public int MaxHealth { get; private set; }
         public int GrowthWithMove { get; private set; }
-        public int MinGrowthSetting { get; private set; }
         public int MaxActiveEntity { get; private set; }
         public int MaxSpawnable { get; private set; }
         
@@ -18,7 +17,7 @@ namespace FS_Runtimes.Models.Settings
 
         #region Constructors
 
-        public PersistenceGameSetting(int startEntity, int minAttack, int maxAttack, int minHealth, int maxHealth, int growthWithMove, int minGrowthSetting, int maxActiveEntity, int maxSpawnable)
+        public PersistenceGameSetting(int startEntity, int minAttack, int maxAttack, int minHealth, int maxHealth, int growthWithMove, int maxActiveEntity, int maxSpawnable)
         {
             StartEntity = startEntity;
             MinAttack = minAttack;
@@ -26,7 +25,6 @@ namespace FS_Runtimes.Models.Settings
             MinHealth = minHealth;
             MaxHealth = maxHealth;
             GrowthWithMove = growthWithMove;
-            MinGrowthSetting = minGrowthSetting;
             MaxActiveEntity = maxActiveEntity;
             MaxSpawnable = maxSpawnable;
         }
@@ -39,7 +37,6 @@ namespace FS_Runtimes.Models.Settings
             MinHealth = data.MinHealth;
             MaxHealth = data.MaxHealth;
             GrowthWithMove = data.GrowthWithMove;
-            MinGrowthSetting = data.MinGrowthSetting;
             MaxActiveEntity = data.MaxActiveEntity;
             MaxSpawnable = data.MaxSpawnable;
         }

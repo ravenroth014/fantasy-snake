@@ -19,6 +19,9 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Gameplay Default Stat Setting")] private StatSetting _defaultStatSetting;
 
         public int DefaultStartEntity => _defaultEntitySetting.DefaultStartEntity;
+        public int MinGrowthMoveCount => _defaultGrowthSetting.MinGrowthMoveCount;
+        public int DefaultMaxAtkStat => _defaultStatSetting.DefaultMaxAttack;
+        public int DefaultMaxHpStat => _defaultStatSetting.DefaultMaxHealth;
         
         private PersistenceGameSetting _defaultSetting;
         private PersistenceGameSetting _customSetting;
@@ -45,13 +48,14 @@ namespace FS_Runtimes.Controllers.Core
                 , _defaultStatSetting.DefaultMinHealth
                 , _defaultStatSetting.DefaultMaxHealth
                 , _defaultGrowthSetting.DefaultGrowthMoveCount
-                , _defaultGrowthSetting.MinGrowthMoveCount
                 , _defaultEntitySetting.DefaultMaxActiveEntity
                 , _defaultEntitySetting.DefaultMaxSpawnable);
             
             if (PlayerPrefs.HasKey(GameHelper.GameSettingKey) == false) return;
 
             string customSettingJson = PlayerPrefs.GetString(GameHelper.GameSettingKey);
+            if (string.IsNullOrEmpty(customSettingJson)) return;
+                
             _customSetting = JsonConvert.DeserializeObject<PersistenceGameSetting>(customSettingJson);
         }
 
@@ -67,7 +71,7 @@ namespace FS_Runtimes.Controllers.Core
 
         public void UpdateCustomSetting(PersistenceGameSetting newSetting)
         {
-            _customSetting = newSetting;
+            _customSetting = new PersistenceGameSetting(newSetting);
 
             string customSettingJson = string.Empty;
             
