@@ -12,6 +12,8 @@ namespace FS_Runtimes.States
         private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
+
+        #region Methods
         
         public override void OnEnter()
         {
@@ -24,5 +26,7 @@ namespace FS_Runtimes.States
         {
             // Do nothing.
         }
+        
+        #endregion
     }
 }

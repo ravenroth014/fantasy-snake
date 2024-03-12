@@ -13,34 +13,41 @@ namespace FS_Runtimes.States
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         private readonly MainMenuUIController _mainMenuUIController = NavigatorManager.Instance.MainMenuUIController;
         private readonly SettingMenuUIController _settingMenuUIController = NavigatorManager.Instance.SettingMenuUIController;
-        private readonly LoadingUIController _loadingUIController = NavigatorManager.Instance.LoadingUIController;
         private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
+
+        #region Methods
+
+        #region Derived Methods
         
         public override void OnEnter()
         {
             _logManager.Log("Enter main menu state ...");
-            _loadingUIController.Open();
             
             if (Init() == false)
                 GameManager.Instance.ChangeState(EGameState.GameError);
             
             _mainMenuUIController.Open();
-            _loadingUIController.Close();
         }
 
         public override void OnExit()
         {
-            _loadingUIController.Open();
-            
             _settingMenuUIController.Close();
             _mainMenuUIController.Close();
             _gameplayManager.SetOnPlayerActionTriggerCallback();
             
             _logManager.Log("Exit main menu state ...");
         }
+        
+        #endregion
 
+        #region Init Methods
+        
+        /// <summary>
+        /// Call this method to initialize game state.
+        /// </summary>
+        /// <returns></returns>
         private bool Init()
         {
             bool isComplete = true;
@@ -51,6 +58,10 @@ namespace FS_Runtimes.States
             return isComplete;
         }
 
+        /// <summary>
+        /// Call this method to initialize UI controllers.
+        /// </summary>
+        /// <returns></returns>
         private bool InitController()
         {
             if (_mainMenuUIController is null) return false;
@@ -62,6 +73,10 @@ namespace FS_Runtimes.States
             return true;
         }
         
+        /// <summary>
+        /// Call this method to initialize UI callback.
+        /// </summary>
+        /// <returns></returns>
         private bool InitCallback()
         {
             if (_gameplayManager is null) return false;
@@ -69,7 +84,15 @@ namespace FS_Runtimes.States
             
             return true;
         }
+        
+        #endregion
 
+        #region Callback Methods
+        
+        /// <summary>
+        /// Callback when player trigger action with gamepad.
+        /// </summary>
+        /// <param name="playerAction"></param>
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
             switch (playerAction)
@@ -92,5 +115,9 @@ namespace FS_Runtimes.States
                 }
             }
         }
+        
+        #endregion
+        
+        #endregion
     }
 }

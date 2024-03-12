@@ -16,10 +16,6 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Setting Menu Controller")]
         private SettingMenuUIController _settingMenuUIController;
 
-        public LoadingUIController LoadingUIController => _loadingUIController;
-        [SerializeField, Tooltip("Loading Controller")]
-        private LoadingUIController _loadingUIController;
-
         public GameplayUIController GameplayUIController => _gameplayUIController;
         [SerializeField, Tooltip("Gameplay UI Controller")]
         private GameplayUIController _gameplayUIController;

@@ -18,6 +18,12 @@ namespace FS_Runtimes.States
 
         #region Utility Methods
 
+        /// <summary>
+        /// Call this method to delay execute time.
+        /// </summary>
+        /// <param name="timeInSecond"></param>
+        /// <param name="onComplete"></param>
+        /// <returns></returns>
         protected IEnumerator DelayTime(int timeInSecond, Action onComplete = null)
         {
             if (timeInSecond <= 0)

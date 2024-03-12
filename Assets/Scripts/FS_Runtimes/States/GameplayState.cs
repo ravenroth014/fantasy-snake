@@ -20,7 +20,6 @@ namespace FS_Runtimes.States
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         
-        private readonly LoadingUIController _loadingUIController = NavigatorManager.Instance.LoadingUIController;
         private readonly GameplayUIController _gameplayUIController = NavigatorManager.Instance.GameplayUIController;
         
         private readonly SettingManager _settingManager = SettingManager.Instance;
@@ -41,7 +40,6 @@ namespace FS_Runtimes.States
         public override void OnEnter()
         {
             _logManager.Log("Enter gameplay state ...");
-            _loadingUIController.Open();
             
             if (Init() == false)
             {
@@ -64,6 +62,10 @@ namespace FS_Runtimes.States
 
         #region Init Methods
         
+        /// <summary>
+        /// Call this method to initialize game state.
+        /// </summary>
+        /// <returns></returns>
         private bool Init()
         {
             bool isComplete = true;
@@ -77,6 +79,10 @@ namespace FS_Runtimes.States
             return isComplete;
         }
 
+        /// <summary>
+        /// Call this method to initialize game state callback.
+        /// </summary>
+        /// <returns></returns>
         private bool InitCallback()
         {
             if (_gameplayManager is null) return false;
@@ -86,6 +92,10 @@ namespace FS_Runtimes.States
             return true;
         }
 
+        /// <summary>
+        /// Call this method to initialize player in this game state.
+        /// </summary>
+        /// <returns></returns>
         private bool InitPlayer()
         {
             CharacterPairData character = _levelManager.GenerateHero();
@@ -98,6 +108,10 @@ namespace FS_Runtimes.States
             return true;
         }
 
+        /// <summary>
+        /// Call this method to initialize stage level of this game state.
+        /// </summary>
+        /// <returns></returns>
         private bool InitStageLevel()
         {
             if (_levelManager is null) return false;
@@ -112,14 +126,20 @@ namespace FS_Runtimes.States
 
         #region Decision Making Methods
 
+        /// <summary>
+        /// Call this method to start game flow.
+        /// </summary>
         private void StartGame()
         {
-            _loadingUIController.Close();
             _gameplayUIController.Open();
             _isReady = true;
             _logManager.Log("Game Start !!!");
         }
         
+        /// <summary>
+        /// Callback method when player trigger action.
+        /// </summary>
+        /// <param name="playerAction"></param>
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
             if (_isReady == false) return;
@@ -159,6 +179,10 @@ namespace FS_Runtimes.States
             }
         }
 
+        /// <summary>
+        /// Call this method to execute move character to grid and decide action of target grid.
+        /// </summary>
+        /// <param name="playerAction"></param>
         private void OnMovementAction(EPlayerAction playerAction)
         {
             Vector2 currentPosition = _charactersManager.GetMainCharacterPosition();
@@ -190,6 +214,10 @@ namespace FS_Runtimes.States
             }
         }
 
+        /// <summary>
+        /// Call this method to execute switch character action.
+        /// </summary>
+        /// <param name="playerAction"></param>
         private void OnSwitchCharacterAction(EPlayerAction playerAction)
         {
             _logManager.Log("Switching characters ...");
@@ -203,12 +231,20 @@ namespace FS_Runtimes.States
             _charactersManager.SwitchCharacter(switchAction, OnUpdateGridCallback);
         }
         
+        /// <summary>
+        /// Call this method to move character to new grid.
+        /// </summary>
+        /// <param name="targetPos"></param>
         private void OnMoveCharacter(Vector2 targetPos)
         {
             _logManager.Log("Moving characters ...");
             _charactersManager.MoveCharacter(targetPos, OnUpdateGridCallback);
         }
 
+        /// <summary>
+        /// Call this method to remove character from grid.
+        /// </summary>
+        /// <param name="targetPos"></param>
         private void OnRemoveCharacter(Vector2 targetPos)
         {
             _logManager.Log("Removing character ...");
@@ -223,6 +259,10 @@ namespace FS_Runtimes.States
             OnEndPhase(_charactersManager.CurrentMainHero);
         }
 
+        /// <summary>
+        /// Call this method to move to occupied grid and make decision.
+        /// </summary>
+        /// <param name="targetPos"></param>
         private void OnMoveToOccupiedGrid(Vector2 targetPos)
         {
             _logManager.Log("Moving to occupied grid ...");
@@ -255,6 +295,10 @@ namespace FS_Runtimes.States
             }
         }
 
+        /// <summary>
+        /// Call this method to recruit enlist from target grid.
+        /// </summary>
+        /// <param name="targetPos"></param>
         private void OnRecruitEnlist(Vector2 targetPos)
         {
             _logManager.Log("Recruiting enlist ...");
@@ -263,6 +307,12 @@ namespace FS_Runtimes.States
             _charactersManager.AddCharacter(character, targetPos, OnUpdateGridCallback);
         }
 
+        /// <summary>
+        /// Call this method to execute battle with enemy on target grid.
+        /// </summary>
+        /// <param name="targetPos"></param>
+        /// <param name="onComplete"></param>
+        /// <returns></returns>
         private IEnumerator OnAttackEnemy(Vector2 targetPos, Action onComplete = null)
         {
             _isBattle = true;
@@ -310,16 +360,39 @@ namespace FS_Runtimes.States
             onComplete?.Invoke();
         }
 
+        /// <summary>
+        /// Call this method when it reach game over condition.
+        /// </summary>
         private void OnGameOver()
         {
             _logManager.Log("Game Over!!!");
             GameManager.Instance.ChangeState(EGameState.GameOver);
         }
 
+        /// <summary>
+        /// Call this method to execute end turn.
+        /// </summary>
+        /// <param name="heroData"></param>
+        /// <param name="enemyData"></param>
+        private void OnEndPhase(CharacterPairData heroData = null, CharacterPairData enemyData = null)
+        {
+            _levelManager.OnTriggerActionEndPhase();
+            _charactersManager.OnTriggerActionEndPhase();
+            
+            _gameplayUIController.UpdatePlayerText(heroData);
+            _gameplayUIController.UpdateEnemyText(enemyData);
+            _gameplayUIController.UpdateKillCountText(_levelManager.TotalKillEnemies);
+        }
+        
         #endregion
 
         #region Callback Methods
-
+        
+        /// <summary>
+        /// Callback when require to update grid data.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="uniqueID"></param>
         private void OnUpdateGridCallback(Vector2 position, string uniqueID)
         {
             EGridState gridState = _levelManager.GetGridState(position);
@@ -330,16 +403,6 @@ namespace FS_Runtimes.States
                 _levelManager.UpdateGridData(position, string.Empty, EGridState.Empty, ECharacterType.None);
             else
                 _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
-        }
-
-        private void OnEndPhase(CharacterPairData heroData = null, CharacterPairData enemyData = null)
-        {
-            _levelManager.OnTriggerActionEndPhase();
-            _charactersManager.OnTriggerActionEndPhase();
-            
-            _gameplayUIController.UpdatePlayerText(heroData);
-            _gameplayUIController.UpdateEnemyText(enemyData);
-            _gameplayUIController.UpdateKillCountText(_levelManager.TotalKillEnemies);
         }
 
         #endregion

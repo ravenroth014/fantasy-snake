@@ -22,6 +22,8 @@ namespace FS_Runtimes.States
 
         #region Methods
 
+        #region Derived Methods
+        
         public override void OnEnter()
         {
             _logManager.Log("Enter game over state ...");
@@ -40,7 +42,15 @@ namespace FS_Runtimes.States
             
             _logManager.Log("Exit game over state ...");
         }
+        
+        #endregion
 
+        #region Init Methods
+        
+        /// <summary>
+        /// Call this method to initialize this game state.
+        /// </summary>
+        /// <returns></returns>
         private bool Init()
         {
             if (_gameOverUIController is null)
@@ -53,6 +63,8 @@ namespace FS_Runtimes.States
             
             return true;
         }
+        
+        #endregion
         
         #endregion
     }
