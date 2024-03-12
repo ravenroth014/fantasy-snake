@@ -1,3 +1,4 @@
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Utilities;
 
 namespace FS_Runtimes.Models.Characters
@@ -16,22 +17,24 @@ namespace FS_Runtimes.Models.Characters
         private readonly int _baseAtkStat;
         private readonly float _hpGrowthRate;
         private readonly float _atkGrowthRate;
-        private readonly int _growthByMoveRule;
+        private readonly int _baseMoveToLevelUp;
+        private readonly float _moveGrowthRate;
         private int _currentLevel;
-        private int _growthMoveLeft;
+        private int _growthBaseMoveLeft;
         
         #endregion
 
         #region Constructors
 
-        public CharacterData(int baseAtkStat, int baseHpStat, float growingRate, int growthByMoveRule, string uniqueID)
+        public CharacterData(int baseAtkStat, int baseHpStat, float statGrowingRate, float moveGrowingRate, int baseMoveToLevelUp, string uniqueID)
         {
             _baseAtkStat = baseAtkStat;
             _baseHpStat = baseHpStat;
-            _hpGrowthRate = growingRate;
-            _atkGrowthRate = growingRate;
-            _growthByMoveRule = growthByMoveRule;
-            _growthMoveLeft = growthByMoveRule;
+            _hpGrowthRate = statGrowingRate;
+            _atkGrowthRate = statGrowingRate;
+            _moveGrowthRate = moveGrowingRate;
+            _baseMoveToLevelUp = baseMoveToLevelUp;
+            _growthBaseMoveLeft = GameHelper.CalculateCharacterStat(baseMoveToLevelUp, 1, moveGrowingRate);
             _currentLevel = 1;
 
             UniqueID = uniqueID;
@@ -71,12 +74,12 @@ namespace FS_Runtimes.Models.Characters
         /// </summary>
         public void OnTakeAction()
         {
-            _growthMoveLeft--;
+            _growthBaseMoveLeft--;
 
-            if (_growthMoveLeft <= 0)
+            if (_growthBaseMoveLeft <= 0)
             {
-                _growthMoveLeft = _growthByMoveRule;
                 _currentLevel++;
+                _growthBaseMoveLeft = GameHelper.CalculateCharacterStat(_baseMoveToLevelUp, _currentLevel, _moveGrowthRate);
                 UpdateCharacterStat();
             }
         }

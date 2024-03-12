@@ -446,10 +446,11 @@ namespace FS_Runtimes.Controllers.Level
         {
             int attackStat = Random.Range(_levelSetting.MinAttack, _levelSetting.MaxAttack + 1);
             int healthStat = Random.Range(_levelSetting.MinHealth, _levelSetting.MaxHealth + 1);
-            int growthByMove = _levelSetting.GrowthWithMove;
-            float growthRate = _levelSetting.StatGrowthRate;
+            int baseMoveLevelUp = _levelSetting.BaseMoveLevelUp;
+            float statGrowthRate = _levelSetting.StatGrowthRate;
+            float moveLevelUpGrowthRate = _levelSetting.MoveLevelUpGrowthRate;
 
-            return new CharacterData(attackStat, healthStat, growthRate, growthByMove, uniqueID);
+            return new CharacterData(attackStat, healthStat, statGrowthRate, moveLevelUpGrowthRate, baseMoveLevelUp, uniqueID);
         }
         
         #endregion

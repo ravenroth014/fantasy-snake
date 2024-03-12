@@ -21,14 +21,14 @@ namespace FS_Runtimes.Models.Settings
         [JsonProperty(PropertyName = "MaxHealth")]
         public int MaxHealth { get; private set; }
         
-        [JsonProperty(PropertyName = "GrowthWithMove")]
-        public int GrowthWithMove { get; private set; }
+        [JsonProperty(PropertyName = "BaseMoveLevelUp")]
+        public int BaseMoveLevelUp { get; private set; }
         
         [JsonProperty(PropertyName = "StatGrowthRate")]
         public float StatGrowthRate { get; private set; }
         
-        [JsonProperty(PropertyName = "TurnGrowthRate")]
-        public float TurnGrowthRate { get; private set; }
+        [JsonProperty(PropertyName = "MoveLevelUpGrowthRate")]
+        public float MoveLevelUpGrowthRate { get; private set; }
         
         [JsonProperty(PropertyName = "MaxActiveEntity")]
         public int MaxActiveEntity { get; private set; }
@@ -47,23 +47,23 @@ namespace FS_Runtimes.Models.Settings
             MaxAttack = 0;
             MinHealth = 0;
             MaxHealth = 0;
-            GrowthWithMove = 0;
+            BaseMoveLevelUp = 0;
             StatGrowthRate = 0;
-            TurnGrowthRate = 0;
+            MoveLevelUpGrowthRate = 0;
             MaxActiveEntity = 0;
             MaxSpawnable = 0;
         }
         
-        public PersistenceGameSetting(int startEntity, int minAttack, int maxAttack, int minHealth, int maxHealth, int growthWithMove, float statGrowthRate, float turnGrowthRate, int maxActiveEntity, int maxSpawnable)
+        public PersistenceGameSetting(int startEntity, int minAttack, int maxAttack, int minHealth, int maxHealth, int baseMoveLevelUp, float statGrowthRate, float moveLevelUpGrowthRate, int maxActiveEntity, int maxSpawnable)
         {
             StartEntity = startEntity;
             MinAttack = minAttack;
             MaxAttack = maxAttack;
             MinHealth = minHealth;
             MaxHealth = maxHealth;
-            GrowthWithMove = growthWithMove;
+            BaseMoveLevelUp = baseMoveLevelUp;
             StatGrowthRate = statGrowthRate;
-            TurnGrowthRate = turnGrowthRate;
+            MoveLevelUpGrowthRate = moveLevelUpGrowthRate;
             MaxActiveEntity = maxActiveEntity;
             MaxSpawnable = maxSpawnable;
         }
@@ -75,9 +75,9 @@ namespace FS_Runtimes.Models.Settings
             MaxAttack = data.MaxAttack;
             MinHealth = data.MinHealth;
             MaxHealth = data.MaxHealth;
-            GrowthWithMove = data.GrowthWithMove;
+            BaseMoveLevelUp = data.BaseMoveLevelUp;
             StatGrowthRate = data.StatGrowthRate;
-            TurnGrowthRate = data.TurnGrowthRate;
+            MoveLevelUpGrowthRate = data.MoveLevelUpGrowthRate;
             MaxActiveEntity = data.MaxActiveEntity;
             MaxSpawnable = data.MaxSpawnable;
         }

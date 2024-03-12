@@ -582,7 +582,7 @@ namespace FS_Runtimes.Controllers.UI
                 _statMaxHpInputField.text = setting.MaxHealth.ToString("D");
 
             if (_growByCountInputField is not null)
-                _growByCountInputField.text = setting.GrowthWithMove.ToString("D");
+                _growByCountInputField.text = setting.BaseMoveLevelUp.ToString("D");
 
             if (_spawnMaxEntityInputField is not null)
                 _spawnMaxEntityInputField.text = setting.MaxActiveEntity.ToString("D");
@@ -594,7 +594,7 @@ namespace FS_Runtimes.Controllers.UI
                 _statGrowingRateInputField.text = setting.StatGrowthRate.ToString("F1");
 
             if (_turnGrowingRateInputField is not null)
-                _turnGrowingRateInputField.text = setting.TurnGrowthRate.ToString("F1");
+                _turnGrowingRateInputField.text = setting.MoveLevelUpGrowthRate.ToString("F1");
         }
         
         #endregion
@@ -613,7 +613,7 @@ namespace FS_Runtimes.Controllers.UI
             isDataChanged |= int.Parse(_statMaxAtkInputField.text) != _cacheSetting.MaxAttack;
             isDataChanged |= int.Parse(_statMinHpInputField.text) != _cacheSetting.MinHealth;
             isDataChanged |= int.Parse(_statMaxHpInputField.text) != _cacheSetting.MaxHealth;
-            isDataChanged |= int.Parse(_growByCountInputField.text) != _cacheSetting.GrowthWithMove;
+            isDataChanged |= int.Parse(_growByCountInputField.text) != _cacheSetting.BaseMoveLevelUp;
             isDataChanged |= int.Parse(_spawnMaxEntityInputField.text) != _cacheSetting.MaxActiveEntity;
             isDataChanged |= int.Parse(_spawnMaxSpawnableField.text) != _cacheSetting.MaxSpawnable;
             
