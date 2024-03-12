@@ -34,15 +34,25 @@ namespace FS_Runtimes.Controllers.Core
 
         #region Methods
 
+        #region Unit Event Methods
+        
         private void Awake()
         {
             _instance = this;
             
             InitSetting();
         }
+        
+        #endregion
 
+        #region Init Methods
+        
+        /// <summary>
+        /// Call this method to initialize game setting.
+        /// </summary>
         private void InitSetting()
         {
+            // Set default setting value from scriptable object.
             _defaultSetting = new PersistenceGameSetting(_defaultEntitySetting.DefaultStartEntity
                 , _defaultStatSetting.DefaultMinAttack
                 , _defaultStatSetting.DefaultMaxAttack
@@ -60,30 +70,35 @@ namespace FS_Runtimes.Controllers.Core
                 
             _customSetting = JsonConvert.DeserializeObject<PersistenceGameSetting>(customSettingJson);
         }
+        
+        #endregion
 
+        #region Get Methods
+        
+        /// <summary>
+        /// Call this method to get current game setting.
+        /// </summary>
+        /// <returns></returns>
         public PersistenceGameSetting GetCurrentGameplaySetting()
         {
             return _customSetting ?? _defaultSetting;
         }
 
+        /// <summary>
+        /// Call this method to get default game setting.
+        /// </summary>
+        /// <returns></returns>
         public PersistenceGameSetting GetDefaultGameplaySetting()
         {
             return _defaultSetting;
         }
-
-        public void UpdateCustomSetting(PersistenceGameSetting newSetting)
-        {
-            _customSetting = new PersistenceGameSetting(newSetting);
-
-            string customSettingJson = string.Empty;
-            
-            if (newSetting != null)
-                customSettingJson = JsonConvert.SerializeObject(_customSetting);
-            
-            PlayerPrefs.SetString(GameHelper.GameSettingKey, customSettingJson);
-            PlayerPrefs.Save();
-        }
-
+        
+        /// <summary>
+        /// Call this method to check if the action button is valid to execute or not during gameplay mode.
+        /// </summary>
+        /// <param name="lastAction"></param>
+        /// <param name="currentAction"></param>
+        /// <returns></returns>
         public bool IsGameplayButtonActionValid(EPlayerAction lastAction, EPlayerAction currentAction)
         {
             if (_gameplayButtonSettingList is null or { Count: 0 })
@@ -96,6 +111,29 @@ namespace FS_Runtimes.Controllers.Core
 
             return true;
         }
+        
+        #endregion
+
+        #region Update Methods
+        
+        /// <summary>
+        /// Call this method to update new custom setting.
+        /// </summary>
+        /// <param name="newSetting"></param>
+        public void UpdateCustomSetting(PersistenceGameSetting newSetting)
+        {
+            _customSetting = new PersistenceGameSetting(newSetting);
+
+            string customSettingJson = string.Empty;
+            
+            if (newSetting != null)
+                customSettingJson = JsonConvert.SerializeObject(_customSetting);
+            
+            PlayerPrefs.SetString(GameHelper.GameSettingKey, customSettingJson);
+            PlayerPrefs.Save();
+        }
+        
+        #endregion
 
         #endregion
     }

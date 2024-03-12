@@ -56,10 +56,12 @@ namespace FS_Runtimes.Controllers.Core
 
         #region Init Methods
 
+        /// <summary>
+        /// Call this method to initialize any controllers which require to be initialized.
+        /// </summary>
         private void InitControllers()
         {
             _levelManager.Init();
-            _charactersManager.Init();
             _playerController.Init();
             _gameplayManager.Init();
         }
@@ -67,7 +69,12 @@ namespace FS_Runtimes.Controllers.Core
         #endregion
 
         #region Management Methods
-
+        
+        /// <summary>
+        /// Call this method to change game state mode.
+        /// </summary>
+        /// <param name="gameState"></param>
+        /// <param name="onComplete"></param>
         public void ChangeState(EGameState gameState, Action onComplete = null)
         {
             _currentState?.OnExit();

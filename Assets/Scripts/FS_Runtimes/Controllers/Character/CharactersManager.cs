@@ -25,11 +25,14 @@ namespace FS_Runtimes.Controllers.Character
 
         #region Methods
 
-        public void Init()
-        {
-            
-        }
-
+        #region Character Management Methods
+        
+        /// <summary>
+        /// Call this method to add new character into hero line.
+        /// </summary>
+        /// <param name="newCharacter"></param>
+        /// <param name="targetPos"></param>
+        /// <param name="onUpdateGrid">Callback method to update grid data</param>
         public void AddCharacter(CharacterPairData newCharacter, Vector2 targetPos, Action<Vector2, string> onUpdateGrid = null)
         {
             string uniqueID = newCharacter.CharacterData.UniqueID;
@@ -53,6 +56,11 @@ namespace FS_Runtimes.Controllers.Character
             _heroDataList.Add(newCharacter.CharacterData);
         }
         
+        /// <summary>
+        /// Call this method to command character moving to assign grid.
+        /// </summary>
+        /// <param name="targetPosition"></param>
+        /// <param name="onUpdateGrid"></param>
         public void MoveCharacter(Vector2 targetPosition, Action<Vector2, string> onUpdateGrid = null)
         {
             Vector2 cachePos = Vector2.zero;
@@ -79,6 +87,11 @@ namespace FS_Runtimes.Controllers.Character
             onUpdateGrid?.Invoke(cachePos, string.Empty);
         }
 
+        /// <summary>
+        /// Call this method to switch character from hero line.
+        /// </summary>
+        /// <param name="switchDirection"></param>
+        /// <param name="onUpdateGrid"></param>
         public void SwitchCharacter(ECharacterSwitch switchDirection, Action<Vector2, string> onUpdateGrid = null)
         {
             if (_heroDataList is null or {Count: <= 1})
@@ -115,6 +128,10 @@ namespace FS_Runtimes.Controllers.Character
             SetHighlightState();
         }
 
+        /// <summary>
+        /// Call this method to remove character from hero line.
+        /// </summary>
+        /// <param name="uniqueID"></param>
         private void RemoveCharacter(string uniqueID)
         {
             if (string.IsNullOrEmpty(uniqueID)) return;
@@ -130,6 +147,11 @@ namespace FS_Runtimes.Controllers.Character
             }
         }
 
+        /// <summary>
+        /// Call this method to remove current character from hero line.
+        /// </summary>
+        /// <param name="targetPosition"></param>
+        /// <param name="onUpdateGrid"></param>
         public void RemoveMainCharacter(Vector2 targetPosition, Action<Vector2, string> onUpdateGrid = null)
         {
             if (_heroDataList is null or {Count: 0})
@@ -140,7 +162,36 @@ namespace FS_Runtimes.Controllers.Character
             RemoveCharacter(uniqueID);
             SetHighlightState();
         }
+        
+        /// <summary>
+        /// Call this method to update all character position when switch character from hero line.
+        /// </summary>
+        /// <param name="cachePosList"></param>
+        /// <param name="cacheDirList"></param>
+        /// <param name="onUpdateGrid"></param>
+        private void UpdateCharactersTransform(List<Vector2> cachePosList, List<Vector3> cacheDirList, Action<Vector2, string> onUpdateGrid = null)
+        {
+            for (int index = 0; index < cachePosList.Count; index++)
+            {
+                string uniqueID = _heroDataList[index].UniqueID;
+                Vector2 newPos = cachePosList[index];
+                Vector3 newDir = cacheDirList[index];
+                CharacterGameObject character = _heroGameObjectDict[uniqueID];
+                
+                character.SetCharacterPosition(newPos);
+                character.SetCharacterDirection(newDir);
+                onUpdateGrid?.Invoke(newPos, uniqueID);
+            }
+        }
+        
+        #endregion
 
+        #region Get & Set Methods
+
+        /// <summary>
+        /// Call this method to get current hero position.
+        /// </summary>
+        /// <returns></returns>
         public Vector2 GetMainCharacterPosition()
         {
             if (_heroDataList is null or { Count: 0 }) 
@@ -152,19 +203,9 @@ namespace FS_Runtimes.Controllers.Character
             return character.CurrentPosition;
         }
         
-        public void ResetManager()
-        {
-            _heroDataList.Clear();
-
-            if (_heroGameObjectDict is { Count: > 0 })
-            {
-                _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
-                _heroGameObjectDict.Clear();
-            }
-
-            CurrentMainHero = null;
-        }
-
+        /// <summary>
+        /// Call this method to adjust highlight of current main hero when user switch hero from line.
+        /// </summary>
         private void SetHighlightState()
         {
             if (_heroDataList is null or {Count: 0})
@@ -182,22 +223,30 @@ namespace FS_Runtimes.Controllers.Character
 
             CurrentMainHero = new CharacterPairData(_heroDataList[0], _heroGameObjectDict[uniqueID]);
         }
+        
+        #endregion
 
-        private void UpdateCharactersTransform(List<Vector2> cachePosList, List<Vector3> cacheDirList, Action<Vector2, string> onUpdateGrid = null)
+        #region Utility Methods
+        
+        /// <summary>
+        /// Call this method to reset the controller to initialize state.
+        /// </summary>
+        public void ResetManager()
         {
-            for (int index = 0; index < cachePosList.Count; index++)
+            _heroDataList.Clear();
+
+            if (_heroGameObjectDict is { Count: > 0 })
             {
-                string uniqueID = _heroDataList[index].UniqueID;
-                Vector2 newPos = cachePosList[index];
-                Vector3 newDir = cacheDirList[index];
-                CharacterGameObject character = _heroGameObjectDict[uniqueID];
-                
-                character.SetCharacterPosition(newPos);
-                character.SetCharacterDirection(newDir);
-                onUpdateGrid?.Invoke(newPos, uniqueID);
+                _heroGameObjectDict.Values.ToList().ForEach(hero => hero.Release());
+                _heroGameObjectDict.Clear();
             }
+
+            CurrentMainHero = null;
         }
 
+        /// <summary>
+        /// Call this method to trigger move count for hero growing mechanic.
+        /// </summary>
         public void OnTriggerActionEndPhase()
         {
             if (_heroDataList is null or {Count: 0})
@@ -205,6 +254,8 @@ namespace FS_Runtimes.Controllers.Character
             
             _heroDataList.ForEach(data => data.OnTakeAction());
         }
+        
+        #endregion
 
         #endregion
     }

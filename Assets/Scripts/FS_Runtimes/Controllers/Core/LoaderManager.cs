@@ -32,6 +32,9 @@ namespace FS_Runtimes.Controllers.Core
             Application.targetFrameRate = _targetFrameRate;
         }
         
+        /// <summary>
+        /// Call this method to load required game scenes.
+        /// </summary>
         private void StartProcess()
         {
             NavigateToScene(GameHelper.GameplayScene, false);
@@ -42,6 +45,11 @@ namespace FS_Runtimes.Controllers.Core
         
         #region Load Scene Methods
         
+        /// <summary>
+        /// Call this method to load specific scene.
+        /// </summary>
+        /// <param name="sceneName"></param>
+        /// <param name="isAdditive"></param>
         private void NavigateToScene(string sceneName, bool isAdditive)
         {
             if (isAdditive == false)

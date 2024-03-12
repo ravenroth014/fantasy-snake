@@ -1,5 +1,6 @@
 ﻿using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.UI;
+using FS_Runtimes.Controllers.Utilities;
 
 namespace FS_Runtimes.States
 {
@@ -8,11 +9,13 @@ namespace FS_Runtimes.States
         #region Fields & Properites
 
         private readonly GameErrorUIController _gameErrorUIController = NavigatorManager.Instance.GameErrorUIController;
+        private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
         
         public override void OnEnter()
         {
+            _logManager.LogError("Enter game error state !!!");
             _gameErrorUIController.Open();
         }
 

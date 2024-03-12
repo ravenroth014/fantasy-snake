@@ -40,6 +40,7 @@ namespace FS_Runtimes.States
 
         public override void OnEnter()
         {
+            _logManager.Log("Enter gameplay state ...");
             _loadingUIController.Open();
             
             if (Init() == false)
@@ -55,6 +56,7 @@ namespace FS_Runtimes.States
         {
             _isReady = false;
             _gameplayUIController.Close();
+            _logManager.Log("Exit gameplay state ...");
         }
 
         #endregion
@@ -114,6 +116,7 @@ namespace FS_Runtimes.States
             _loadingUIController.Close();
             _gameplayUIController.Open();
             _isReady = true;
+            _logManager.Log("Game Start !!!");
         }
         
         private void OnPlayerTrigger(EPlayerAction playerAction)
@@ -212,7 +215,7 @@ namespace FS_Runtimes.States
             
             if (_charactersManager.CurrentMainHero == null)
             {
-                GameManager.Instance.ChangeState(EGameState.GameOver);
+                OnGameOver();
                 return;
             }
             
@@ -242,7 +245,7 @@ namespace FS_Runtimes.States
                 }
                 case ECharacterType.Hero:
                 {
-                    GameManager.Instance.ChangeState(EGameState.GameOver);
+                    OnGameOver();
                     break;
                 }
                 default:
@@ -299,11 +302,17 @@ namespace FS_Runtimes.States
 
             if (_charactersManager.CurrentMainHero == null)
             {
-                GameManager.Instance.ChangeState(EGameState.GameOver);
+                OnGameOver();
                 yield return null;
             }
             
             onComplete?.Invoke();
+        }
+
+        private void OnGameOver()
+        {
+            _logManager.Log("Game Over!!!");
+            GameManager.Instance.ChangeState(EGameState.GameOver);
         }
 
         #endregion

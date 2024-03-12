@@ -2,6 +2,7 @@
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.UI;
+using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Utilities;
 
 namespace FS_Runtimes.States
@@ -13,15 +14,18 @@ namespace FS_Runtimes.States
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
 
-        private readonly LoadingUIController _loadingUIController = NavigatorManager.Instance.LoadingUIController;
         private readonly GameOverUIController _gameOverUIController = NavigatorManager.Instance.GameOverUIController;
 
+        private readonly LogManager _logManager = LogManager.Instance;
+        
         #endregion
 
         #region Methods
 
         public override void OnEnter()
         {
+            _logManager.Log("Enter game over state ...");
+            
             if (Init() == false)
                 GameManager.Instance.ChangeState(EGameState.GameError);
             
@@ -33,6 +37,8 @@ namespace FS_Runtimes.States
             _gameOverUIController.Close();
             _charactersManager.ResetManager();
             _levelManager.ResetManager();
+            
+            _logManager.Log("Exit game over state ...");
         }
 
         private bool Init()

@@ -20,6 +20,7 @@ namespace FS_Runtimes.States
         
         public override void OnEnter()
         {
+            _logManager.Log("Enter main menu state ...");
             _loadingUIController.Open();
             
             if (Init() == false)
@@ -35,6 +36,8 @@ namespace FS_Runtimes.States
             
             _settingMenuUIController.Close();
             _mainMenuUIController.Close();
+            
+            _logManager.Log("Exit main menu state ...");
         }
 
         private bool Init()
