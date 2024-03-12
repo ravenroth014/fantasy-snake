@@ -8,21 +8,25 @@ namespace FS_Runtimes.Controllers.Core
     {
         #region Fields & Properties
 
-        public MainMenuController MainMenuController => _mainMenuController;
+        public MainMenuUIController MainMenuUIController => _mainMenuUIController;
         [SerializeField, Tooltip("Main Menu Controller")]
-        private MainMenuController _mainMenuController;
+        private MainMenuUIController _mainMenuUIController;
 
-        public SettingMenuController SettingMenuController => _settingMenuController;
+        public SettingMenuUIController SettingMenuUIController => _settingMenuUIController;
         [SerializeField, Tooltip("Setting Menu Controller")]
-        private SettingMenuController _settingMenuController;
+        private SettingMenuUIController _settingMenuUIController;
 
-        public LoadingStateController LoadingStateController => _loadingStateController;
-        [SerializeField, Tooltip("Loading Controller")]
-        private LoadingStateController _loadingStateController;
+        public LoadingUIController LoadingUIController => _loadingUIController;
+        [FormerlySerializedAs("_loadingStateController")] [SerializeField, Tooltip("Loading Controller")]
+        private LoadingUIController _loadingUIController;
 
         public GameplayUIController GameplayUIController => _gameplayUIController;
         [SerializeField, Tooltip("Gameplay UI Controller")]
         private GameplayUIController _gameplayUIController;
+
+        public GameOverUIController GameOverUIController => _gameOverUIController;
+        [SerializeField, Tooltip("Game over UI Controller")]
+        private GameOverUIController _gameOverUIController;
         
         public static NavigatorManager Instance => _instance;
         private static NavigatorManager _instance;

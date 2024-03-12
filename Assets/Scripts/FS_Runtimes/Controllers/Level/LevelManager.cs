@@ -95,6 +95,20 @@ namespace FS_Runtimes.Controllers.Level
             
             _decorateList.ForEach(decorate => decorate.Release());
             _decorateList.Clear();
+            
+            if (_enlistCharacterDict is {Count: > 0})
+            {
+                _enlistCharacterDict.Values.ToList().ForEach(enlist => enlist.CharacterGameObject.Release());
+                _enlistCharacterDict.Clear();
+            }
+
+            if (_enemyCharacterDict is { Count: > 0 })
+            {
+                _enemyCharacterDict.Values.ToList().ForEach(enemy => enemy.CharacterGameObject.Release());
+                _enemyCharacterDict.Clear();
+            }
+
+            TotalKillEnemies = 0;
         }
 
         private Vector2 GetFreePosition()

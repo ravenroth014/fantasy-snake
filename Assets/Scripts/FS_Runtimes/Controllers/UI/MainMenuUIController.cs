@@ -6,7 +6,7 @@ using UnityEngine.EventSystems;
 
 namespace FS_Runtimes.Controllers.UI
 {
-    public class MainMenuController : AbstractUIController
+    public class MainMenuUIController : AbstractUIController
     {
         #region Fields & Properties
 
@@ -18,7 +18,7 @@ namespace FS_Runtimes.Controllers.UI
         [Header("Event Systems")] 
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
 
-        private SettingMenuController _settingMenuController;
+        private SettingMenuUIController _settingMenuUIController;
         private ECurrentMainMenu _currentMainMenuState;
 
         #endregion
@@ -27,7 +27,7 @@ namespace FS_Runtimes.Controllers.UI
 
         public void Init()
         {
-            _settingMenuController ??= NavigatorManager.Instance.SettingMenuController;
+            _settingMenuUIController ??= NavigatorManager.Instance.SettingMenuUIController;
             _eventSystem.firstSelectedGameObject = _startButton.gameObject;
 
             InitCallback();
@@ -66,7 +66,7 @@ namespace FS_Runtimes.Controllers.UI
             {
                 _settingButton.SetCallback(() =>
                 {
-                    _settingMenuController.Open();
+                    _settingMenuUIController.Open();
                     Close();
                 });
             }

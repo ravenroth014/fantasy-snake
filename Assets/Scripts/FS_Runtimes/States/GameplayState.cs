@@ -20,7 +20,7 @@ namespace FS_Runtimes.States
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
         
-        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
+        private readonly LoadingUIController _loadingUIController = NavigatorManager.Instance.LoadingUIController;
         private readonly GameplayUIController _gameplayUIController = NavigatorManager.Instance.GameplayUIController;
         
         private readonly SettingManager _settingManager = SettingManager.Instance;
@@ -40,6 +40,8 @@ namespace FS_Runtimes.States
 
         public override void OnEnter()
         {
+            _loadingUIController.Open();
+            
             if (Init() == false)
             {
                 GameManager.Instance.ChangeState(EGameState.GameError);
@@ -100,6 +102,7 @@ namespace FS_Runtimes.States
             if (_levelManager is null) return false;
 
             _levelManager.GenerateLevel();
+            _gameplayUIController.UpdateKillCountText(_levelManager.TotalKillEnemies);
             
             return true;
         }
@@ -110,7 +113,7 @@ namespace FS_Runtimes.States
 
         private void StartGame()
         {
-            _loadingStateController.Close();
+            _loadingUIController.Close();
             _gameplayUIController.Open();
             _isReady = true;
         }

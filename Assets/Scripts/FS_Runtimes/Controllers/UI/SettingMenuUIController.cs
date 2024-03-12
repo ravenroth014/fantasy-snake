@@ -6,7 +6,7 @@ using UnityEngine.UI;
 
 namespace FS_Runtimes.Controllers.UI
 {
-    public class SettingMenuController : AbstractUIController
+    public class SettingMenuUIController : AbstractUIController
     {
         #region Fields & Properties
 
@@ -235,7 +235,7 @@ namespace FS_Runtimes.Controllers.UI
             }
             else
             {
-                NavigatorManager.Instance.MainMenuController.Open();
+                NavigatorManager.Instance.MainMenuUIController.Open();
                 Close();
             }
         }
@@ -265,7 +265,7 @@ namespace FS_Runtimes.Controllers.UI
         private void OnClickDiscardSettingBackPopupButton()
         {
             _backPopupUI.SetActive(false);
-            NavigatorManager.Instance.MainMenuController.Open();
+            NavigatorManager.Instance.MainMenuUIController.Open();
             Close();
         }
 
@@ -273,7 +273,7 @@ namespace FS_Runtimes.Controllers.UI
         {
             OnClickApplyButton();
             _backPopupUI.SetActive(false);
-            NavigatorManager.Instance.MainMenuController.Open();
+            NavigatorManager.Instance.MainMenuUIController.Open();
             Close();
         }
         

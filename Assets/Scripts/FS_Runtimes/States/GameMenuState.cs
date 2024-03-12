@@ -11,25 +11,29 @@ namespace FS_Runtimes.States
         #region Fields & Properties
 
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
-        private readonly MainMenuController _mainMenuController = NavigatorManager.Instance.MainMenuController;
-        private readonly SettingMenuController _settingMenuController = NavigatorManager.Instance.SettingMenuController;
-        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
+        private readonly MainMenuUIController _mainMenuUIController = NavigatorManager.Instance.MainMenuUIController;
+        private readonly SettingMenuUIController _settingMenuUIController = NavigatorManager.Instance.SettingMenuUIController;
+        private readonly LoadingUIController _loadingUIController = NavigatorManager.Instance.LoadingUIController;
         private readonly LogManager _logManager = LogManager.Instance;
 
         #endregion
         
         public override void OnEnter()
         {
+            _loadingUIController.Open();
+            
             if (Init() == false)
                 GameManager.Instance.ChangeState(EGameState.GameError);
+            
+            _loadingUIController.Close();
         }
 
         public override void OnExit()
         {
-            _loadingStateController.Open();
+            _loadingUIController.Open();
             
-            _settingMenuController.Close();
-            _mainMenuController.Close();
+            _settingMenuUIController.Close();
+            _mainMenuUIController.Close();
         }
 
         private bool Init()
@@ -44,11 +48,11 @@ namespace FS_Runtimes.States
 
         private bool InitController()
         {
-            if (_mainMenuController is null) return false;
-            if (_settingMenuController is null) return false;
+            if (_mainMenuUIController is null) return false;
+            if (_settingMenuUIController is null) return false;
             
-            _mainMenuController.Init();
-            _settingMenuController.Init();
+            _mainMenuUIController.Init();
+            _settingMenuUIController.Init();
 
             return true;
         }
@@ -70,7 +74,7 @@ namespace FS_Runtimes.States
                 case EPlayerAction.Down:
                 case EPlayerAction.Left:
                 {
-                    _mainMenuController.OnPlayerTrigger(playerAction);
+                    _mainMenuUIController.OnPlayerTrigger(playerAction);
                     break;
                 }
                 case EPlayerAction.RotateLeft:
