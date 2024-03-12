@@ -19,12 +19,16 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Event System")] private EventSystem _eventSystem;
 
         private SettingMenuUIController _settingMenuUIController;
-        private ECurrentMainMenu _currentMainMenuState;
 
         #endregion
 
         #region Methods
 
+        #region Init Methods
+
+        /// <summary>
+        /// Call this method to initialize UI.
+        /// </summary>
         public void Init()
         {
             _settingMenuUIController ??= NavigatorManager.Instance.SettingMenuUIController;
@@ -32,26 +36,10 @@ namespace FS_Runtimes.Controllers.UI
 
             InitCallback();
         }
-
-        public void OnPlayerTrigger(EPlayerAction playerAction)
-        {
-            if (_currentMainMenuState == ECurrentMainMenu.Main)
-                OnControlMainMenu();
-            if (_currentMainMenuState == ECurrentMainMenu.Setting)
-                OnControlSettingMenu(playerAction);
-        }
-
-        private void OnControlMainMenu()
-        {
-            if (_eventSystem.currentSelectedGameObject is not null) return;
-            _eventSystem.SetSelectedGameObject(_startButton.gameObject);
-        }
-
-        private void OnControlSettingMenu(EPlayerAction playerAction)
-        {
-            
-        }
-
+        
+        /// <summary>
+        /// Call this method to initialize button's callback.
+        /// </summary>
         private void InitCallback()
         {
             if (_startButton is not null)
@@ -76,6 +64,30 @@ namespace FS_Runtimes.Controllers.UI
                 _exitButton.SetCallback(Application.Quit);
             }
         }
+        
+        #endregion
+
+        #region UI Controller Methods
+
+        /// <summary>
+        /// Call this method to handle UI from gamepad.
+        /// </summary>
+        /// <param name="playerAction"></param>
+        public void OnPlayerTrigger(EPlayerAction playerAction)
+        {
+            OnControlMainMenu();
+        }
+
+        /// <summary>
+        /// Call this method to select
+        /// </summary>
+        private void OnControlMainMenu()
+        {
+            if (_eventSystem.currentSelectedGameObject is not null) return;
+            _eventSystem.SetSelectedGameObject(_startButton.gameObject);
+        }
+        
+        #endregion
 
         #endregion
     }

@@ -19,6 +19,10 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Methods
 
+        /// <summary>
+        /// Call this method to update hero UI.
+        /// </summary>
+        /// <param name="heroData"></param>
         public void UpdatePlayerText(CharacterPairData heroData)
         {
             if (_heroHealthText is null || _heroAttackText is null)
@@ -39,6 +43,10 @@ namespace FS_Runtimes.Controllers.UI
             _heroAttackText.text = attackString;
         }
         
+        /// <summary>
+        /// Call this method to update enemy UI.
+        /// </summary>
+        /// <param name="enemyData"></param>
         public void UpdateEnemyText(CharacterPairData enemyData)
         {
             if (_enemyHealthText is null || _enemyAttackText is null)
@@ -59,6 +67,10 @@ namespace FS_Runtimes.Controllers.UI
             _enemyAttackText.text = attackString;
         }
 
+        /// <summary>
+        /// Call this method to update score UI.
+        /// </summary>
+        /// <param name="killCount"></param>
         public void UpdateKillCountText(int killCount)
         {
             if (_killCountText is not null)

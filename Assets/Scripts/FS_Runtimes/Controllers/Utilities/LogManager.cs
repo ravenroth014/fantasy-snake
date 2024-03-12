@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Text;
-using FS_Runtimes.Controllers.Core;
-using FS_Runtimes.Utilities;
 using FS_Runtimes.Utilities.Setting;
 using UnityEngine;
 
@@ -82,6 +80,9 @@ namespace FS_Runtimes.Controllers.Utilities
 
         #region Init Methods
         
+        /// <summary>
+        /// Call this method to initialize log manager.
+        /// </summary>
         private void Init()
         {
             InitFolder();
@@ -89,6 +90,9 @@ namespace FS_Runtimes.Controllers.Utilities
             InitStringBuilder();
         }
 
+        /// <summary>
+        /// Call this method to initialize folder.
+        /// </summary>
         private void InitFolder()
         {
             string logPath = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments).Replace("\\", "/");
@@ -108,6 +112,10 @@ namespace FS_Runtimes.Controllers.Utilities
             InitLogFolder(logPath);
         }
 
+        /// <summary>
+        /// Call this method to initialize log folder.
+        /// </summary>
+        /// <param name="logPath"></param>
         private void InitLogFolder(string logPath)
         {
             _logFolderPath = $"{logPath}/log";
@@ -128,6 +136,9 @@ namespace FS_Runtimes.Controllers.Utilities
                 CreateFolder(_logAssertionFolderPath);
         }
 
+        /// <summary>
+        /// Call this method to initialize file name.
+        /// </summary>
         private void InitFileName()
         {
             DateTime currentTime = DateTime.Now;
@@ -146,6 +157,10 @@ namespace FS_Runtimes.Controllers.Utilities
                 _logAssertionFileName = $"{LogAssertionFileNamePrefix}_{time}.txt";
         }
 
+        /// <summary>
+        /// Call this method to create folder.
+        /// </summary>
+        /// <param name="folderPath"></param>
         private void CreateFolder(string folderPath)
         {
             try
@@ -158,6 +173,9 @@ namespace FS_Runtimes.Controllers.Utilities
             }
         }
 
+        /// <summary>
+        /// Call this method to initialize string builder.
+        /// </summary>
         private void InitStringBuilder()
         {
             _logBuilder = new StringBuilder();
@@ -170,6 +188,10 @@ namespace FS_Runtimes.Controllers.Utilities
 
         #region Log Methods
 
+        /// <summary>
+        /// Call this method to log normal message.
+        /// </summary>
+        /// <param name="message"></param>
         public void Log(string message)
         {
             #if UNITY_EDITOR
@@ -180,6 +202,10 @@ namespace FS_Runtimes.Controllers.Utilities
             #endif
         }
 
+        /// <summary>
+        /// Call this method to log warning message.
+        /// </summary>
+        /// <param name="message"></param>
         public void LogWarning(string message)
         {
             #if UNITY_EDITOR
@@ -190,6 +216,10 @@ namespace FS_Runtimes.Controllers.Utilities
             #endif
         }
 
+        /// <summary>
+        /// Call this method to log error message.
+        /// </summary>
+        /// <param name="message"></param>
         public void LogError(string message)
         {
             #if UNITY_EDITOR
@@ -200,6 +230,10 @@ namespace FS_Runtimes.Controllers.Utilities
             #endif
         }
 
+        /// <summary>
+        /// Call this method to log assertion message.
+        /// </summary>
+        /// <param name="message"></param>
         public void LogAssertion(string message)
         {
             #if UNITY_EDITOR
@@ -228,6 +262,12 @@ namespace FS_Runtimes.Controllers.Utilities
 
         #region Event Methods
 
+        /// <summary>
+        /// Callback method when debug log event is triggered.
+        /// </summary>
+        /// <param name="logString"></param>
+        /// <param name="stacktrace"></param>
+        /// <param name="logType"></param>
         private void OnDebugLog(string logString, string stacktrace, LogType logType)
         {
             switch (logType)
@@ -295,6 +335,9 @@ namespace FS_Runtimes.Controllers.Utilities
 
         #region Write Files Methods
 
+        /// <summary>
+        /// Call this method to write normal log file.
+        /// </summary>
         private void WriteLogFile()
         {
             if (_logSetting.IsLogMessage == false) return;
@@ -305,6 +348,9 @@ namespace FS_Runtimes.Controllers.Utilities
             tw.Close();
         }
 
+        /// <summary>
+        /// Call this method to write warning log file.
+        /// </summary>
         private void WriteLogWarningFile()
         {
             if (_logSetting.IsLogWarningMessage == false) return;
@@ -315,6 +361,9 @@ namespace FS_Runtimes.Controllers.Utilities
             tw.Close();
         }
 
+        /// <summary>
+        /// Call this method to write error log file.
+        /// </summary>
         private void WriteLogErrorFile()
         {
             if (_logSetting.IsLogErrorMessage == false) return;
@@ -325,6 +374,9 @@ namespace FS_Runtimes.Controllers.Utilities
             tw.Close();
         }
 
+        /// <summary>
+        /// Call this method to write assertion log file.
+        /// </summary>
         private void WriteLogAssertionFile()
         {
             if (_logSetting.IsLogAssertionMessage == false) return;

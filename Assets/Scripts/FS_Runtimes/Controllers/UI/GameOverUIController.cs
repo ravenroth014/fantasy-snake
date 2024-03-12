@@ -21,6 +21,11 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Methods
 
+        #region Init Methods
+        
+        /// <summary>
+        /// Call this method to initialize UI callback.
+        /// </summary>
         public void Init()
         {
             if (_retryButton is not null)
@@ -35,7 +40,15 @@ namespace FS_Runtimes.Controllers.UI
                 _mainMenuButton.onClick.AddListener(OnClickMainMenuButton);
             }
         }
+        
+        #endregion
 
+        #region Set UI Methods
+        
+        /// <summary>
+        /// Call this method to set score UI.
+        /// </summary>
+        /// <param name="score"></param>
         public void SetScore(int score)
         {
             string scoreString = score.ToString("D");
@@ -43,17 +56,29 @@ namespace FS_Runtimes.Controllers.UI
             if (_scoreText is not null)
                 _scoreText.text = $"Score : {scoreString}";
         }
+        
+        #endregion
 
+        #region Callback Methods
+        
+        /// <summary>
+        /// Callback when click on retry button.
+        /// </summary>
         private void OnClickRetryButton()
         {
             GameManager.Instance.ChangeState(EGameState.GamePlay);
         }
 
+        /// <summary>
+        /// Callback when click on main menu button.
+        /// </summary>
         private void OnClickMainMenuButton()
         {
             GameManager.Instance.ChangeState(EGameState.GameMenu);
         }
 
+        #endregion
+        
         #endregion
     }
 }

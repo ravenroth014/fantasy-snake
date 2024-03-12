@@ -55,6 +55,9 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Init Methods
         
+        /// <summary>
+        /// Call this method to initialize UI.
+        /// </summary>
         public void Init()
         {
             InitButtonCallback();
@@ -62,6 +65,9 @@ namespace FS_Runtimes.Controllers.UI
             InitUI();
         }
 
+        /// <summary>
+        /// Call this method to initialize button callback.
+        /// </summary>
         private void InitButtonCallback()
         {
             if (_entityButton is not null)
@@ -143,6 +149,9 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Call this method to initialize input field callback.
+        /// </summary>
         private void InitInputFieldCallback()
         {
             if (_entityInputField is not null)
@@ -200,6 +209,9 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
         
+        /// <summary>
+        /// Call this method to init UI value.
+        /// </summary>
         private void InitUI()
         {
             if (_entityWarningText is not null)
@@ -210,6 +222,9 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Override Methods
         
+        /// <summary>
+        /// Call this overriden method to open this UI.
+        /// </summary>
         public override void Open()
         {
             base.Open();
@@ -227,6 +242,9 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Callback Methods
         
+        /// <summary>
+        /// Callback method on click back button.
+        /// </summary>
         private void OnClickBackButton()
         {
             if (IsSettingChanged())
@@ -240,11 +258,17 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method on rollback to default setting.
+        /// </summary>
         private void OnClickDefaultButton()
         {
             UpdateUI(SettingManager.Instance.GetDefaultGameplaySetting());
         }
 
+        /// <summary>
+        /// Callback method on save custom setting.
+        /// </summary>
         private void OnClickApplyButton()
         {
             int startEntity = int.Parse(_entityInputField.text);
@@ -262,6 +286,9 @@ namespace FS_Runtimes.Controllers.UI
             _cacheSetting = newSetting;
         }
 
+        /// <summary>
+        /// Callback method on discard customized setting.
+        /// </summary>
         private void OnClickDiscardSettingBackPopupButton()
         {
             _backPopupUI.SetActive(false);
@@ -269,6 +296,9 @@ namespace FS_Runtimes.Controllers.UI
             Close();
         }
 
+        /// <summary>
+        /// Callback method when apply customized data during leaving without saving.
+        /// </summary>
         private void OnClickApplySettingBackPopupButton()
         {
             OnClickApplyButton();
@@ -277,6 +307,10 @@ namespace FS_Runtimes.Controllers.UI
             Close();
         }
         
+        /// <summary>
+        /// Callback method when finish editing input field of 'On start entity' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnStartEntityInputUpdate(string value)
         {
             bool isParsed = int.TryParse(value, out int result);
@@ -292,6 +326,10 @@ namespace FS_Runtimes.Controllers.UI
                 _entityInputField.text = defaultValue.ToString("D");
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'On grow by move count' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnGrowByCountInputUpdate(string value)
         {
             bool isParsed = int.TryParse(value, out int result);
@@ -307,6 +345,10 @@ namespace FS_Runtimes.Controllers.UI
                 _growByCountInputField.text = defaultValue.ToString("D");
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Minimum attack value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMinAtkInputUpdate(string value)
         {
             int maxResult = int.MaxValue;
@@ -336,6 +378,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Minimum health value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMinHpInputUpdate(string value)
         {
             int maxResult = int.MaxValue;
@@ -365,6 +411,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Maximum attack value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMaxAtkInputUpdate(string value)
         {
             int minResult = 1;
@@ -388,6 +438,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Maximum health value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMaxHpInputUpdate(string value)
         {
             int minResult = 1;
@@ -411,6 +465,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Max active entity value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMaxEntityInputUpdate(string value)
         {
             bool isParsed = int.TryParse(value, out int result);
@@ -429,6 +487,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Max spawnable value' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnMaxSpawnableInputUpdate(string value)
         {
             bool isParsed = int.TryParse(value, out int result);
@@ -447,6 +509,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Grow rate' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnGrowingStatRateInputUpdate(string value)
         {
             bool isParsed = float.TryParse(value, out float result);
@@ -469,6 +535,10 @@ namespace FS_Runtimes.Controllers.UI
 
         #region UI Methods
 
+        /// <summary>
+        /// Call this method to update UI option value by game setting persistence setting data.
+        /// </summary>
+        /// <param name="setting"></param>
         private void UpdateUI(PersistenceGameSetting setting)
         {
             if (_entityInputField is not null)
@@ -503,6 +573,10 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Utility Methods
 
+        /// <summary>
+        /// Call this to check if there is any changed in setting or not.
+        /// </summary>
+        /// <returns></returns>
         private bool IsSettingChanged()
         {
             bool isDataChanged = false;

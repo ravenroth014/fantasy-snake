@@ -14,6 +14,9 @@ namespace FS_Runtimes.Controllers.UI
 
         #region Methods
 
+        /// <summary>
+        /// Call this method to initialize button's callback.
+        /// </summary>
         public void Init()
         {
             if (_confirmButton is not null)

@@ -16,6 +16,7 @@ namespace FS_Runtimes.States
         public override void OnEnter()
         {
             _logManager.LogError("Enter game error state !!!");
+            _gameErrorUIController.Init();
             _gameErrorUIController.Open();
         }
 
