@@ -14,9 +14,6 @@ namespace FS_Runtimes.Controllers.Gameplay
 
         private Action<EPlayerAction> _onPlayerTrigger;
         private GameState _currentState;
-
-        private EDirection _currentDirection;
-
         private LevelManager _levelManager;
         private CharactersManager _charactersManager;
         

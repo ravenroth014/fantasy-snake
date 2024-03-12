@@ -16,15 +16,6 @@ namespace FS_Runtimes.Utilities
         , None
     }
 
-    public enum EDirection
-    {
-        Up
-        , Down
-        , Left
-        , Right
-        , None
-    }
-
     public enum EPlayerAction
     {
         Up
@@ -61,11 +52,5 @@ namespace FS_Runtimes.Utilities
     {
         Decorate
         , Obstacle
-    }
-
-    public enum ECurrentMainMenu
-    {
-        Main
-        , Setting
     }
 }

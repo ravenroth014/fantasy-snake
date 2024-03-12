@@ -13,7 +13,6 @@ namespace FS_Runtimes.Controllers.Player
 
         [SerializeField, Tooltip("Player Input")] private InputActionReference _moveInput;
 
-        private EDirection _currentDirection;
         private GameplayManager _gameplayManager;
 
         #endregion

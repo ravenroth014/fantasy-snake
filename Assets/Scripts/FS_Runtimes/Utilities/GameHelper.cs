@@ -22,8 +22,13 @@ namespace FS_Runtimes.Utilities
         
         #endregion
 
-        #region Gameplay Direction Methods
-
+        #region Methods
+        
+        /// <summary>
+        /// Call this method to get 2D direction by player action.
+        /// </summary>
+        /// <param name="playerAction"></param>
+        /// <returns></returns>
         public static Vector2 GetVector2Direction(EPlayerAction playerAction)
         {
             switch (playerAction)
@@ -41,10 +46,11 @@ namespace FS_Runtimes.Utilities
             }
         }
 
-        #endregion
-
-        #region Gameplay Switch Character Methods
-
+        /// <summary>
+        /// Call this method to get character switch action by player action.
+        /// </summary>
+        /// <param name="playerAction"></param>
+        /// <returns></returns>
         public static ECharacterSwitch GetCharacterSwitchAction(EPlayerAction playerAction)
         {
             switch (playerAction)
@@ -57,11 +63,13 @@ namespace FS_Runtimes.Utilities
                     return ECharacterSwitch.None;
             }
         }
-
-        #endregion
-
-        #region Player Action Methods
         
+        /// <summary>
+        /// Call this method to get player action by d-Pad gamepad.
+        /// </summary>
+        /// <param name="minValue"></param>
+        /// <param name="maxValue"></param>
+        /// <returns></returns>
         public static EPlayerAction GetPlayerAction(int minValue, int maxValue)
         {
             switch (minValue)
@@ -79,6 +87,11 @@ namespace FS_Runtimes.Utilities
             }
         }
 
+        /// <summary>
+        /// Call this method to get player action by corner button gamepad.
+        /// </summary>
+        /// <param name="buttonName"></param>
+        /// <returns></returns>
         public static EPlayerAction GetPlayerAction(string buttonName)
         {
             switch (buttonName)
@@ -92,6 +105,11 @@ namespace FS_Runtimes.Utilities
             }
         }
 
+        /// <summary>
+        /// Call this method to get player action by keyboard.
+        /// </summary>
+        /// <param name="keyCode"></param>
+        /// <returns></returns>
         public static EPlayerAction GetPlayerAction(Key keyCode)
         {
             switch (keyCode)
@@ -112,11 +130,12 @@ namespace FS_Runtimes.Utilities
                     return EPlayerAction.None;
             }
         }
-        
-        #endregion
 
-        #region Game State Methods
-        
+        /// <summary>
+        /// Call this method to get new game state instance.
+        /// </summary>
+        /// <param name="gameState"></param>
+        /// <returns></returns>
         public static GameState GetGameState(EGameState gameState)
         {
             switch (gameState)
@@ -133,17 +152,19 @@ namespace FS_Runtimes.Utilities
                     return null;
             }
         }
-        
-        #endregion
 
-        #region Calculation Methods
-
+        /// <summary>
+        /// Call this method to calculate character stat with formula.
+        /// </summary>
+        /// <param name="baseStat"></param>
+        /// <param name="level"></param>
+        /// <param name="growthRate"></param>
+        /// <returns></returns>
         public static int CalculateCharacterStat(int baseStat, int level, float growthRate)
         {
             return (int)(baseStat * (1 + (growthRate * (level - 1))));
         }
-
+        
         #endregion
-
     }
 }
