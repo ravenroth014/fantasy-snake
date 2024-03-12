@@ -1,6 +1,7 @@
 using System;
 using System.IO;
 using System.Text;
+using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Utilities;
 using FS_Runtimes.Utilities.Setting;
 using UnityEngine;
@@ -171,26 +172,42 @@ namespace FS_Runtimes.Controllers.Utilities
 
         public void Log(string message)
         {
-            if (_logSetting.IsLogMessage)
-                Debug.Log(message);
+            #if UNITY_EDITOR
+                if (_logSetting.IsLogMessage)
+                    Debug.Log(message);
+            #else
+                OnDebugLog(message, string.Empty, LogType.Log);
+            #endif
         }
 
         public void LogWarning(string message)
         {
-            if (_logSetting.IsLogWarningMessage)
-                Debug.LogWarning(message);
+            #if UNITY_EDITOR
+                if (_logSetting.IsLogWarningMessage)
+                    Debug.LogWarning(message);
+            #else
+                OnDebugLog(message, string.Empty, LogType.Warning);
+            #endif
         }
 
         public void LogError(string message)
         {
-            if (_logSetting.IsLogErrorMessage)
-                Debug.LogError(message);
+            #if UNITY_EDITOR
+                if (_logSetting.IsLogErrorMessage)
+                    Debug.LogError(message);
+            #else
+                OnDebugLog(message, string.Empty, LogType.Error);
+            #endif
         }
 
         public void LogAssertion(string message)
         {
-            if (_logSetting.IsLogAssertionMessage)
-                Debug.LogAssertion(message);
+            #if UNITY_EDITOR
+                if (_logSetting.IsLogAssertionMessage)
+                    Debug.LogAssertion(message);
+            #else
+                OnDebugLog(message, string.Empty, LogType.Assert);
+            #endif
         }
         
         #endregion

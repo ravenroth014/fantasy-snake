@@ -17,7 +17,7 @@ namespace FS_Runtimes.Controllers.Core
         private SettingMenuUIController _settingMenuUIController;
 
         public LoadingUIController LoadingUIController => _loadingUIController;
-        [FormerlySerializedAs("_loadingStateController")] [SerializeField, Tooltip("Loading Controller")]
+        [SerializeField, Tooltip("Loading Controller")]
         private LoadingUIController _loadingUIController;
 
         public GameplayUIController GameplayUIController => _gameplayUIController;
@@ -27,6 +27,10 @@ namespace FS_Runtimes.Controllers.Core
         public GameOverUIController GameOverUIController => _gameOverUIController;
         [SerializeField, Tooltip("Game over UI Controller")]
         private GameOverUIController _gameOverUIController;
+
+        public GameErrorUIController GameErrorUIController => _gameErrorUIController;
+        [SerializeField, Tooltip("Game error UI Controller")]
+        private GameErrorUIController _gameErrorUIController;
         
         public static NavigatorManager Instance => _instance;
         private static NavigatorManager _instance;
