@@ -539,6 +539,10 @@ namespace FS_Runtimes.Controllers.UI
             }
         }
 
+        /// <summary>
+        /// Callback method when finish editing input field of 'Turn grow rate' option.
+        /// </summary>
+        /// <param name="value"></param>
         private void OnTurnGrowingRateInputUpdate(string value)
         {
             bool isParsed = float.TryParse(value, out float result);
