@@ -16,18 +16,30 @@ namespace FS_Runtimes.Controllers.Decorate
 
         #region Methods
 
+        /// <summary>
+        /// Call this method to initialize when it's created from object pool.
+        /// </summary>
+        /// <param name="pooling"></param>
+        /// <param name="decorateType"></param>
         public void InitOnCreate(DecoratePooling pooling, EDecorateType decorateType)
         {
             _pooling = pooling;
             _decorateType = decorateType;
         }
         
+        /// <summary>
+        /// Call this method to set item's position.
+        /// </summary>
+        /// <param name="position"></param>
         public void SetDecoratePosition(Vector2 position)
         {
             float height = transform.position.y;
             gameObject.transform.position = new Vector3(position.x, height, position.y);
         }
         
+        /// <summary>
+        /// Call this method to return item to its pool.
+        /// </summary>
         public void Release()
         {
             if (_pooling is null)
@@ -38,6 +50,10 @@ namespace FS_Runtimes.Controllers.Decorate
             }
         }
 
+        /// <summary>
+        /// Call this method to set its parent.
+        /// </summary>
+        /// <param name="parent"></param>
         public void SetParent(Transform parent)
         {
             gameObject.transform.parent = parent;

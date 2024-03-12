@@ -23,22 +23,29 @@ namespace FS_Runtimes.Controllers.Gameplay
         #endregion
 
         #region Methods
-
-        public void Init()
-        {
-            // Do nothing (For now)
-        }
-
+        
+        /// <summary>
+        /// Call this method to execute the player action into current active game state.
+        /// </summary>
+        /// <param name="playerAction"></param>
         public void OnPlayerAction(EPlayerAction playerAction)
         {
             _onPlayerTrigger?.Invoke(playerAction);
         }
 
+        /// <summary>
+        /// Call this method to set callback of player trigger of current active game state.
+        /// </summary>
+        /// <param name="callback"></param>
         public void SetOnPlayerActionTriggerCallback(Action<EPlayerAction> callback = null)
         {
             _onPlayerTrigger = callback;
         }
 
+        /// <summary>
+        /// Call this method to execute coroutine task from current active game state.
+        /// </summary>
+        /// <param name="coroutine"></param>
         public void ExecuteCoroutine(IEnumerator coroutine)
         {
             StartCoroutine(coroutine);

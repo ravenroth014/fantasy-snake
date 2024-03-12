@@ -56,6 +56,7 @@ namespace FS_Runtimes.States
         {
             _isReady = false;
             _gameplayUIController.Close();
+            _gameplayManager.SetOnPlayerActionTriggerCallback();
             _logManager.Log("Exit gameplay state ...");
         }
 

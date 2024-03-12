@@ -52,6 +52,9 @@ namespace FS_Runtimes.Controllers.Level
 
         #region Init Methods
         
+        /// <summary>
+        /// Call this method to initialize data and pooling object.
+        /// </summary>
         public void Init()
         {
             GenerateDict();
@@ -62,6 +65,9 @@ namespace FS_Runtimes.Controllers.Level
             _enemyPooling.Init();
         }
         
+        /// <summary>
+        /// Call this method to generate grid data dictionary.
+        /// </summary>
         private void GenerateDict()
         {
             for (int hIndex = 0; hIndex <= _horizontalMaxSize + 1; hIndex++)
@@ -83,6 +89,9 @@ namespace FS_Runtimes.Controllers.Level
 
         #region Utility Methods
 
+        /// <summary>
+        /// Call this method to reset back to its initial state.
+        /// </summary>
         public void ResetManager()
         {
             if (_gridDict is null or { Count: 0 })
@@ -110,7 +119,30 @@ namespace FS_Runtimes.Controllers.Level
 
             TotalKillEnemies = 0;
         }
+        
+        /// <summary>
+        /// Call this method to update grid data.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <param name="uniqueID"></param>
+        /// <param name="gridState"></param>
+        /// <param name="characterType"></param>
+        public void UpdateGridData(Vector2 position, string uniqueID, EGridState gridState, ECharacterType characterType)
+        {
+            if (_gridDict.TryGetValue(position, out GridData gridData))
+            {
+                gridData.UpdateData(uniqueID, gridState, characterType);
+            }
+        }
 
+        #endregion
+
+        #region Get Methods
+        
+        /// <summary>
+        /// Call this method to get random free grid.
+        /// </summary>
+        /// <returns></returns>
         private Vector2 GetFreePosition()
         {
             List<GridData> freeGridList = _gridDict.Values.Where(grid => grid.GridState == EGridState.Empty).ToList();
@@ -121,29 +153,56 @@ namespace FS_Runtimes.Controllers.Level
             int randIndex = Random.Range(0, freeGridList.Count);
             return freeGridList[randIndex].GridIndex;
         }
-
-        public void UpdateGridData(Vector2 position, string uniqueID, EGridState gridState, ECharacterType characterType)
-        {
-            if (_gridDict.TryGetValue(position, out GridData gridData))
-            {
-                gridData.UpdateData(uniqueID, gridState, characterType);
-            }
-        }
         
+        /// <summary>
+        /// Call this method to get grid state data.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public EGridState GetGridState(Vector2 position)
         {
             return _gridDict[position].GridState;
         }
 
+        /// <summary>
+        /// Call this method to get grid occupied state.
+        /// </summary>
+        /// <param name="position"></param>
+        /// <returns></returns>
         public ECharacterType GetGridOccupiedType(Vector2 position)
         {
             return _gridDict[position].CharacterType;
+        }
+        
+        /// <summary>
+        /// Call this method to fetch enlist by grid position.
+        /// </summary>
+        /// <param name="targetPos"></param>
+        /// <returns></returns>
+        public CharacterPairData GetEnlistCharacter(Vector2 targetPos)
+        {
+            if (_enlistCharacterDict is { Count: > 0 } && _enlistCharacterDict.Remove(targetPos, out CharacterPairData enlist))
+                return enlist;
+            return null;
+        }
+
+        /// <summary>
+        /// Call this method to get enemy data by grid position.
+        /// </summary>
+        /// <param name="targetPos"></param>
+        /// <returns></returns>
+        public CharacterPairData GetEnemyCharacter(Vector2 targetPos)
+        {
+            return _enemyCharacterDict is {Count: > 0} && _enemyCharacterDict.TryGetValue(targetPos, out CharacterPairData enemy) ? enemy : null;
         }
         
         #endregion
 
         #region Generate Methods
 
+        /// <summary>
+        /// Call this method to generate level state.
+        /// </summary>
         public void GenerateLevel()
         {
             _levelSetting = SettingManager.Instance.GetCurrentGameplaySetting();
@@ -156,6 +215,10 @@ namespace FS_Runtimes.Controllers.Level
             GenerateDecoration();
         }
         
+        /// <summary>
+        /// Call this method to generate main hero at the initial state of game state.
+        /// </summary>
+        /// <returns></returns>
         public CharacterPairData GenerateHero()
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
@@ -171,6 +234,9 @@ namespace FS_Runtimes.Controllers.Level
             return pairData;
         }
         
+        /// <summary>
+        /// Call this method to generate enlist character into state.
+        /// </summary>
         private void GenerateEnlist()
         {
             CharacterGameObject character = _heroPooling.GetFromPool();
@@ -185,6 +251,9 @@ namespace FS_Runtimes.Controllers.Level
             _enlistCharacterDict[position] = pairData;
         }
 
+        /// <summary>
+        /// Call this method to generate enemy character into state.
+        /// </summary>
         private void GenerateEnemy()
         {
             CharacterGameObject character = _enemyPooling.GetFromPool();
@@ -200,6 +269,9 @@ namespace FS_Runtimes.Controllers.Level
             _enemyCharacterDict[position] = pairData;
         }
 
+        /// <summary>
+        /// Call this method to generate characters at the initial state.
+        /// </summary>
         public void GenerateCharactersOnStart()
         {
             int totalSpawnable = _levelSetting.StartEntity;
@@ -214,6 +286,9 @@ namespace FS_Runtimes.Controllers.Level
             }
         }
         
+        /// <summary>
+        /// Call this method to generate characters at the progress state.
+        /// </summary>
         public void GenerateCharacters()
         {
             int currentActiveEntity = _enlistCharacterDict.Count + _enemyCharacterDict.Count;
@@ -235,6 +310,9 @@ namespace FS_Runtimes.Controllers.Level
             }
         }
 
+        /// <summary>
+        /// Call this method to generate level state decoration.
+        /// </summary>
         private void GenerateDecoration()
         {
             List<GridData> availableGrid = _gridDict.Values.Where(gridData => gridData.GridState == EGridState.Empty).ToList();
@@ -255,6 +333,9 @@ namespace FS_Runtimes.Controllers.Level
             }
         }
 
+        /// <summary>
+        /// Call this method to generate level state obstacle.
+        /// </summary>
         private void GenerateObstacle()
         {
             List<GridData> availableGrid = _gridDict.Values.Where(gridData => gridData.GridState == EGridState.Empty).ToList();
@@ -289,6 +370,13 @@ namespace FS_Runtimes.Controllers.Level
             } while (totalObstacle > 0);
         }
 
+        /// <summary>
+        /// Call this method to generate level state obstacle.
+        /// </summary>
+        /// <param name="availableGrid"></param>
+        /// <param name="gridData"></param>
+        /// <param name="sizeX"></param>
+        /// <param name="sizeY"></param>
         private void GenerateObstacle(List<GridData> availableGrid, GridData gridData, int sizeX, int sizeY)
         {
             if (availableGrid is null or {Count: 0})
@@ -315,6 +403,13 @@ namespace FS_Runtimes.Controllers.Level
             }
         }
 
+        /// <summary>
+        /// Call this state to check if the surround area of current position can spawn obstacle or not.
+        /// </summary>
+        /// <param name="selectedGrid"></param>
+        /// <param name="sizeX"></param>
+        /// <param name="sizeY"></param>
+        /// <returns></returns>
         private bool CanPlaceObstacle(GridData selectedGrid, int sizeX, int sizeY)
         {
             for (int x = 0; x < sizeX; x++)
@@ -329,19 +424,12 @@ namespace FS_Runtimes.Controllers.Level
 
             return true;
         }
-        
-        public CharacterPairData GetEnlistCharacter(Vector2 targetPos)
-        {
-            if (_enlistCharacterDict is { Count: > 0 } && _enlistCharacterDict.Remove(targetPos, out CharacterPairData enlist))
-                return enlist;
-            return null;
-        }
 
-        public CharacterPairData GetEnemyCharacter(Vector2 targetPos)
-        {
-            return _enemyCharacterDict is {Count: > 0} && _enemyCharacterDict.TryGetValue(targetPos, out CharacterPairData enemy) ? enemy : null;
-        }
-
+        /// <summary>
+        /// Call this method to generate character data randomly.
+        /// </summary>
+        /// <param name="uniqueID"></param>
+        /// <returns></returns>
         private CharacterData GenerateCharacterData(string uniqueID)
         {
             int attackStat = Random.Range(_levelSetting.MinAttack, _levelSetting.MaxAttack + 1);
@@ -351,7 +439,15 @@ namespace FS_Runtimes.Controllers.Level
 
             return new CharacterData(attackStat, healthStat, growthRate, growthByMove, uniqueID);
         }
+        
+        #endregion
+        
+        #region Management Methods
 
+        /// <summary>
+        /// Call this method to remove enemy from level state.
+        /// </summary>
+        /// <param name="targetPos"></param>
         public void RemoveEnemy(Vector2 targetPos)
         {
             UpdateGridData(targetPos, string.Empty, EGridState.Empty, ECharacterType.None);
@@ -364,6 +460,9 @@ namespace FS_Runtimes.Controllers.Level
             TotalKillEnemies++;
         }
         
+        /// <summary>
+        /// Call this method to execute action for enlist and enemy stat growing mechanic.
+        /// </summary>
         public void OnTriggerActionEndPhase()
         {
             _enlistCharacterDict.Values.ToList().ForEach(enlist => enlist.CharacterData.OnTakeAction());

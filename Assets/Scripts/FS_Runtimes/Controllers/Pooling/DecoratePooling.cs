@@ -20,6 +20,11 @@ namespace FS_Runtimes.Controllers.Pooling
 
         #region Methods
 
+        #region Init Methods
+
+        /// <summary>
+        /// Call this method to initialize this pool
+        /// </summary>
         public void Init()
         {
             if (_pool != null) return;
@@ -29,7 +34,15 @@ namespace FS_Runtimes.Controllers.Pooling
             else if (_poolingSetting.PoolingType == EPoolingType.LinkedList)
                 _pool = new LinkedPool<DecorateGameObject>(CreatePoolItem, OnGetFromPool, OnReleaseToPool, OnDestroyPoolObject, _poolingSetting.CollectionCheck, _poolingSetting.PoolMaxSize);
         }
+        
+        #endregion
 
+        #region Pooling Methods
+        
+        /// <summary>
+        /// Callback method when first time creating item from this pool.
+        /// </summary>
+        /// <returns></returns>
         private DecorateGameObject CreatePoolItem()
         {
             if (_poolingSetting.ObjectInPool is null or { Count: 0 }) return null;
@@ -42,31 +55,53 @@ namespace FS_Runtimes.Controllers.Pooling
             return item;
         }
 
+        /// <summary>
+        /// Callback method when item is returned into pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnReleaseToPool(DecorateGameObject item)
         {
             item.gameObject.transform.parent = gameObject.transform;
             item.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Callback method when item is retrieved from this pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnGetFromPool(DecorateGameObject item)
         {
             item.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Callback method when item is designated to be destroyed from this pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnDestroyPoolObject(DecorateGameObject item)
         {
             Destroy(item.gameObject);
         }
 
+        /// <summary>
+        /// Call this method to return item to this pool.
+        /// </summary>
+        /// <param name="item"></param>
         public void ReturnItemToPool(DecorateGameObject item)
         {
             _pool.Release(item);
         }
 
+        /// <summary>
+        /// Call this method to get item from this pool.
+        /// </summary>
+        /// <returns></returns>
         public DecorateGameObject GetFromPool()
         {
             return _pool.Get();
         }
+        
+        #endregion
         
         #endregion
     }

@@ -36,6 +36,7 @@ namespace FS_Runtimes.States
             
             _settingMenuUIController.Close();
             _mainMenuUIController.Close();
+            _gameplayManager.SetOnPlayerActionTriggerCallback();
             
             _logManager.Log("Exit main menu state ...");
         }

@@ -25,6 +25,9 @@ namespace FS_Runtimes.Controllers.Pooling
 
         #region Init Methods
         
+        /// <summary>
+        /// Call this method to initialize pooling.
+        /// </summary>
         public void Init()
         {
             if (_pool != null) return;
@@ -42,6 +45,10 @@ namespace FS_Runtimes.Controllers.Pooling
 
         #region Pooling Methods
         
+        /// <summary>
+        /// Callback method when first time creating item from this pool.
+        /// </summary>
+        /// <returns></returns>
         private CharacterGameObject CreatePooledItem()
         {
             if (_poolingSetting.ObjectInPool is null or {Count: 0}) return null;
@@ -60,27 +67,47 @@ namespace FS_Runtimes.Controllers.Pooling
             return item;
         }
 
+        /// <summary>
+        /// Callback method when item is returned into pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnReleaseToPool(CharacterGameObject item)
         {
             item.SetParent(gameObject.transform);
             item.gameObject.SetActive(false);
         }
 
+        /// <summary>
+        /// Callback method when item is retrieved from this pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnGetFromPool(CharacterGameObject item)
         {
             item.gameObject.SetActive(true);
         }
 
+        /// <summary>
+        /// Callback method when item is designated to be destroyed from this pool.
+        /// </summary>
+        /// <param name="item"></param>
         private void OnDestroyPoolObject(CharacterGameObject item)
         {
             Destroy(item.gameObject);
         }
 
+        /// <summary>
+        /// Call this method to return item to this pool.
+        /// </summary>
+        /// <param name="item"></param>
         public void ReturnItemToPool(CharacterGameObject item)
         {
             _pool.Release(item);
         }
 
+        /// <summary>
+        /// Call this method to get item from this pool.
+        /// </summary>
+        /// <returns></returns>
         public CharacterGameObject GetFromPool()
         {
             return _pool.Get();

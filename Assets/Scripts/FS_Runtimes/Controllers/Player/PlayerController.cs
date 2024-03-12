@@ -1,4 +1,3 @@
-using FS_Runtimes.Controllers.Character;
 using FS_Runtimes.Controllers.Core;
 using FS_Runtimes.Controllers.Gameplay;
 using FS_Runtimes.Utilities;
@@ -21,10 +20,7 @@ namespace FS_Runtimes.Controllers.Player
 
         #region Methods
 
-        public void Init()
-        {
-            _gameplayManager = GameManager.Instance.GameplayManager;
-        }
+        #region Unity Event Methods
         
         private void OnEnable()
         {
@@ -35,7 +31,27 @@ namespace FS_Runtimes.Controllers.Player
         {
             _moveInput.action.started -= OnMoveTrigger;
         }
+        
+        #endregion
 
+        #region Init Methods
+        
+        /// <summary>
+        /// Call this method to initialize required init setting. 
+        /// </summary>
+        public void Init()
+        {
+            _gameplayManager = GameManager.Instance.GameplayManager;
+        }
+        
+        #endregion
+
+        #region Player Action Trigger Methods
+
+        /// <summary>
+        /// Call this method to determine player action by player's input decision.
+        /// </summary>
+        /// <param name="action"></param>
         private void OnMoveTrigger(InputAction.CallbackContext action)
         {
             switch (action.control)
@@ -52,23 +68,37 @@ namespace FS_Runtimes.Controllers.Player
             }
         }
 
+        /// <summary>
+        /// Call this method to execute player action by keyboard.
+        /// </summary>
+        /// <param name="keyControl"></param>
         private void OnKeyboardTrigger(KeyControl keyControl)
         {
             EPlayerAction playerAction = GameHelper.GetPlayerAction(keyControl.keyCode);
             _gameplayManager.OnPlayerAction(playerAction);
         }
 
+        /// <summary>
+        /// Call this method to execute player action by d-Pad on gamepad.
+        /// </summary>
+        /// <param name="gamepadControl"></param>
         private void OnDiscreteGamepadTrigger(DiscreteButtonControl gamepadControl)
         {
             EPlayerAction playerAction = GameHelper.GetPlayerAction(gamepadControl.minValue, gamepadControl.maxValue);
             _gameplayManager.OnPlayerAction(playerAction);
         }
 
+        /// <summary>
+        /// Call this method to execute player action by corner buttons on gamepad.
+        /// </summary>
+        /// <param name="gamepadControl"></param>
         private void OnButtonGamepadTrigger(ButtonControl gamepadControl)
         {
             EPlayerAction playerAction = GameHelper.GetPlayerAction(gamepadControl.name);
             _gameplayManager.OnPlayerAction(playerAction);
         }
+        
+        #endregion
 
         #endregion
     }

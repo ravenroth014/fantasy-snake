@@ -63,7 +63,6 @@ namespace FS_Runtimes.Controllers.Core
         {
             _levelManager.Init();
             _playerController.Init();
-            _gameplayManager.Init();
         }
 
         #endregion
