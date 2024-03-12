@@ -10,8 +10,6 @@ namespace FS_Runtimes.Models.Characters
         public int CurrentHp { get; private set; }
         public int AtkPoint { get; private set; }
         public string UniqueID { get; private set; }
-        public ECharacterType CharacterType { get; private set; }
-
         public bool IsDead => CurrentHp <= 0;
         
         private readonly int _baseHpStat;
@@ -45,6 +43,9 @@ namespace FS_Runtimes.Models.Characters
         
         #region Methods
 
+        /// <summary>
+        /// Call this method to update character stat.
+        /// </summary>
         private void UpdateCharacterStat()
         {
             MaxHp = GameHelper.CalculateCharacterStat(_baseHpStat, _currentLevel, _hpGrowthRate);
@@ -53,6 +54,10 @@ namespace FS_Runtimes.Models.Characters
             AtkPoint = GameHelper.CalculateCharacterStat(_baseAtkStat, _currentLevel, _atkGrowthRate);
         }
 
+        /// <summary>
+        /// Call this method to deduct character health from damage.
+        /// </summary>
+        /// <param name="value"></param>
         public void TakeDamage(int value)
         {
             CurrentHp -= value;
@@ -61,6 +66,9 @@ namespace FS_Runtimes.Models.Characters
                 CurrentHp = 0;
         }
 
+        /// <summary>
+        /// Call this method to execute end turn action to check update stat condition.
+        /// </summary>
         public void OnTakeAction()
         {
             _growthMoveLeft--;

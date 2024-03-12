@@ -28,6 +28,12 @@ namespace FS_Runtimes.Models.Levels
         
         #region Methods
 
+        /// <summary>
+        /// Call this method to update grid data.
+        /// </summary>
+        /// <param name="uniqueID"></param>
+        /// <param name="gridState"></param>
+        /// <param name="characterType"></param>
         public void UpdateData(string uniqueID, EGridState gridState, ECharacterType characterType)
         {
             CharacterUniqueID = uniqueID;
@@ -35,6 +41,9 @@ namespace FS_Runtimes.Models.Levels
             CharacterType = characterType;
         }
         
+        /// <summary>
+        /// Call this method to reset grid value.
+        /// </summary>
         public void Reset()
         {
             CharacterUniqueID = string.Empty;
