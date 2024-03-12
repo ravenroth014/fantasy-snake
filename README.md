@@ -1,6 +1,8 @@
 # Technical Decision on Assignment: Fantasy Snake
 By Atid Puwatnuttasit
 
+[Download Build version 1.0](https://drive.google.com/file/d/15aTQESjJJ-8ei2fedzU9yP_j7eQrbYku/view?usp=drive_link)
+
 ## Status
 Finished. Waiting for evaluation.
 
