@@ -300,6 +300,18 @@ namespace FS_Runtimes.Controllers.Level
             totalSpawnable = totalSpawnable > _levelSetting.MaxSpawnable ? _levelSetting.MaxSpawnable : totalSpawnable;
             totalSpawnable = Random.Range(1, totalSpawnable + 1);
 
+            if (_enemyCharacterDict.Count == 0 && totalSpawnable > 0)
+            {
+                GenerateEnemy();
+                totalSpawnable--;
+            }
+
+            if (_enlistCharacterDict.Count == 0 && totalSpawnable > 0)
+            {
+                GenerateEnlist();
+                totalSpawnable--;
+            }
+
             for (int i = 0; i < totalSpawnable; i++)
             {
                 int randIndex = Random.Range(0, 2);
