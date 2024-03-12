@@ -1,4 +1,5 @@
 # Technical Decision on Assignment: Fantasy Snake
+By Atid Puwatnuttasit
 
 ## Status
 Finished. Waiting for evaluation.
