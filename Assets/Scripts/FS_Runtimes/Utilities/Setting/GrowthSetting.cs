@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.Serialization;
 
 namespace FS_Runtimes.Utilities.Setting
 {
@@ -7,13 +8,15 @@ namespace FS_Runtimes.Utilities.Setting
     {
         #region Fields & Properties
 
-        [SerializeField, Tooltip("Minimum Growth Move Count")] private int _minGrowthMoveCount = 1;
-        [SerializeField, Tooltip("Default Growth Move Count")] private int _defaultGrowthMoveCount = 4;
-        [SerializeField, Tooltip("Default Growth Rate")] private float _defaultGrowthRate = 1.5f;
+        [FormerlySerializedAs("_minGrowthMoveCount")] [SerializeField, Tooltip("Minimum Move Count To Level up")] private int _minMoveCountToLevelUp = 1;
+        [SerializeField, Tooltip("Default Move Count To Level up")] private int _defaultMoveCountLevelUp = 4;
+        [FormerlySerializedAs("_defaultGrowthRate")] [SerializeField, Tooltip("Default Growth Rate Stat")] private float _defaultGrowthRateStat = 0.2f;
+        [SerializeField, Tooltip("Default Growth Rate Move Count")] private float _defaultGrowthRateMove = 0.5f;
 
-        public int MinGrowthMoveCount => _minGrowthMoveCount;
-        public int DefaultGrowthMoveCount => _defaultGrowthMoveCount;
-        public float DefaultGrowthRate => _defaultGrowthRate;
+        public int MinMoveCountToLevelUp => _minMoveCountToLevelUp;
+        public int DefaultMoveCountLevelUp => _defaultMoveCountLevelUp;
+        public float DefaultGrowthRateStat => _defaultGrowthRateStat;
+        public float DefaultGrowthRateMove => _defaultGrowthRateMove;
 
         #endregion
     }

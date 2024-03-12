@@ -19,10 +19,11 @@ namespace FS_Runtimes.Controllers.Core
         [SerializeField, Tooltip("Gameplay Default Stat Setting")] private StatSetting _defaultStatSetting;
 
         public int DefaultStartEntity => _defaultEntitySetting.DefaultStartEntity;
-        public int MinGrowthMoveCount => _defaultGrowthSetting.MinGrowthMoveCount;
+        public int MinGrowthMoveCount => _defaultGrowthSetting.MinMoveCountToLevelUp;
         public int DefaultMaxAtkStat => _defaultStatSetting.DefaultMaxAttack;
         public int DefaultMaxHpStat => _defaultStatSetting.DefaultMaxHealth;
-        public float DefaultGrowingRate => _defaultGrowthSetting.DefaultGrowthRate;
+        public float DefaultGrowingRateStat => _defaultGrowthSetting.DefaultGrowthRateStat;
+        public float DefaultGrowingRateMove => _defaultGrowthSetting.DefaultGrowthRateMove;
         
         private PersistenceGameSetting _defaultSetting;
         private PersistenceGameSetting _customSetting;
@@ -58,8 +59,9 @@ namespace FS_Runtimes.Controllers.Core
                 , _defaultStatSetting.DefaultMaxAttack
                 , _defaultStatSetting.DefaultMinHealth
                 , _defaultStatSetting.DefaultMaxHealth
-                , _defaultGrowthSetting.DefaultGrowthMoveCount
-                , _defaultGrowthSetting.DefaultGrowthRate
+                , _defaultGrowthSetting.DefaultMoveCountLevelUp
+                , _defaultGrowthSetting.DefaultGrowthRateStat
+                , _defaultGrowthSetting.DefaultGrowthRateMove
                 , _defaultEntitySetting.DefaultMaxActiveEntity
                 , _defaultEntitySetting.DefaultMaxSpawnable);
             

@@ -39,8 +39,9 @@ namespace FS_Runtimes.Controllers.UI
         [SerializeField, Tooltip("Stat Min HP InputField")] private TMP_InputField _statMaxHpInputField;
 
         [Header("Growth Option UI")] 
-        [SerializeField, Tooltip("Growing by Count InputField")] private TMP_InputField _growByCountInputField;
-        [SerializeField, Tooltip("Stat Growing rate")] private TMP_InputField _statGrowingRateInputField;
+        [SerializeField, Tooltip("Base Level Up by Turn Count InputField")] private TMP_InputField _growByCountInputField;
+        [SerializeField, Tooltip("Growing Rate of Stat")] private TMP_InputField _statGrowingRateInputField;
+        [SerializeField, Tooltip("Growing Rate of Turn Level Up")] private TMP_InputField _turnGrowingRateInputField;
 
         [Header("Spawn Option UI")] 
         [SerializeField, Tooltip("Spawn Max Entity InputField")] private TMP_InputField _spawnMaxEntityInputField;
@@ -207,6 +208,12 @@ namespace FS_Runtimes.Controllers.UI
                 _statGrowingRateInputField.onEndEdit.RemoveAllListeners();
                 _statGrowingRateInputField.onEndEdit.AddListener(OnGrowingStatRateInputUpdate);
             }
+
+            if (_turnGrowingRateInputField is not null)
+            {
+                _turnGrowingRateInputField.onEndEdit.RemoveAllListeners();
+                _turnGrowingRateInputField.onEndEdit.AddListener(OnTurnGrowingRateInputUpdate);
+            }
         }
         
         /// <summary>
@@ -277,11 +284,12 @@ namespace FS_Runtimes.Controllers.UI
             int minHp = int.Parse(_statMinHpInputField.text);
             int maxHp = int.Parse(_statMaxHpInputField.text);
             int growthByMove = int.Parse(_growByCountInputField.text);
-            float growRate = float.Parse(_statGrowingRateInputField.text);
+            float statGrowRate = float.Parse(_statGrowingRateInputField.text);
+            float moveGrowRate = float.Parse(_turnGrowingRateInputField.text);
             int maxActiveEntity = int.Parse(_spawnMaxEntityInputField.text);
             int maxSpawnable = int.Parse(_spawnMaxSpawnableField.text);
 
-            PersistenceGameSetting newSetting = new PersistenceGameSetting(startEntity, minAtk, maxAtk, minHp, maxHp, growthByMove, growRate, maxActiveEntity, maxSpawnable);
+            PersistenceGameSetting newSetting = new PersistenceGameSetting(startEntity, minAtk, maxAtk, minHp, maxHp, growthByMove, statGrowRate, moveGrowRate, maxActiveEntity, maxSpawnable);
             SettingManager.Instance.UpdateCustomSetting(newSetting);
             _cacheSetting = newSetting;
         }
@@ -517,7 +525,7 @@ namespace FS_Runtimes.Controllers.UI
         {
             bool isParsed = float.TryParse(value, out float result);
 
-            float defaultValue = SettingManager.Instance.DefaultGrowingRate;
+            float defaultValue = SettingManager.Instance.DefaultGrowingRateStat;
 
             if (isParsed == false)
             {
@@ -528,6 +536,23 @@ namespace FS_Runtimes.Controllers.UI
             if (result <= 0)
             {
                 _spawnMaxSpawnableField.text = defaultValue.ToString("F1");
+            }
+        }
+
+        private void OnTurnGrowingRateInputUpdate(string value)
+        {
+            bool isParsed = float.TryParse(value, out float result);
+
+            float defaultValue = SettingManager.Instance.DefaultGrowingRateMove;
+
+            if (isParsed == false)
+            {
+                _turnGrowingRateInputField.text = defaultValue.ToString("F1");
+            }
+
+            if (result <= 0)
+            {
+                _turnGrowingRateInputField.text = "0";
             }
         }
         
@@ -567,6 +592,9 @@ namespace FS_Runtimes.Controllers.UI
 
             if (_statGrowingRateInputField is not null)
                 _statGrowingRateInputField.text = setting.StatGrowthRate.ToString("F1");
+
+            if (_turnGrowingRateInputField is not null)
+                _turnGrowingRateInputField.text = setting.TurnGrowthRate.ToString("F1");
         }
         
         #endregion
