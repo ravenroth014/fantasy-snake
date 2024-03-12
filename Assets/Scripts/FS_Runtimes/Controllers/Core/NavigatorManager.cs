@@ -19,6 +19,10 @@ namespace FS_Runtimes.Controllers.Core
         public LoadingStateController LoadingStateController => _loadingStateController;
         [SerializeField, Tooltip("Loading Controller")]
         private LoadingStateController _loadingStateController;
+
+        public GameplayUIController GameplayUIController => _gameplayUIController;
+        [SerializeField, Tooltip("Gameplay UI Controller")]
+        private GameplayUIController _gameplayUIController;
         
         public static NavigatorManager Instance => _instance;
         private static NavigatorManager _instance;

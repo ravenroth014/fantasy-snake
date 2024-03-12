@@ -7,7 +7,6 @@ using FS_Runtimes.Controllers.Level;
 using FS_Runtimes.Controllers.UI;
 using FS_Runtimes.Controllers.Utilities;
 using FS_Runtimes.Models.Characters;
-using FS_Runtimes.Models.Settings;
 using FS_Runtimes.Utilities;
 using UnityEngine;
 
@@ -20,21 +19,25 @@ namespace FS_Runtimes.States
         private readonly CharactersManager _charactersManager = GameManager.Instance.CharactersManager;
         private readonly LevelManager _levelManager = GameManager.Instance.LevelManager;
         private readonly GameplayManager _gameplayManager = GameManager.Instance.GameplayManager;
+        
+        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
+        private readonly GameplayUIController _gameplayUIController = NavigatorManager.Instance.GameplayUIController;
+        
         private readonly SettingManager _settingManager = SettingManager.Instance;
         private readonly LogManager _logManager = LogManager.Instance;
-        private readonly LoadingStateController _loadingStateController = NavigatorManager.Instance.LoadingStateController;
 
         private CharacterPairData _currentHero;
         private CharacterPairData _currentEnemy;
         private EPlayerAction _lastAction;
         private bool _isBattle;
-
-        private PersistenceGameSetting _gameSetting;
+        private bool _isReady;
         
         #endregion
 
         #region Methods
-        
+
+        #region Derived Methods
+
         public override void OnEnter()
         {
             if (Init() == false)
@@ -42,24 +45,24 @@ namespace FS_Runtimes.States
                 GameManager.Instance.ChangeState(EGameState.GameError);
                 return;
             }
-            
-            _loadingStateController.Close();
-            // TODO: Countdown before start game.
+
+            StartGame();
         }
 
         public override void OnExit()
         {
-            _levelManager.ResetManager();
-            _charactersManager.ResetManager();
-            // TODO: Reset decoration and obstacle.
+            _isReady = false;
+            // TODO: Need to reset on GameOver onExit instead now.
+            // _levelManager.ResetManager();
+            // _charactersManager.ResetManager();
         }
+
+        #endregion
 
         #region Init Methods
         
         private bool Init()
         {
-            _gameSetting = SettingManager.Instance.GetCurrentGameplaySetting();
-            
             bool isComplete = true;
             
             isComplete &= InitCallback();
@@ -85,7 +88,10 @@ namespace FS_Runtimes.States
             CharacterPairData character = _levelManager.GenerateHero();
             _charactersManager.AddCharacter(character, Vector2.zero);
             _levelManager.GenerateCharactersOnStart();
-
+            
+            _gameplayUIController.UpdatePlayerText(_charactersManager.CurrentMainHero);
+            _gameplayUIController.UpdateEnemyText(null);
+            
             return true;
         }
 
@@ -101,9 +107,17 @@ namespace FS_Runtimes.States
         #endregion
 
         #region Decision Making Methods
+
+        private void StartGame()
+        {
+            _loadingStateController.Close();
+            _gameplayUIController.Open();
+            _isReady = true;
+        }
         
         private void OnPlayerTrigger(EPlayerAction playerAction)
         {
+            if (_isReady == false) return;
             if (_isBattle) return;
             if (_charactersManager.IsMoving) return;
             if (_settingManager.IsGameplayButtonActionValid(_lastAction, playerAction) == false)
@@ -142,7 +156,6 @@ namespace FS_Runtimes.States
 
         private void OnMovementAction(EPlayerAction playerAction)
         {
-            
             Vector2 currentPosition = _charactersManager.GetMainCharacterPosition();
             Vector2 direction = GameHelper.GetVector2Direction(playerAction);
             Vector2 targetPosition = currentPosition + direction;
@@ -154,7 +167,7 @@ namespace FS_Runtimes.States
                 case EGridState.Empty:
                 {
                     OnMoveCharacter(targetPosition);
-                    OnEndPhase();
+                    OnEndPhase(_charactersManager.CurrentMainHero);
                     break;
                 }
                 case EGridState.Occupied:
@@ -196,11 +209,14 @@ namespace FS_Runtimes.States
             _logManager.Log("Removing character ...");
             _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
             
-            // TODO: Need to check if this is the last character
-            // If so, game over.
-            // Else
+            if (_charactersManager.CurrentMainHero == null)
+            {
+                GameManager.Instance.ChangeState(EGameState.GameOver);
+                return;
+            }
+            
             _levelManager.GenerateCharacters();
-            OnEndPhase();
+            OnEndPhase(_charactersManager.CurrentMainHero);
         }
 
         private void OnMoveToOccupiedGrid(Vector2 targetPos)
@@ -213,17 +229,20 @@ namespace FS_Runtimes.States
                 case ECharacterType.Enlist:
                 {
                     OnRecruitEnlist(targetPos);
-                    OnEndPhase();
+                    OnEndPhase(_charactersManager.CurrentMainHero);
                     break;
                 }
                 case ECharacterType.Enemy:
                 {
-                    _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos, OnEndPhase));
+                    _gameplayManager.ExecuteCoroutine(OnAttackEnemy(targetPos, () =>
+                    {
+                        OnEndPhase(_charactersManager.CurrentMainHero);
+                    }));
                     break;
                 }
                 case ECharacterType.Hero:
                 {
-                    // TODO: Game over.
+                    GameManager.Instance.ChangeState(EGameState.GameOver);
                     break;
                 }
                 default:
@@ -260,7 +279,8 @@ namespace FS_Runtimes.States
                 _logManager.Log($"{_currentEnemy.CharacterData.UniqueID} take damage {_currentHero.CharacterData.AtkPoint} from {_currentHero.CharacterData.UniqueID}, HP: {_currentEnemy.CharacterData.CurrentHp.ToString()}/{_currentEnemy.CharacterData.MaxHp}");
                 _logManager.Log($"{_currentHero.CharacterData.UniqueID} take damage {_currentEnemy.CharacterData.AtkPoint} from {_currentEnemy.CharacterData.UniqueID}, HP: {_currentHero.CharacterData.CurrentHp.ToString()}/{_currentHero.CharacterData.MaxHp}");
                 
-                // TODO: Update UI.
+                _gameplayUIController.UpdatePlayerText(_currentHero);
+                _gameplayUIController.UpdateEnemyText(_currentEnemy);
 
                 yield return new WaitForSeconds(1.5f);
                 
@@ -271,13 +291,17 @@ namespace FS_Runtimes.States
             if (_currentHero.CharacterData.IsDead)
             {
                 _charactersManager.RemoveMainCharacter(targetPos, OnUpdateGridCallback);
-                // TODO: If it's last one, Game Over.
-                // return;
             }
             if (_currentEnemy.CharacterData.IsDead)
             {
                 _levelManager.RemoveEnemy(targetPos);
 
+            }
+
+            if (_charactersManager.CurrentMainHero == null)
+            {
+                GameManager.Instance.ChangeState(EGameState.GameOver);
+                yield return null;
             }
             
             _levelManager.GenerateCharacters();
@@ -300,10 +324,14 @@ namespace FS_Runtimes.States
                 _levelManager.UpdateGridData(position, uniqueID, EGridState.Occupied, ECharacterType.Hero);
         }
 
-        private void OnEndPhase()
+        private void OnEndPhase(CharacterPairData heroData = null, CharacterPairData enemyData = null)
         {
             _levelManager.OnTriggerActionEndPhase();
             _charactersManager.OnTriggerActionEndPhase();
+            
+            _gameplayUIController.UpdatePlayerText(heroData);
+            _gameplayUIController.UpdateEnemyText(enemyData);
+            _gameplayUIController.UpdateKillCountText(_levelManager.TotalKillEnemies);
         }
 
         #endregion

@@ -168,7 +168,10 @@ namespace FS_Runtimes.Controllers.Character
         private void SetHighlightState()
         {
             if (_heroDataList is null or {Count: 0})
+            {
+                CurrentMainHero = null;
                 return;
+            }
             
             string uniqueID = _heroDataList[0].UniqueID;
             
@@ -176,6 +179,8 @@ namespace FS_Runtimes.Controllers.Character
             {
                 characterGameObject.Value.SetHighlightState(characterGameObject.Key == uniqueID);
             }
+
+            CurrentMainHero = new CharacterPairData(_heroDataList[0], _heroGameObjectDict[uniqueID]);
         }
 
         private void UpdateCharactersTransform(List<Vector2> cachePosList, List<Vector3> cacheDirList, Action<Vector2, string> onUpdateGrid = null)
