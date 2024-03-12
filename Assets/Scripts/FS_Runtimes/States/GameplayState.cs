@@ -215,7 +215,6 @@ namespace FS_Runtimes.States
                 return;
             }
             
-            _levelManager.GenerateCharacters();
             OnEndPhase(_charactersManager.CurrentMainHero);
         }
 
@@ -257,7 +256,6 @@ namespace FS_Runtimes.States
             CharacterPairData character = _levelManager.GetEnlistCharacter(targetPos);
             
             _charactersManager.AddCharacter(character, targetPos, OnUpdateGridCallback);
-            _levelManager.GenerateCharacters();
         }
 
         private IEnumerator OnAttackEnemy(Vector2 targetPos, Action onComplete = null)
@@ -295,7 +293,7 @@ namespace FS_Runtimes.States
             if (_currentEnemy.CharacterData.IsDead)
             {
                 _levelManager.RemoveEnemy(targetPos);
-
+                _levelManager.GenerateCharacters();
             }
 
             if (_charactersManager.CurrentMainHero == null)
@@ -304,7 +302,6 @@ namespace FS_Runtimes.States
                 yield return null;
             }
             
-            _levelManager.GenerateCharacters();
             onComplete?.Invoke();
         }
 
