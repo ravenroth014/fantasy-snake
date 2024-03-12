@@ -25,6 +25,7 @@ namespace FS_Runtimes.States
             if (Init() == false)
                 GameManager.Instance.ChangeState(EGameState.GameError);
             
+            _mainMenuUIController.Open();
             _loadingUIController.Close();
         }
 

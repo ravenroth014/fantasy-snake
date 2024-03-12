@@ -54,9 +54,7 @@ namespace FS_Runtimes.States
         public override void OnExit()
         {
             _isReady = false;
-            // TODO: Need to reset on GameOver onExit instead now.
-            // _levelManager.ResetManager();
-            // _charactersManager.ResetManager();
+            _gameplayUIController.Close();
         }
 
         #endregion

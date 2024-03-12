@@ -73,7 +73,7 @@ namespace FS_Runtimes.Controllers.UI
 
             if (_exitButton is not null)
             {
-                Application.Quit();
+                _exitButton.SetCallback(Application.Quit);
             }
         }
 
