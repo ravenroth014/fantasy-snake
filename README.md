@@ -1,8 +1,10 @@
 # Technical Decision on Assignment: Fantasy Snake
 By Atid Puwatnuttasit
 
+[Download Build version 1.0](https://drive.google.com/file/d/15aTQESjJJ-8ei2fedzU9yP_j7eQrbYku/view?usp=drive_link)
+
 ## Status
-Finished. Waiting for evaluation.
+Finished. Evaluated.
 
 ## Context
 I have been tasked to develop a game project with the provided game design document (GDD) by using Unity3D. This assignment is used to evaluate my programming skills, problem-solving, software design, and creativity in game development. By following the requirements and constraints strictly with this following.
